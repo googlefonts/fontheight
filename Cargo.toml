@@ -11,7 +11,11 @@ repository = "https://github.com/googlefonts/fontheight"
 
 [dependencies]
 anyhow = "1"
+clap = { version = "4.5", features = ["derive"] }
+kurbo = "0.11.1"
 log = "0.4.25"
+rustybuzz = "0.20.1"
+skrifa = "0.26.5"
 
 [dependencies.env_logger]
 version = "0.11.6"

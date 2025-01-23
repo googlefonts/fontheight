@@ -3,6 +3,10 @@ on:
 
 name: Lint
 
+# Make sure CI fails on all warnings, including Clippy lints
+env:
+  RUSTFLAGS: "-Dwarnings"
+
 jobs:
   format:
     name: Formatting

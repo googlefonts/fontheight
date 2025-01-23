@@ -4,11 +4,13 @@ use anyhow::Context;
 
 #[derive(Debug)]
 pub struct WordList {
+    #[allow(dead_code)] // FIXME: remove when no longer needed
     name: String,
     words: Vec<String>,
 }
 
 impl WordList {
+    #[allow(dead_code)] // FIXME: remove when no longer needed
     pub fn load(
         name: impl Into<String>,
         path: impl AsRef<Path>,

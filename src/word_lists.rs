@@ -20,11 +20,7 @@ impl WordList {
             .with_context(|| format!("unable to read {}", path.display()))?;
         Ok(WordList {
             name: name.into(),
-            words: file_content
-                .split_whitespace()
-                .filter(|word| !word.is_empty())
-                .map(String::from)
-                .collect(),
+            words: newline_delimited_words(file_content),
         })
     }
 
@@ -41,4 +37,13 @@ impl WordList {
     pub fn iter(&self) -> impl Iterator<Item = &str> {
         self.words.iter().map(String::as_ref)
     }
+}
+
+fn newline_delimited_words(input: impl AsRef<str>) -> Vec<String> {
+    input
+        .as_ref()
+        .split_whitespace()
+        .filter(|word| !word.is_empty())
+        .map(String::from)
+        .collect()
 }

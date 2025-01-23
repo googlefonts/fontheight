@@ -1,0 +1,32 @@
+on:
+  push:
+
+name: Lint
+
+jobs:
+  format:
+    name: Formatting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ${{ github.head_ref || github.ref_name }}
+        uses: actions/checkout@v4
+      - name: Install nightly rustfmt
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: rustfmt
+      - name: Run rustfmt
+        shell: bash
+        run: cargo fmt -- --check --files-with-diff
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ${{ github.head_ref || github.ref_name }}
+        uses: actions/checkout@v4
+      - name: Install clippy
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - name: Run Clippy
+        shell: bash
+        run: cargo clippy --tests

@@ -1,0 +1,20 @@
+on:
+  push:
+
+name: Build & test
+
+jobs:
+  build-test:
+    name: Stable Rust
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Checkout ${{ github.head_ref || github.ref_name }}
+        uses: actions/checkout@v4
+      - name: Build
+        shell: bash
+        run: cargo build
+      - name: Test
+        shell: bash
+        run: cargo test

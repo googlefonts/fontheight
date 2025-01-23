@@ -3,6 +3,10 @@ on:
 
 name: Build & test
 
+# Make sure CI fails on all warnings, including Clippy lints
+env:
+  RUSTFLAGS: "-Dwarnings"
+
 jobs:
   build-test:
     name: Stable Rust

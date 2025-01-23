@@ -7,8 +7,8 @@ use anyhow::{anyhow, Context};
 use clap::Parser;
 use env_logger::Env;
 use kurbo::Shape;
-use log::{error, info, LevelFilter};
-use rustybuzz::{SerializeFlags, UnicodeBuffer};
+use log::{error, LevelFilter};
+use rustybuzz::UnicodeBuffer;
 use skrifa::{outline::DrawSettings, prelude::Size, MetadataProvider};
 
 use crate::{pens::BezierPen, word_lists::WordList};

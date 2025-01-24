@@ -1,3 +1,4 @@
+mod locations;
 mod pens;
 mod word_lists;
 
@@ -7,7 +8,8 @@ use anyhow::{anyhow, Context};
 use clap::Parser;
 use env_logger::Env;
 use kurbo::Shape;
-use log::{error, LevelFilter};
+use locations::{interesting_locations, Location};
+use log::{error, info, LevelFilter};
 use rustybuzz::UnicodeBuffer;
 use skrifa::{outline::DrawSettings, prelude::Size, MetadataProvider};
 
@@ -44,44 +46,58 @@ fn _main() -> anyhow::Result<()> {
     let font_bytes =
         fs::read(&args.font_path).context("failed to read font file")?;
 
-    let font_face = rustybuzz::Face::from_slice(&font_bytes, 0)
+    let mut font_face = rustybuzz::Face::from_slice(&font_bytes, 0)
         .context("rustybuzz could not parse font")?;
 
     let skrifa_font = skrifa::FontRef::new(&font_bytes)
         .context("skrifa could not parse font")?;
-    let instance_extremes = InstanceExtremes::new(
-        skrifa_font,
-        skrifa::instance::LocationRef::default(),
-    )?;
 
-    let test_words = WordList::define("test", ["hello", "apple"]);
-    test_words.iter().for_each(|word| {
-        let mut buffer = UnicodeBuffer::new();
-        buffer.push_str(word);
-        buffer.guess_segment_properties();
-        let glyph_buffer = rustybuzz::shape(&font_face, &[], buffer);
-        // TODO: remove empty glyphs and/or .notdef?
-        let _word_extremes = glyph_buffer
-            .glyph_infos()
-            .iter()
-            .zip(glyph_buffer.glyph_positions())
-            .map(|(info, pos)| {
-                let y_offset = pos.y_offset;
-                let heights = instance_extremes.get(info.glyph_id).unwrap();
+    let locations = interesting_locations(&skrifa_font);
 
-                (
-                    y_offset as f64 + heights.lowest,
-                    y_offset as f64 + heights.highest,
-                )
-            })
-            .fold(VerticalExtremes::default(), |extremes, (low, high)| {
-                let VerticalExtremes { highest, lowest } = extremes;
-                VerticalExtremes {
-                    highest: highest.max(high),
-                    lowest: lowest.min(low),
-                }
+    info!("testing font at {} locations", locations.len());
+    locations
+        .iter()
+        .try_for_each(|location| -> anyhow::Result<()> {
+            font_face.set_variations(&location.to_rustybuzz());
+
+            let instance_extremes =
+                InstanceExtremes::new(&skrifa_font, location)?;
+
+            let test_words = WordList::define("test", ["hello", "apple"]);
+            test_words.iter().for_each(|word| {
+                let mut buffer = UnicodeBuffer::new();
+                buffer.push_str(word);
+                buffer.guess_segment_properties();
+                let glyph_buffer = rustybuzz::shape(&font_face, &[], buffer);
+                // TODO: remove empty glyphs and/or .notdef?
+                let _word_extremes = glyph_buffer
+                    .glyph_infos()
+                    .iter()
+                    .zip(glyph_buffer.glyph_positions())
+                    .map(|(info, pos)| {
+                        let y_offset = pos.y_offset;
+                        let heights =
+                            instance_extremes.get(info.glyph_id).unwrap();
+
+                        (
+                            y_offset as f64 + heights.lowest,
+                            y_offset as f64 + heights.highest,
+                        )
+                    })
+                    .fold(
+                        VerticalExtremes::default(),
+                        |extremes, (low, high)| {
+                            let VerticalExtremes { highest, lowest } = extremes;
+                            VerticalExtremes {
+                                highest: highest.max(high),
+                                lowest: lowest.min(low),
+                            }
+                        },
+                    );
             });
-    });
+
+            Ok(())
+        })?;
 
     Ok(())
 }
@@ -91,8 +107,8 @@ struct InstanceExtremes(HashMap<u32, VerticalExtremes>);
 
 impl InstanceExtremes {
     pub fn new(
-        font: skrifa::FontRef,
-        location: skrifa::instance::LocationRef,
+        font: &skrifa::FontRef,
+        location: &Location,
     ) -> anyhow::Result<Self> {
         let instance_extremes = font
             .outline_glyphs()
@@ -101,7 +117,10 @@ impl InstanceExtremes {
                 let mut bez_pen = BezierPen::default();
                 outline
                     .draw(
-                        DrawSettings::unhinted(Size::unscaled(), location),
+                        DrawSettings::unhinted(
+                            Size::unscaled(),
+                            &location.to_skrifa(font),
+                        ),
                         &mut bez_pen,
                     )
                     .map_err(|err| {

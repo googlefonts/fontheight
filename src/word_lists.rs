@@ -47,3 +47,41 @@ fn newline_delimited_words(input: impl AsRef<str>) -> Vec<String> {
         .map(String::from)
         .collect()
 }
+
+#[allow(dead_code)] // FIXME: remove once we've worked out how we'll access these
+pub mod builtins {
+    macro_rules! builtin_wordlist {
+        (name: $name:ident, path: $path:literal $(,)?) => {
+            ::paste::paste! {
+                pub static [<$name:snake:upper>]: ::std::sync::LazyLock<super::WordList> =
+                    ::std::sync::LazyLock::new(|| {
+                        ::include_flate::flate!(
+                            static RAW_STR: str from $path
+                        );
+                        ::log::debug!("loaded {}", ::std::stringify!($name));
+                        super::WordList {
+                            name: ::std::string::String::from(
+                                ::std::stringify!($name),
+                            ),
+                            words: super::newline_delimited_words(
+                                ::std::ops::Deref::deref(&RAW_STR),
+                            ),
+                        }
+                    });
+            }
+        };
+    }
+
+    builtin_wordlist! {
+        name: diffenator2_latin,
+        path: "data/diffenator_word_lists/Latin.txt",
+    }
+    builtin_wordlist! {
+        name: diffenator2_greek,
+        path: "data/diffenator_word_lists/Greek.txt",
+    }
+    builtin_wordlist! {
+        name: diffenator2_cyrillic,
+        path: "data/diffenator_word_lists/Cyrillic.txt",
+    }
+}

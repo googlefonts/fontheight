@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
 use kurbo::Shape;
-use log::info;
 use rustybuzz::UnicodeBuffer;
 use skrifa::{
     instance::Size,
@@ -19,60 +18,99 @@ mod word_lists;
 pub use locations::Location;
 pub use word_lists::*;
 
-pub fn the_owl(font_bytes: impl AsRef<[u8]>) -> Result<(), FontHeightError> {
-    let font_bytes = font_bytes.as_ref();
-    let mut font_face = rustybuzz::Face::from_slice(font_bytes, 0)
-        .ok_or(FontHeightError::Rustybuzz)?;
+pub struct Reporter<'a> {
+    rusty_face: rustybuzz::Face<'a>,
+    skrifa_font: skrifa::FontRef<'a>,
+}
 
-    let skrifa_font = skrifa::FontRef::new(font_bytes)?;
+impl<'a> Reporter<'a> {
+    pub fn new(font_bytes: &'a [u8]) -> Result<Self, FontHeightError> {
+        let rusty_face = rustybuzz::Face::from_slice(font_bytes, 0)
+            .ok_or(FontHeightError::Rustybuzz)?;
 
-    let locations = interesting_locations(&skrifa_font);
+        let skrifa_font = skrifa::FontRef::new(font_bytes)?;
 
-    info!("testing font at {} locations", locations.len());
-    locations.iter().try_for_each(
-        |location| -> Result<(), SkrifaDrawError> {
-            font_face.set_variations(&location.to_rustybuzz());
+        Ok(Reporter {
+            rusty_face,
+            skrifa_font,
+        })
+    }
 
-            let instance_extremes =
-                InstanceExtremes::new(&skrifa_font, location)?;
+    pub fn interesting_locations(&self) -> Vec<Location> {
+        interesting_locations(&self.skrifa_font)
+    }
 
-            let test_words = WordList::define("test", ["hello", "apple"]);
-            test_words.iter().for_each(|word| {
-                let mut buffer = UnicodeBuffer::new();
-                buffer.push_str(word);
-                buffer.guess_segment_properties();
-                let glyph_buffer = rustybuzz::shape(&font_face, &[], buffer);
-                // TODO: remove empty glyphs and/or .notdef?
-                let _word_extremes = glyph_buffer
-                    .glyph_infos()
-                    .iter()
-                    .zip(glyph_buffer.glyph_positions())
-                    .map(|(info, pos)| {
-                        let y_offset = pos.y_offset;
-                        let heights =
-                            instance_extremes.get(info.glyph_id).unwrap();
+    pub fn check_location(
+        &'a mut self,
+        location: &'a Location,
+        word_list: &'a WordList,
+    ) -> Result<ReportIterator<'a>, SkrifaDrawError> {
+        self.rusty_face.set_variations(&location.to_rustybuzz());
 
-                        (
-                            y_offset as f64 + heights.lowest,
-                            y_offset as f64 + heights.highest,
-                        )
-                    })
-                    .fold(
-                        VerticalExtremes::default(),
-                        |extremes, (low, high)| {
-                            let VerticalExtremes { highest, lowest } = extremes;
-                            VerticalExtremes {
-                                highest: highest.max(high),
-                                lowest: lowest.min(low),
-                            }
-                        },
-                    );
+        let instance_extremes =
+            InstanceExtremes::new(&self.skrifa_font, location)?;
+
+        Ok(ReportIterator {
+            parent: self,
+            word_list,
+            instance_extremes,
+            word_index: 0,
+        })
+    }
+}
+
+pub struct ReportIterator<'a> {
+    parent: &'a Reporter<'a>,
+    word_list: &'a WordList,
+    instance_extremes: InstanceExtremes,
+    word_index: usize,
+}
+
+impl<'a> Iterator for ReportIterator<'a> {
+    type Item = Report<'a>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let word = self.word_list.get(self.word_index)?;
+
+        let mut buffer = UnicodeBuffer::new();
+        buffer.push_str(word);
+        buffer.guess_segment_properties();
+        let glyph_buffer =
+            rustybuzz::shape(&self.parent.rusty_face, &[], buffer);
+        // TODO: remove empty glyphs and/or .notdef?
+        let word_extremes = glyph_buffer
+            .glyph_infos()
+            .iter()
+            .zip(glyph_buffer.glyph_positions())
+            .map(|(info, pos)| {
+                let y_offset = pos.y_offset;
+                let heights =
+                    self.instance_extremes.get(info.glyph_id).unwrap();
+
+                (
+                    y_offset as f64 + heights.lowest,
+                    y_offset as f64 + heights.highest,
+                )
+            })
+            .fold(VerticalExtremes::default(), |extremes, (low, high)| {
+                let VerticalExtremes { highest, lowest } = extremes;
+                VerticalExtremes {
+                    highest: highest.max(high),
+                    lowest: lowest.min(low),
+                }
             });
+        self.word_index += 1;
+        Some(Report {
+            word,
+            extremes: word_extremes,
+        })
+    }
+}
 
-            Ok(())
-        },
-    )?;
-    Ok(())
+#[derive(Debug)]
+pub struct Report<'w> {
+    pub word: &'w str,
+    pub extremes: VerticalExtremes,
 }
 
 #[derive(Debug)]

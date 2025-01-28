@@ -1,0 +1,23 @@
+[package]
+name = "fontheight"
+version = "0.1.0"
+edition = "2021"
+authors = [
+    "Dalton Maag <sd@daltonmaag.com>",
+]
+license = "Apache-2.0"
+readme = "../README.md"
+repository = "https://github.com/googlefonts/fontheight"
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4.5", features = ["derive"] }
+fontheight-core = { version = "0.1.0", path = "../fontheight-core" }
+log = { workspace = true }
+
+[dependencies.env_logger]
+version = "0.11.6"
+default-features = false
+features = [
+    "auto-color",
+]

@@ -1,0 +1,19 @@
+[package]
+name = "fontheight-core"
+version = "0.1.0"
+edition = "2021"
+authors = [
+    "Dalton Maag <sd@daltonmaag.com>",
+]
+license = "Apache-2.0"
+readme = "../README.md"
+repository = "https://github.com/googlefonts/fontheight"
+
+[dependencies]
+itertools = "0.14.0"
+kurbo = "0.11.1"
+log = { workspace = true }
+ordered-float = "4.6"
+rustybuzz = "0.20.1"
+skrifa = "0.26.5"
+thiserror = "2"

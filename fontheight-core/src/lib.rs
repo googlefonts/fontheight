@@ -1,63 +1,36 @@
+use std::collections::HashMap;
+
+use kurbo::Shape;
+use log::info;
+use rustybuzz::UnicodeBuffer;
+use skrifa::{
+    instance::Size,
+    outline::{DrawError, DrawSettings},
+    MetadataProvider,
+};
+use thiserror::Error;
+
+use crate::{locations::interesting_locations, pens::BezierPen};
+
 mod locations;
 mod pens;
 mod word_lists;
 
-use std::{collections::HashMap, fs, path::PathBuf, process::ExitCode};
+pub use locations::Location;
+pub use word_lists::*;
 
-use anyhow::{anyhow, Context};
-use clap::Parser;
-use env_logger::Env;
-use kurbo::Shape;
-use locations::{interesting_locations, Location};
-use log::{error, info, LevelFilter};
-use rustybuzz::UnicodeBuffer;
-use skrifa::{outline::DrawSettings, prelude::Size, MetadataProvider};
+pub fn the_owl(font_bytes: impl AsRef<[u8]>) -> Result<(), FontHeightError> {
+    let font_bytes = font_bytes.as_ref();
+    let mut font_face = rustybuzz::Face::from_slice(font_bytes, 0)
+        .ok_or(FontHeightError::Rustybuzz)?;
 
-use crate::{pens::BezierPen, word_lists::WordList};
-
-fn main() -> ExitCode {
-    env_logger::builder()
-        .filter_level(if cfg!(debug_assertions) {
-            LevelFilter::Debug
-        } else {
-            LevelFilter::Warn
-        })
-        .parse_env(Env::new().filter("FONTHEIGHT_LOG"))
-        .init();
-    match _main() {
-        Ok(()) => ExitCode::SUCCESS,
-        Err(why) => {
-            error!("{why}");
-            ExitCode::FAILURE
-        },
-    }
-}
-
-#[derive(Debug, Parser)]
-#[command(version, about)]
-struct Args {
-    /// The TTF to analyze
-    font_path: PathBuf,
-}
-
-fn _main() -> anyhow::Result<()> {
-    let args = Args::parse();
-
-    let font_bytes =
-        fs::read(&args.font_path).context("failed to read font file")?;
-
-    let mut font_face = rustybuzz::Face::from_slice(&font_bytes, 0)
-        .context("rustybuzz could not parse font")?;
-
-    let skrifa_font = skrifa::FontRef::new(&font_bytes)
-        .context("skrifa could not parse font")?;
+    let skrifa_font = skrifa::FontRef::new(font_bytes)?;
 
     let locations = interesting_locations(&skrifa_font);
 
     info!("testing font at {} locations", locations.len());
-    locations
-        .iter()
-        .try_for_each(|location| -> anyhow::Result<()> {
+    locations.iter().try_for_each(
+        |location| -> Result<(), SkrifaDrawError> {
             font_face.set_variations(&location.to_rustybuzz());
 
             let instance_extremes =
@@ -97,23 +70,23 @@ fn _main() -> anyhow::Result<()> {
             });
 
             Ok(())
-        })?;
-
+        },
+    )?;
     Ok(())
 }
 
 #[derive(Debug)]
-struct InstanceExtremes(HashMap<u32, VerticalExtremes>);
+pub struct InstanceExtremes(HashMap<u32, VerticalExtremes>);
 
 impl InstanceExtremes {
     pub fn new(
         font: &skrifa::FontRef,
         location: &Location,
-    ) -> anyhow::Result<Self> {
+    ) -> Result<Self, SkrifaDrawError> {
         let instance_extremes = font
             .outline_glyphs()
             .iter()
-            .map(|(id, outline)| -> anyhow::Result<(u32, VerticalExtremes)> {
+            .map(|(id, outline)| -> Result<(u32, VerticalExtremes), SkrifaDrawError> {
                 let mut bez_pen = BezierPen::default();
                 outline
                     .draw(
@@ -123,9 +96,7 @@ impl InstanceExtremes {
                         ),
                         &mut bez_pen,
                     )
-                    .map_err(|err| {
-                        anyhow!("could not draw glyph {id}: {err}")
-                    })?;
+                    .map_err(|err| SkrifaDrawError(id, err))?;
 
                 let kurbo::Rect { y0, y1, .. } = bez_pen.path.bounding_box();
                 Ok((u32::from(id), VerticalExtremes {
@@ -133,7 +104,7 @@ impl InstanceExtremes {
                     highest: y1,
                 }))
             })
-            .collect::<anyhow::Result<HashMap<_, _>>>()?;
+            .collect::<Result<HashMap<_, _>, _>>()?;
         Ok(InstanceExtremes(instance_extremes))
     }
 
@@ -142,8 +113,22 @@ impl InstanceExtremes {
     }
 }
 
+#[derive(Debug, Error)]
+#[error("could not draw glyph {0}: {1}")]
+pub struct SkrifaDrawError(skrifa::GlyphId, DrawError);
+
 #[derive(Debug, Clone, Copy, Default)]
-struct VerticalExtremes {
-    lowest: f64,
-    highest: f64,
+pub struct VerticalExtremes {
+    pub lowest: f64,
+    pub highest: f64,
+}
+
+#[derive(Debug, Error)]
+pub enum FontHeightError {
+    #[error("rustybuzz could not parse the font")]
+    Rustybuzz,
+    #[error("skrifa could not parse the font: {0}")]
+    Skrifa(#[from] skrifa::raw::ReadError),
+    #[error(transparent)]
+    Drawing(#[from] SkrifaDrawError),
 }

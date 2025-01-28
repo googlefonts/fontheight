@@ -1,5 +1,6 @@
 use std::{
     fs, io,
+    ops::{Deref, Index},
     path::{Path, PathBuf},
 };
 
@@ -46,6 +47,29 @@ impl WordList {
 
     pub fn iter(&self) -> impl Iterator<Item = &str> {
         self.words.iter().map(String::as_ref)
+    }
+
+    #[inline]
+    pub fn len(&self) -> usize {
+        self.words.len()
+    }
+
+    #[inline]
+    pub fn is_empty(&self) -> bool {
+        self.words.is_empty()
+    }
+
+    #[inline]
+    pub fn get(&self, index: usize) -> Option<&str> {
+        self.words.get(index).map(|word| word.as_str())
+    }
+}
+
+impl Index<usize> for WordList {
+    type Output = str;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        self.words.index(index).deref()
     }
 }
 

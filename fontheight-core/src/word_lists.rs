@@ -1,23 +1,25 @@
-use std::{fs, path::Path};
+use std::{
+    fs, io,
+    path::{Path, PathBuf},
+};
 
-use anyhow::Context;
+use thiserror::Error;
 
 #[derive(Debug)]
 pub struct WordList {
-    #[allow(dead_code)] // FIXME: remove when no longer needed
     name: String,
     words: Vec<String>,
 }
 
 impl WordList {
-    #[allow(dead_code)] // FIXME: remove when no longer needed
     pub fn load(
         name: impl Into<String>,
         path: impl AsRef<Path>,
-    ) -> anyhow::Result<Self> {
+    ) -> Result<Self, WordListError> {
         let path = path.as_ref();
-        let file_content = fs::read_to_string(path)
-            .with_context(|| format!("unable to read {}", path.display()))?;
+        let file_content = fs::read_to_string(path).map_err(|io_err| {
+            WordListError::FailedToRead(path.to_owned(), io_err)
+        })?;
         Ok(WordList {
             name: name.into(),
             words: file_content
@@ -38,7 +40,17 @@ impl WordList {
         }
     }
 
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
     pub fn iter(&self) -> impl Iterator<Item = &str> {
         self.words.iter().map(String::as_ref)
     }
+}
+
+#[derive(Debug, Error)]
+pub enum WordListError {
+    #[error("failed to read from {}: {}", .0.display(), .1)]
+    FailedToRead(PathBuf, io::Error),
 }

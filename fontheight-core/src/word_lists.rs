@@ -2,9 +2,14 @@ use std::{
     fs, io,
     ops::{Deref, Index},
     path::{Path, PathBuf},
+    slice,
 };
 
 use thiserror::Error;
+
+// FIXME: making this a formal struct would allow for the consolidation of
+//        WordList::iter and WordList::raw_iter methods
+pub(crate) type WordListIter<'a> = slice::Iter<'a, String>;
 
 #[derive(Debug)]
 pub struct WordList {
@@ -47,6 +52,10 @@ impl WordList {
 
     pub fn iter(&self) -> impl Iterator<Item = &str> {
         self.words.iter().map(String::as_ref)
+    }
+
+    pub(crate) fn raw_iter(&self) -> WordListIter {
+        self.words.iter()
     }
 
     #[inline]

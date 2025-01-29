@@ -14,6 +14,7 @@ anyhow = "1"
 clap = { version = "4.5", features = ["derive"] }
 fontheight-core = { version = "0.1.0", path = "../fontheight-core" }
 log = { workspace = true }
+static-lang-word-lists = { version = "0.1.0", path = "../static-lang-word-lists" }
 
 [dependencies.env_logger]
 version = "0.11.6"

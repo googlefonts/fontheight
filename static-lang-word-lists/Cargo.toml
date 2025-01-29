@@ -1,0 +1,21 @@
+[package]
+name = "static-lang-word-lists"
+version = "0.1.0"
+edition = "2021"
+authors = [
+    "Dalton Maag <sd@daltonmaag.com>",
+]
+license = "Apache-2.0"
+readme = "../README.md"
+repository = "https://github.com/googlefonts/fontheight"
+
+[dependencies]
+fontheight-core = { version = "0.1.0", path = "../fontheight-core" }
+log = { workspace = true }
+paste = "1"
+phf = { version = "0.11.3", features = ["macros"] }
+
+[build-dependencies]
+brotli = "7"
+minreq = "2.13"
+walkdir = "2.5"

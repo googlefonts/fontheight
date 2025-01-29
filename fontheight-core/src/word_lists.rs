@@ -42,6 +42,12 @@ impl WordList {
         }
     }
 
+    // Private API used by static-lang-word-lists
+    #[doc(hidden)]
+    pub fn new(name: String, words: Vec<String>) -> Self {
+        WordList { name, words }
+    }
+
     pub fn name(&self) -> &str {
         &self.name
     }

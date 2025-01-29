@@ -3,8 +3,9 @@ use std::{fs, path::PathBuf, process::ExitCode};
 use anyhow::Context;
 use clap::Parser;
 use env_logger::Env;
-use fontheight_core::{Reporter, WordList};
+use fontheight_core::Reporter;
 use log::{error, info, LevelFilter};
+use static_lang_word_lists::DIFFENATOR_LATIN;
 
 fn main() -> ExitCode {
     env_logger::builder()
@@ -37,12 +38,10 @@ fn _main() -> anyhow::Result<()> {
     let font_bytes =
         fs::read(&args.font_path).context("failed to read font file")?;
 
-    let word_list = WordList::define("test", ["hello", "you"]);
-
     let mut reporter = Reporter::new(&font_bytes)?;
     let locations = reporter.interesting_locations();
     let reports = reporter
-        .check_location(&locations[0], &word_list)?
+        .check_location(&locations[0], &DIFFENATOR_LATIN)?
         .collect::<Vec<_>>();
 
     info!("{reports:#?}");

@@ -1,7 +1,9 @@
 [workspace]
 resolver = "2"
-members = [ "fontheight",
+members = [
+    "fontheight",
     "fontheight-core",
+    "static-lang-word-lists",
 ]
 
 [workspace.dependencies]

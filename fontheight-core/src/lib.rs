@@ -52,26 +52,23 @@ impl<'a> Reporter<'a> {
 
         Ok(ReportIterator {
             parent: self,
-            word_list,
+            word_iter: word_list.raw_iter(),
             instance_extremes,
-            word_index: 0,
         })
     }
 }
 
 pub struct ReportIterator<'a> {
     parent: &'a Reporter<'a>,
-    word_list: &'a WordList,
     instance_extremes: InstanceExtremes,
-    word_index: usize,
+    word_iter: WordListIter<'a>,
 }
 
 impl<'a> Iterator for ReportIterator<'a> {
     type Item = Report<'a>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let word = self.word_list.get(self.word_index)?;
-
+        let word = self.word_iter.next()?;
         let mut buffer = UnicodeBuffer::new();
         buffer.push_str(word);
         buffer.guess_segment_properties();
@@ -99,7 +96,6 @@ impl<'a> Iterator for ReportIterator<'a> {
                     lowest: lowest.min(low),
                 }
             });
-        self.word_index += 1;
         Some(Report {
             word,
             extremes: word_extremes,

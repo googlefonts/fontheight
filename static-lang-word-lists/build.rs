@@ -1,7 +1,7 @@
 use std::{
-    env,
+    env, fs,
     fs::{File, OpenOptions},
-    io::Write,
+    io::{Cursor, Write},
     path::{Path, PathBuf},
 };
 
@@ -13,24 +13,10 @@ use brotli::enc::{
 const BASE_URL: &str = "https://raw.githubusercontent.com/googlefonts/fontheight/refs/heads/word-list-crate/static-lang-word-lists/data";
 
 fn main() {
-    let brotli_params = BrotliEncoderParams {
-        mode: BrotliEncoderMode::BROTLI_MODE_TEXT,
-        ..Default::default()
-    };
-
     let codegen_path = out_dir_path("codegen.rs");
     let mut codegen_file = open_path(&codegen_path);
 
-    let latin_path = out_dir_path("latin.txt.br");
-    let mut latin_file = open_path(&latin_path);
-
-    // TODO: check data as it comes in? Could save UTF-8 validate at runtime
-    let mut latin = minreq::get(format!("{BASE_URL}/diffenator/Latin.txt"))
-        .send_lazy()
-        .expect("failed to get remote word list");
-    assert_eq!(latin.status_code, 200);
-    brotli::BrotliCompress(&mut latin, &mut latin_file, &brotli_params)
-        .expect("failed to read remote & compress");
+    let latin_path = download_validate_compress("diffenator/Latin.txt");
 
     writeln!(
         &mut codegen_file,
@@ -44,17 +30,53 @@ fn main() {
     .unwrap();
 }
 
+fn download_validate_compress(relative_path: &str) -> PathBuf {
+    // Download & validate
+    let response = minreq::get(format!("{BASE_URL}/{relative_path}"))
+        .send()
+        .unwrap_or_else(|err| panic!("failed to get {relative_path}: {err}"));
+    assert_eq!(
+        response.status_code, 200,
+        "failed to get {relative_path}: {}",
+        response.status_code
+    );
+    let bytes = response.into_bytes();
+    assert!(
+        std::str::from_utf8(&bytes).is_ok(),
+        "{relative_path} was not UTF-8"
+    );
+
+    // Compress & write to disk
+    let br_path = out_dir_path(relative_path).with_extension("txt.br");
+    let mut br_file = open_path(&br_path);
+
+    let mut cursor = Cursor::new(bytes.as_slice());
+    brotli::BrotliCompress(&mut cursor, &mut br_file, &BrotliEncoderParams {
+        mode: BrotliEncoderMode::BROTLI_MODE_TEXT,
+        ..Default::default()
+    })
+    .expect("failed to read remote & compress");
+
+    br_path
+}
+
 fn out_dir_path(name: &str) -> PathBuf {
     let out_dir = env::var_os("OUT_DIR").unwrap();
     PathBuf::from(out_dir).join(name)
 }
 
 fn open_path(path: &Path) -> File {
+    let Some(parent) = path.parent() else {
+        unreachable!(
+            "open_path will always be called on a file with a parent directory"
+        );
+    };
+    fs::create_dir_all(parent).expect("failed to create parent directories");
     OpenOptions::new()
         .write(true)
         .create(true)
         .truncate(true)
-        .open(&path)
+        .open(path)
         .unwrap_or_else(|err| {
             panic!("unable to open output file {}: {err}", path.display())
         })

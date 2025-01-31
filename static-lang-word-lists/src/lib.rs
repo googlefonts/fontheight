@@ -18,8 +18,8 @@ macro_rules! wordlist {
                     let mut brotli_bytes: &[u8] = $bytes;
                     let mut buf = ::std::vec::Vec::with_capacity(brotli_bytes.len());
                     ::brotli_decompressor::BrotliDecompress(&mut brotli_bytes, &mut buf).unwrap_or_else(|err| panic!("failed to decode {NAME}: {err}"));
-                    let raw_words = String::from_utf8(buf)
-                        .unwrap_or_else(|_| panic!("{NAME} didn't decode to UTF-8"));
+                    // SAFETY: UTF-8 validity is checked by the build script
+                    let raw_words = unsafe { String::from_utf8_unchecked(buf) };
                     ::log::debug!("loaded {NAME}");
                     ::fontheight_core::WordList::new(
                         NAME.to_owned(),

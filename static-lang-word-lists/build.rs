@@ -3,6 +3,8 @@ use std::{
     fs::{File, OpenOptions},
     io::{Cursor, Write},
     path::{Path, PathBuf},
+    sync::{Arc, Mutex},
+    thread,
 };
 
 use brotli::enc::{
@@ -12,22 +14,36 @@ use brotli::enc::{
 // FIXME: change branch to `main` before merging
 const BASE_URL: &str = "https://raw.githubusercontent.com/googlefonts/fontheight/refs/heads/word-list-crate/static-lang-word-lists/data";
 
+// Provides WORD_LISTS: &[(&str, &str)] for word list name and relative paths
+// See egg.py for how this code is generated
+include!("chicken.rs");
+
 fn main() {
+    println!("cargo::rerun-if-changed=chicken.rs");
+    println!("cargo::rerun-if-changed=build.rs");
+
     let codegen_path = out_dir_path("codegen.rs");
-    let mut codegen_file = open_path(&codegen_path);
+    let codegen_file = Arc::new(Mutex::new(open_path(&codegen_path)));
 
-    let latin_path = download_validate_compress("diffenator/Latin.txt");
-
-    writeln!(
-        &mut codegen_file,
-        r#"
-        wordlist! {{
-            name: DiffenatorLatin,
-            bytes: include_bytes!(r"{}"),
-        }}"#,
-        latin_path.display(),
-    )
-    .unwrap();
+    thread::scope(|s| {
+        WORD_LISTS.iter().copied().for_each(|(name, path)| {
+            let codegen_file = codegen_file.clone();
+            s.spawn(move || {
+                let br_path = download_validate_compress(path);
+                let mut codegen_file = codegen_file.lock().unwrap();
+                writeln!(
+                    &mut codegen_file,
+                    r#"
+                    wordlist! {{
+                        name: {name},
+                        bytes: include_bytes!(r"{}"),
+                    }}"#,
+                    br_path.display(),
+                )
+                .unwrap();
+            });
+        });
+    });
 }
 
 fn download_validate_compress(relative_path: &str) -> PathBuf {

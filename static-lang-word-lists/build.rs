@@ -41,7 +41,9 @@ fn main() {
                     }}"#,
                     br_path.display(),
                 )
-                .unwrap();
+                .unwrap_or_else(|err| {
+                    panic!("failed to write to codegen.rs: {err}");
+                });
             });
         });
     });
@@ -51,7 +53,9 @@ fn download_validate_compress(relative_path: &str) -> PathBuf {
     // Download & validate
     let response = minreq::get(format!("{BASE_URL}/{relative_path}"))
         .send()
-        .unwrap_or_else(|err| panic!("failed to get {relative_path}: {err}"));
+        .unwrap_or_else(|err| {
+            panic!("failed to fetch {relative_path} from GitHub: {err}");
+        });
     assert_eq!(
         response.status_code, 200,
         "failed to get {relative_path}: {}",
@@ -72,7 +76,7 @@ fn download_validate_compress(relative_path: &str) -> PathBuf {
         mode: BrotliEncoderMode::BROTLI_MODE_TEXT,
         ..Default::default()
     })
-    .expect("failed to read remote & compress");
+    .unwrap_or_else(|err| panic!("failed to compress {relative_path}: {err}"));
 
     br_path
 }

@@ -3,7 +3,7 @@ use std::{
     fs::{File, OpenOptions},
     io::{Cursor, Write},
     path::{Path, PathBuf},
-    sync::{Arc, Mutex},
+    sync::Mutex,
     thread,
 };
 
@@ -23,11 +23,12 @@ fn main() {
     println!("cargo::rerun-if-changed=build.rs");
 
     let codegen_path = out_dir_path("codegen.rs");
-    let codegen_file = Arc::new(Mutex::new(open_path(&codegen_path)));
+    let codegen_file = Mutex::new(open_path(&codegen_path));
 
     thread::scope(|s| {
+        // Bind reference to a name so it can be copied to each spawned thread
+        let codegen_file = &codegen_file;
         WORD_LISTS.iter().copied().for_each(|(name, path)| {
-            let codegen_file = codegen_file.clone();
             s.spawn(move || {
                 let br_path = download_validate_compress(path);
                 let mut codegen_file = codegen_file.lock().unwrap();

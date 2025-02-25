@@ -21,6 +21,11 @@ include!("chicken.rs");
 fn main() {
     println!("cargo::rerun-if-changed=chicken.rs");
     println!("cargo::rerun-if-changed=build.rs");
+    println!("cargo::rerun-if-env-changed=STATIC_LANG_WORD_LISTS_LOCAL");
+
+    if option_env!("STATIC_LANG_WORD_LISTS_LOCAL").is_some() {
+        println!("cargo::warning=building from local files");
+    }
 
     let codegen_path = out_dir_path("codegen.rs");
     let codegen_file = Mutex::new(open_path(&codegen_path));
@@ -30,7 +35,19 @@ fn main() {
         let codegen_file = &codegen_file;
         WORD_LISTS.iter().copied().for_each(|(name, path)| {
             s.spawn(move || {
-                let br_path = download_validate_compress(path);
+                let bytes =
+                    if option_env!("STATIC_LANG_WORD_LISTS_LOCAL").is_none() {
+                        download_validate(path)
+                    } else {
+                        let repo_path = Path::new("data").join(path);
+                        fs::read(&repo_path).unwrap_or_else(|err| {
+                            panic!(
+                                "failed to read local word list file {}: {err}",
+                                repo_path.display()
+                            );
+                        })
+                    };
+                let br_path = compress(&bytes, path);
                 let mut codegen_file = codegen_file.lock().unwrap();
                 writeln!(
                     &mut codegen_file,
@@ -49,8 +66,7 @@ fn main() {
     });
 }
 
-fn download_validate_compress(relative_path: &str) -> PathBuf {
-    // Download & validate
+fn download_validate(relative_path: &str) -> Vec<u8> {
     let response = minreq::get(format!("{BASE_URL}/{relative_path}"))
         .send()
         .unwrap_or_else(|err| {
@@ -66,12 +82,14 @@ fn download_validate_compress(relative_path: &str) -> PathBuf {
         std::str::from_utf8(&bytes).is_ok(),
         "{relative_path} was not UTF-8"
     );
+    bytes
+}
 
-    // Compress & write to disk
+fn compress(bytes: &[u8], relative_path: &str) -> PathBuf {
     let br_path = out_dir_path(relative_path).with_extension("txt.br");
     let mut br_file = open_path(&br_path);
 
-    let mut cursor = Cursor::new(bytes.as_slice());
+    let mut cursor = Cursor::new(bytes);
     brotli::BrotliCompress(&mut cursor, &mut br_file, &BrotliEncoderParams {
         mode: BrotliEncoderMode::BROTLI_MODE_TEXT,
         ..Default::default()

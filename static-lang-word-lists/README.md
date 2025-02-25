@@ -17,6 +17,10 @@ Note: adding or removing a wordlist requires that `egg.py` be re-run
 3. Each file is downloaded, validated as UTF-8 (to avoid needing to do this at binary runtime), and compressed with Brotli, and saved as a build artifact
 4. The build script generates `codegen.rs` which uses the `wordlist!` macro to make the structs for accessing the data for crate consumers
 
+## Developing
+
+To build using local files, set the `STATIC_LANG_WORD_LISTS_LOCAL` environment variable
+
 ## Credits
 
 Diffenator wordlists are from [diffenator2](https://github.com/googlefonts/diffenator2)

@@ -10,6 +10,7 @@ use std::{
 use brotli::enc::{
     backward_references::BrotliEncoderMode, BrotliEncoderParams,
 };
+use heck::ToShoutySnakeCase;
 
 // FIXME: change branch to `main` before merging
 const BASE_URL: &str = "https://raw.githubusercontent.com/googlefonts/fontheight/refs/heads/word-list-crate/static-lang-word-lists/data";
@@ -27,14 +28,27 @@ fn main() {
         println!("cargo::warning=building from local files");
     }
 
-    let codegen_path = out_dir_path("codegen.rs");
-    let codegen_file = Mutex::new(open_path(&codegen_path));
+    let word_list_path = out_dir_path("word_list_codegen.rs");
+    let word_list_file = Mutex::new(open_path(&word_list_path));
+    let map_path = out_dir_path("map_codegen.rs");
+    let mut map_file = open_path(&map_path);
+
+    writeln!(
+        &mut map_file,
+        "pub static LOOKUP_TABLE: ::phf::Map<&'static str, &'static \
+         ::std::sync::LazyLock<::fontheight_core::WordList>> = \
+         ::phf::phf_map! {{"
+    )
+    .unwrap_or_else(|err| panic!("failed to write to map_codeden.rs: {err}"));
+    let map_file = Mutex::new(map_file);
 
     thread::scope(|s| {
-        // Bind reference to a name so it can be copied to each spawned thread
-        let codegen_file = &codegen_file;
+        // Bind references to names so they can be copied to each spawned thread
+        let codegen_file = &word_list_file;
+        let map_file = &map_file;
         WORD_LISTS.iter().copied().for_each(|(name, path)| {
             s.spawn(move || {
+                let ident = name.to_shouty_snake_case();
                 let bytes =
                     if option_env!("STATIC_LANG_WORD_LISTS_LOCAL").is_none() {
                         download_validate(path)
@@ -48,21 +62,34 @@ fn main() {
                         })
                     };
                 let br_path = compress(&bytes, path);
+
                 let mut codegen_file = codegen_file.lock().unwrap();
                 writeln!(
                     &mut codegen_file,
                     r#"
                     wordlist! {{
+                        ident: {ident},
                         name: {name},
                         bytes: include_bytes!(r"{}"),
                     }}"#,
                     br_path.display(),
                 )
                 .unwrap_or_else(|err| {
-                    panic!("failed to write to codegen.rs: {err}");
+                    panic!("failed to write to word_list_codegen.rs: {err}");
                 });
+
+                let mut map_file = map_file.lock().unwrap();
+                writeln!(&mut map_file, r#"    "{name}" => &{ident},"#)
+                    .unwrap_or_else(|err| {
+                        panic!("failed to write to map_codeden.rs: {err}")
+                    });
             });
         });
+    });
+
+    let mut map_file = map_file.into_inner().unwrap();
+    writeln!(&mut map_file, "}};").unwrap_or_else(|err| {
+        panic!("failed to write to map_codeden.rs: {err}")
     });
 }
 

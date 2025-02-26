@@ -7,10 +7,6 @@ use std::{
 
 use thiserror::Error;
 
-// FIXME: making this a formal struct would allow for the consolidation of
-//        WordList::iter and WordList::raw_iter methods
-pub(crate) type WordListIter<'a> = slice::Iter<'a, String>;
-
 #[derive(Debug)]
 pub struct WordList {
     name: String,
@@ -50,12 +46,8 @@ impl WordList {
         &self.name
     }
 
-    pub fn iter(&self) -> impl Iterator<Item = &str> {
-        self.words.iter().map(String::as_ref)
-    }
-
-    pub(crate) fn raw_iter(&self) -> WordListIter {
-        self.words.iter()
+    pub fn iter(&self) -> WordListIter {
+        WordListIter(self.words.iter())
     }
 
     #[inline]
@@ -79,6 +71,17 @@ impl Index<usize> for WordList {
 
     fn index(&self, index: usize) -> &Self::Output {
         self.words.index(index).deref()
+    }
+}
+
+#[derive(Debug)]
+pub struct WordListIter<'a>(slice::Iter<'a, String>);
+
+impl<'a> Iterator for WordListIter<'a> {
+    type Item = &'a str;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.0.next().map(String::as_ref)
     }
 }
 

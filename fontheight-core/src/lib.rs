@@ -52,7 +52,7 @@ impl<'a> Reporter<'a> {
 
         Ok(ReportIterator {
             parent: self,
-            word_iter: word_list.raw_iter(),
+            word_iter: word_list.iter(),
             instance_extremes,
         })
     }

@@ -1,4 +1,8 @@
+use std::sync::LazyLock;
+
 pub use fontheight_core::WordList;
+
+pub type LazyWordList = LazyLock<WordList>;
 
 fn newline_delimited_words(input: impl AsRef<str>) -> Vec<String> {
     input
@@ -11,7 +15,7 @@ fn newline_delimited_words(input: impl AsRef<str>) -> Vec<String> {
 
 macro_rules! wordlist {
     (ident: $ident:ident,name: $name:ident,bytes: $bytes:expr $(,)?) => {
-        pub static $ident: ::std::sync::LazyLock<::fontheight_core::WordList> =
+        pub static $ident: $crate::LazyWordList =
             ::std::sync::LazyLock::new(|| {
                 static NAME: &str = ::std::stringify!($name);
                 let mut brotli_bytes: &[u8] = $bytes;

@@ -8,6 +8,7 @@ use skrifa::{
     MetadataProvider,
 };
 use thiserror::Error;
+use unicode_script::{ScriptExtension, UnicodeScript};
 
 use crate::{locations::interesting_locations, pens::BezierPen};
 
@@ -165,4 +166,33 @@ pub enum FontHeightError {
     Skrifa(#[from] skrifa::raw::ReadError),
     #[error(transparent)]
     Drawing(#[from] SkrifaDrawError),
+}
+
+pub fn discover_font_scripts(
+    font: &skrifa::FontRef,
+) -> Result<ScriptExtension, ScriptDiscoveryError> {
+    let mut empty_cmap = true;
+    let scripts = font.charmap().mappings().try_fold(
+        ScriptExtension::default(),
+        |acc, (codepoint, _)| {
+            empty_cmap = false;
+            let script_extension = char::from_u32(codepoint)
+                .ok_or(ScriptDiscoveryError::InvalidCodepoint(codepoint))?
+                .script_extension();
+            Ok(acc.union(script_extension))
+        },
+    )?;
+    if empty_cmap {
+        Err(ScriptDiscoveryError::EmptyCmap)
+    } else {
+        Ok(scripts)
+    }
+}
+
+#[derive(Debug, Error)]
+pub enum ScriptDiscoveryError {
+    #[error("invalid codepoint in cmap: {0:#x}")]
+    InvalidCodepoint(u32),
+    #[error("empty cmap")]
+    EmptyCmap,
 }

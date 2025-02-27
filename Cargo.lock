@@ -261,6 +261,7 @@ dependencies = [
  "rustybuzz",
  "skrifa",
  "thiserror",
+ "unicode-script",
 ]
 
 [[package]]

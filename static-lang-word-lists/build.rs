@@ -12,8 +12,7 @@ use brotli::enc::{
 };
 use heck::ToShoutySnakeCase;
 
-// FIXME: change branch to `main` before merging
-const BASE_URL: &str = "https://raw.githubusercontent.com/googlefonts/fontheight/refs/heads/word-list-crate/static-lang-word-lists/data";
+const BASE_URL: &str = "https://raw.githubusercontent.com/googlefonts/fontheight/refs/heads/main/static-lang-word-lists/data";
 
 // Provides WORD_LISTS: &[(&str, &str)] for word list name and relative paths
 // See egg.py for how this code is generated

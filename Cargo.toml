@@ -12,3 +12,13 @@ log = "0.4.25"
 [profile.release]
 lto = true
 strip = true
+
+# Speed up build scripts
+[profile.dev.build-override]
+opt-level = 1
+[profile.release.build-override]
+opt-level = 1
+[profile.dev.package.brotli]
+opt-level = 3
+[profile.release.package.brotli]
+opt-level = 3

@@ -8,7 +8,8 @@ use skrifa::{
     MetadataProvider,
 };
 use thiserror::Error;
-use unicode_script::{ScriptExtension, UnicodeScript};
+use unicode_script::UnicodeScript;
+pub use unicode_script::{Script, ScriptExtension};
 
 use crate::{locations::interesting_locations, pens::BezierPen};
 

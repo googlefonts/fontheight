@@ -14,7 +14,7 @@ impl Location {
     pub const fn user_coords(&self) -> &HashMap<skrifa::Tag, f32> {
         &self.user_coords
     }
-    
+
     pub fn to_skrifa(
         &self,
         font: &skrifa::FontRef,

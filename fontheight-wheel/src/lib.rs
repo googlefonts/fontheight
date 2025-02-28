@@ -5,6 +5,7 @@ use pyo3::{Bound, PyResult, prelude::*, pymodule, types::PyBytes};
 use static_lang_word_lists::DIFFENATOR_LATIN;
 
 #[pyclass(frozen, get_all)]
+#[derive(Debug)]
 struct FontheightReport {
     word: String,
     highest: f64,
@@ -26,6 +27,22 @@ impl FontheightReport {
             highest,
             lowest,
         }
+    }
+}
+
+#[pymethods]
+impl FontheightReport {
+    fn __repr__(&self) -> String {
+        let FontheightReport {
+            word,
+            location,
+            highest,
+            lowest,
+        } = self;
+        format!(
+            "FontheightReport(word=\"{word}\", location={location:?}, \
+             highest={highest}, lowest={lowest})"
+        )
     }
 }
 

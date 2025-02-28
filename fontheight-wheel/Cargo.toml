@@ -8,5 +8,13 @@ name = "fontheight"
 crate-type = ["cdylib"]
 
 [dependencies]
+anyhow = "1"
 fontheight-core = { version = "0.1.0", path = "../fontheight-core"}
-pyo3 = { version = "0.23.5", features = ["extension-module"] }
+static-lang-word-lists = { version = "0.1.0", path = "../static-lang-word-lists" }
+
+[dependencies.pyo3]
+version = "0.23.5"
+features = [
+    "extension-module",
+    "anyhow",
+]

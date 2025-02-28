@@ -267,8 +267,10 @@ dependencies = [
 name = "fontheight-wheel"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "fontheight-core",
  "pyo3",
+ "static-lang-word-lists",
 ]
 
 [[package]]
@@ -446,6 +448,7 @@ version = "0.23.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7778bffd85cf38175ac1f545509665d0b9b92a198ca7941f131f85f7a4f9a872"
 dependencies = [
+ "anyhow",
  "cfg-if",
  "indoc",
  "libc",

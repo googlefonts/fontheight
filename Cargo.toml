@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "fontheight",
     "fontheight-core",
+    "fontheight-wheel",
     "static-lang-word-lists",
 ]
 

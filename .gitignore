@@ -3,3 +3,4 @@
 *.otf
 *.woff
 *.woff2
+.venv

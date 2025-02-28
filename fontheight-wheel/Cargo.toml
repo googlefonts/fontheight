@@ -1,0 +1,12 @@
+[package]
+name = "fontheight-wheel"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "fontheight"
+crate-type = ["cdylib"]
+
+[dependencies]
+fontheight-core = { version = "0.1.0", path = "../fontheight-core"}
+pyo3 = { version = "0.23.5", features = ["extension-module"] }

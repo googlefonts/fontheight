@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use fontheight_core::{Location, Report, Reporter, VerticalExtremes};
+use fontheight_core::{Location, Report, Reporter};
 use pyo3::{Bound, PyResult, prelude::*, pymodule, types::PyBytes};
 use static_lang_word_lists::DIFFENATOR_LATIN;
 
@@ -16,7 +16,6 @@ struct FontheightReport {
 impl FontheightReport {
     fn new(report: Report, location: &Location) -> Self {
         let Report { word, extremes } = report;
-        let VerticalExtremes { highest, lowest } = extremes;
         FontheightReport {
             word: word.to_owned(),
             location: location
@@ -24,8 +23,8 @@ impl FontheightReport {
                 .iter()
                 .map(|(tag, &value)| (tag.to_string(), value))
                 .collect(),
-            highest,
-            lowest,
+            highest: extremes.highest(),
+            lowest: extremes.lowest(),
         }
     }
 }

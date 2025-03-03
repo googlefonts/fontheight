@@ -1,6 +1,7 @@
-use std::collections::HashMap;
+use std::{cmp::Ordering, collections::HashMap};
 
 use kurbo::Shape;
+use ordered_float::OrderedFloat;
 use rustybuzz::UnicodeBuffer;
 use skrifa::{
     instance::Size,
@@ -64,6 +65,15 @@ pub struct ReportIterator<'a> {
     word_iter: WordListIter<'a>,
 }
 
+impl<'a> ReportIterator<'a> {
+    pub fn collect_n_extremes(self, n: usize) -> ReportSummary<'a> {
+        self.fold(ReportSummary::new(n), |mut acc, report| {
+            acc.push(report);
+            acc
+        })
+    }
+}
+
 impl<'a> Iterator for ReportIterator<'a> {
     type Item = Report<'a>;
 
@@ -85,8 +95,8 @@ impl<'a> Iterator for ReportIterator<'a> {
                     self.instance_extremes.get(info.glyph_id).unwrap();
 
                 (
-                    y_offset as f64 + heights.lowest,
-                    y_offset as f64 + heights.highest,
+                    heights.lowest + y_offset as f64,
+                    heights.highest + y_offset as f64,
                 )
             })
             .fold(VerticalExtremes::default(), |extremes, (low, high)| {
@@ -103,10 +113,61 @@ impl<'a> Iterator for ReportIterator<'a> {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub struct Report<'w> {
     pub word: &'w str,
     pub extremes: VerticalExtremes,
+}
+
+#[derive(Debug, Clone)]
+pub struct ReportSummary<'w> {
+    lowest: Vec<Report<'w>>,
+    highest: Vec<Report<'w>>,
+    size: usize,
+}
+
+impl<'w> ReportSummary<'w> {
+    fn new(top_n: usize) -> Self {
+        ReportSummary {
+            lowest: Vec::with_capacity(top_n),
+            highest: Vec::with_capacity(top_n),
+            size: top_n,
+        }
+    }
+
+    fn push(&mut self, elem: Report<'w>) {
+        let lower = |a: &Report, b: &Report| a.extremes.lower_than(&b.extremes);
+        let higher =
+            |a: &Report, b: &Report| a.extremes.higher_than(&b.extremes);
+
+        if self.lowest.len() < self.size {
+            self.lowest.push(elem);
+            self.lowest.sort_unstable_by(lower);
+        } else {
+            let highest_low = self.lowest.last_mut().unwrap();
+            match lower(highest_low, &elem) {
+                Ordering::Greater | Ordering::Equal => {},
+                Ordering::Less => {
+                    *highest_low = elem;
+                    self.lowest.sort_unstable_by(lower);
+                },
+            }
+        }
+
+        if self.highest.len() < self.size {
+            self.highest.push(elem);
+            self.highest.sort_unstable_by(higher);
+        } else {
+            let lowest_high = self.highest.last_mut().unwrap();
+            match higher(lowest_high, &elem) {
+                Ordering::Greater | Ordering::Equal => {},
+                Ordering::Less => {
+                    *lowest_high = elem;
+                    self.highest.sort_unstable_by(higher);
+                },
+            }
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -134,8 +195,8 @@ impl InstanceExtremes {
 
                 let kurbo::Rect { y0, y1, .. } = bez_pen.path.bounding_box();
                 Ok((u32::from(id), VerticalExtremes {
-                    lowest: y0,
-                    highest: y1,
+                    lowest: y0.into(),
+                    highest: y1.into(),
                 }))
             })
             .collect::<Result<HashMap<_, _>, _>>()?;
@@ -151,10 +212,30 @@ impl InstanceExtremes {
 #[error("could not draw glyph {0}: {1}")]
 pub struct SkrifaDrawError(skrifa::GlyphId, DrawError);
 
-#[derive(Debug, Clone, Copy, Default)]
+#[derive(Debug, Clone, Copy, Default, Eq, PartialEq)]
 pub struct VerticalExtremes {
-    pub lowest: f64,
-    pub highest: f64,
+    lowest: OrderedFloat<f64>,
+    highest: OrderedFloat<f64>,
+}
+
+impl VerticalExtremes {
+    #[inline]
+    pub fn lowest(&self) -> f64 {
+        *self.lowest
+    }
+
+    #[inline]
+    pub fn highest(&self) -> f64 {
+        *self.highest
+    }
+
+    pub fn lower_than(&self, other: &Self) -> Ordering {
+        self.lowest.cmp(&other.lowest).reverse()
+    }
+
+    pub fn higher_than(&self, other: &Self) -> Ordering {
+        self.highest.cmp(&other.highest)
+    }
 }
 
 #[derive(Debug, Error)]

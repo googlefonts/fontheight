@@ -7,16 +7,20 @@ use std::{
 
 use thiserror::Error;
 
+use crate::{Script, ScriptExtension};
+
 #[derive(Debug)]
 pub struct WordList {
     name: String,
     words: Vec<String>,
+    scripts: ScriptExtension,
 }
 
 impl WordList {
     pub fn load(
         name: impl Into<String>,
         path: impl AsRef<Path>,
+        scripts: ScriptExtension,
     ) -> Result<Self, WordListError> {
         let path = path.as_ref();
         let file_content = fs::read_to_string(path).map_err(|io_err| {
@@ -29,29 +33,43 @@ impl WordList {
                 .filter(|word| !word.is_empty())
                 .map(String::from)
                 .collect(),
+            scripts,
         })
     }
 
     pub fn define(
         name: impl Into<String>,
         words: impl IntoIterator<Item = impl Into<String>>,
+        scripts: ScriptExtension,
     ) -> Self {
         WordList {
             name: name.into(),
             words: words.into_iter().map(Into::into).collect(),
+            scripts,
         }
     }
 
     // Private API used by static-lang-word-lists
     #[doc(hidden)]
-    pub fn new(name: String, words: Vec<String>) -> Self {
-        WordList { name, words }
+    #[inline]
+    pub fn new(
+        name: String,
+        words: Vec<String>,
+        scripts: ScriptExtension,
+    ) -> Self {
+        WordList {
+            name,
+            words,
+            scripts,
+        }
     }
 
+    #[inline]
     pub fn name(&self) -> &str {
         &self.name
     }
 
+    #[inline]
     pub fn iter(&self) -> WordListIter {
         WordListIter(self.words.iter())
     }
@@ -69,6 +87,16 @@ impl WordList {
     #[inline]
     pub fn get(&self, index: usize) -> Option<&str> {
         self.words.get(index).map(|word| word.as_str())
+    }
+
+    #[inline]
+    pub fn covers(&self, script: Script) -> bool {
+        self.scripts.contains_script(script)
+    }
+
+    #[inline]
+    pub fn covers_all(&self, scripts: ScriptExtension) -> bool {
+        self.scripts.intersection(scripts) == self.scripts
     }
 }
 

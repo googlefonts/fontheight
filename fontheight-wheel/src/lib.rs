@@ -1,5 +1,8 @@
+use std::{fs, path::PathBuf};
+
+use anyhow::Context;
 use fontheight_core::{Exemplars, Reporter, SimpleLocation, WordExtremes};
-use pyo3::{Bound, PyResult, prelude::*, pymodule, types::PyBytes};
+use pyo3::{Bound, PyResult, prelude::*, pymodule};
 use static_lang_word_lists::DIFFENATOR_LATIN;
 
 #[pyclass(frozen, get_all)]
@@ -46,14 +49,22 @@ impl From<WordExtremes<'_>> for OwnedWordExtremes {
 }
 
 #[pyfunction]
-fn get_min_max_extremes(
-    font_bytes: Py<PyBytes>,
+fn get_min_max_extremes_from(
+    path: PathBuf,
     n: usize,
 ) -> anyhow::Result<Vec<Report>> {
-    let bytes = Python::with_gil(|py| font_bytes.as_bytes(py));
-    let reporter = Reporter::new(bytes)?;
-    let locations = reporter.interesting_locations();
+    let bytes = fs::read(&path)
+        .with_context(|| format!("failed to read {}", path.display()))?;
+    get_min_max_extremes(&bytes, n)
+}
 
+#[pyfunction]
+fn get_min_max_extremes(
+    font_bytes: &[u8],
+    n: usize,
+) -> anyhow::Result<Vec<Report>> {
+    let reporter = Reporter::new(font_bytes)?;
+    let locations = reporter.interesting_locations();
     locations
         .iter()
         .map(|location| -> anyhow::Result<Report> {
@@ -74,5 +85,7 @@ fn fontheight(module: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<OwnedExemplars>()?;
     module.add_class::<OwnedWordExtremes>()?;
     module.add_function(wrap_pyfunction!(get_min_max_extremes, module)?)?;
+    module
+        .add_function(wrap_pyfunction!(get_min_max_extremes_from, module)?)?;
     Ok(())
 }

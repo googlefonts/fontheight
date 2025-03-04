@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use exemplars::ExemplarCollector;
+pub use exemplars::Exemplars;
 use kurbo::Shape;
 pub use locations::SimpleLocation;
 use ordered_float::OrderedFloat;
@@ -9,15 +11,13 @@ use skrifa::{
     outline::{DrawError, DrawSettings},
     MetadataProvider,
 };
-use summary::ReportSummarizer;
-pub use summary::ReportSummary;
 use thiserror::Error;
 
 use crate::{locations::interesting_locations, pens::BezierPen};
 
+mod exemplars;
 mod locations;
 mod pens;
-mod summary;
 mod word_lists;
 
 pub use locations::Location;
@@ -49,14 +49,14 @@ impl<'a> Reporter<'a> {
         &'a self,
         location: &'a Location,
         word_list: &'a WordList,
-    ) -> Result<ReportIterator<'a>, SkrifaDrawError> {
+    ) -> Result<WordExtremesIterator<'a>, SkrifaDrawError> {
         let mut rusty_face = self.rusty_face.clone();
         rusty_face.set_variations(&location.to_rustybuzz());
 
         let instance_extremes =
             InstanceExtremes::new(&self.skrifa_font, location)?;
 
-        Ok(ReportIterator {
+        Ok(WordExtremesIterator {
             rusty_face,
             word_iter: word_list.iter(),
             instance_extremes,
@@ -64,15 +64,15 @@ impl<'a> Reporter<'a> {
     }
 }
 
-pub struct ReportIterator<'a> {
+pub struct WordExtremesIterator<'a> {
     rusty_face: rustybuzz::Face<'a>,
     instance_extremes: InstanceExtremes,
     word_iter: WordListIter<'a>,
 }
 
-impl<'a> ReportIterator<'a> {
-    pub fn collect_min_max_extremes(self, n: usize) -> ReportSummary<'a> {
-        self.fold(ReportSummarizer::new(n), |mut acc, report| {
+impl<'a> WordExtremesIterator<'a> {
+    pub fn collect_min_max_extremes(self, n: usize) -> Exemplars<'a> {
+        self.fold(ExemplarCollector::new(n), |mut acc, report| {
             acc.push(report);
             acc
         })
@@ -80,8 +80,8 @@ impl<'a> ReportIterator<'a> {
     }
 }
 
-impl<'a> Iterator for ReportIterator<'a> {
-    type Item = Report<'a>;
+impl<'a> Iterator for WordExtremesIterator<'a> {
+    type Item = WordExtremes<'a>;
 
     fn next(&mut self) -> Option<Self::Item> {
         let word = self.word_iter.next()?;
@@ -111,7 +111,7 @@ impl<'a> Iterator for ReportIterator<'a> {
                     lowest: lowest.min(low),
                 }
             });
-        Some(Report {
+        Some(WordExtremes {
             word,
             extremes: word_extremes,
         })
@@ -119,7 +119,7 @@ impl<'a> Iterator for ReportIterator<'a> {
 }
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
-pub struct Report<'w> {
+pub struct WordExtremes<'w> {
     pub word: &'w str,
     pub extremes: VerticalExtremes,
 }

@@ -30,6 +30,10 @@ fn main() -> ExitCode {
 struct Args {
     /// The TTF to analyze
     font_path: PathBuf,
+
+    /// The number of words to log
+    #[arg(short, long)]
+    results: usize,
 }
 
 fn _main() -> anyhow::Result<()> {
@@ -42,7 +46,7 @@ fn _main() -> anyhow::Result<()> {
     let locations = reporter.interesting_locations();
     let reports = reporter
         .check_location(&locations[0], &DIFFENATOR_LATIN)?
-        .collect::<Vec<_>>();
+        .collect_n_extremes(args.results);
 
     info!("{reports:#?}");
     Ok(())

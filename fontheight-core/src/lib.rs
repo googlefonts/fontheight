@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 use kurbo::Shape;
+pub use locations::SimpleLocation;
 use ordered_float::OrderedFloat;
 use rustybuzz::UnicodeBuffer;
 use skrifa::{
@@ -8,7 +9,8 @@ use skrifa::{
     outline::{DrawError, DrawSettings},
     MetadataProvider,
 };
-use summary::{ReportSummarizer, ReportSummary};
+use summary::ReportSummarizer;
+pub use summary::ReportSummary;
 use thiserror::Error;
 
 use crate::{locations::interesting_locations, pens::BezierPen};
@@ -44,17 +46,18 @@ impl<'a> Reporter<'a> {
     }
 
     pub fn check_location(
-        &'a mut self,
+        &'a self,
         location: &'a Location,
         word_list: &'a WordList,
     ) -> Result<ReportIterator<'a>, SkrifaDrawError> {
-        self.rusty_face.set_variations(&location.to_rustybuzz());
+        let mut rusty_face = self.rusty_face.clone();
+        rusty_face.set_variations(&location.to_rustybuzz());
 
         let instance_extremes =
             InstanceExtremes::new(&self.skrifa_font, location)?;
 
         Ok(ReportIterator {
-            parent: self,
+            rusty_face,
             word_iter: word_list.iter(),
             instance_extremes,
         })
@@ -62,13 +65,13 @@ impl<'a> Reporter<'a> {
 }
 
 pub struct ReportIterator<'a> {
-    parent: &'a Reporter<'a>,
+    rusty_face: rustybuzz::Face<'a>,
     instance_extremes: InstanceExtremes,
     word_iter: WordListIter<'a>,
 }
 
 impl<'a> ReportIterator<'a> {
-    pub fn collect_n_extremes(self, n: usize) -> ReportSummary<'a> {
+    pub fn collect_min_max_extremes(self, n: usize) -> ReportSummary<'a> {
         self.fold(ReportSummarizer::new(n), |mut acc, report| {
             acc.push(report);
             acc
@@ -85,8 +88,7 @@ impl<'a> Iterator for ReportIterator<'a> {
         let mut buffer = UnicodeBuffer::new();
         buffer.push_str(word);
         buffer.guess_segment_properties();
-        let glyph_buffer =
-            rustybuzz::shape(&self.parent.rusty_face, &[], buffer);
+        let glyph_buffer = rustybuzz::shape(&self.rusty_face, &[], buffer);
         // TODO: remove empty glyphs and/or .notdef?
         let word_extremes = glyph_buffer
             .glyph_infos()

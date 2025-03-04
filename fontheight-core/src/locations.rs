@@ -4,15 +4,19 @@ use itertools::Itertools;
 use ordered_float::OrderedFloat;
 use skrifa::{raw::collections::int_set::Domain, MetadataProvider};
 
+pub type SimpleLocation = HashMap<String, f32>;
+
 #[derive(Debug, Clone)]
 pub struct Location {
     user_coords: HashMap<skrifa::Tag, f32>,
 }
 
 impl Location {
-    #[inline]
-    pub const fn user_coords(&self) -> &HashMap<skrifa::Tag, f32> {
-        &self.user_coords
+    pub fn to_simple(&self) -> SimpleLocation {
+        self.user_coords
+            .iter()
+            .map(|(tag, &val)| (tag.to_string(), val))
+            .collect()
     }
 
     pub fn to_skrifa(

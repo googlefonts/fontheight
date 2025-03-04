@@ -1,47 +1,47 @@
-use std::collections::HashMap;
-
-use fontheight_core::{Location, Report, Reporter};
+use fontheight_core::{Report, ReportSummary, Reporter, SimpleLocation};
 use pyo3::{Bound, PyResult, prelude::*, pymodule, types::PyBytes};
 use static_lang_word_lists::DIFFENATOR_LATIN;
 
 #[pyclass(frozen, get_all)]
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct FontheightReport {
-    word: String,
-    highest: f64,
-    lowest: f64,
-    location: HashMap<String, f32>,
+    location: SimpleLocation,
+    word_list_name: String,
+    exemplars: OwnedReportSummary,
 }
 
-impl FontheightReport {
-    fn new(report: Report, location: &Location) -> Self {
-        let Report { word, extremes } = report;
-        FontheightReport {
-            word: word.to_owned(),
-            location: location
-                .user_coords()
-                .iter()
-                .map(|(tag, &value)| (tag.to_string(), value))
-                .collect(),
-            highest: extremes.highest(),
-            lowest: extremes.lowest(),
+#[pyclass(name = "ReportSummary", frozen, get_all)]
+#[derive(Debug, Clone)]
+struct OwnedReportSummary {
+    lowest: Vec<OwnedReport>,
+    highest: Vec<OwnedReport>,
+}
+
+impl From<ReportSummary<'_>> for OwnedReportSummary {
+    fn from(summary: ReportSummary<'_>) -> Self {
+        let ReportSummary { lowest, highest } = summary;
+        OwnedReportSummary {
+            lowest: lowest.into_iter().map(OwnedReport::from).collect(),
+            highest: highest.into_iter().map(OwnedReport::from).collect(),
         }
     }
 }
 
-#[pymethods]
-impl FontheightReport {
-    fn __repr__(&self) -> String {
-        let FontheightReport {
-            word,
-            location,
-            highest,
-            lowest,
-        } = self;
-        format!(
-            "FontheightReport(word=\"{word}\", location={location:?}, \
-             highest={highest}, lowest={lowest})"
-        )
+#[pyclass(name = "Report", frozen, get_all)]
+#[derive(Debug, Clone)]
+struct OwnedReport {
+    word: String,
+    lowest: f64,
+    highest: f64,
+}
+
+impl From<Report<'_>> for OwnedReport {
+    fn from(report: Report<'_>) -> Self {
+        OwnedReport {
+            word: report.word.to_owned(),
+            lowest: report.extremes.lowest(),
+            highest: report.extremes.highest(),
+        }
     }
 }
 
@@ -51,20 +51,28 @@ fn get_min_max_extremes(
     n: usize,
 ) -> anyhow::Result<Vec<FontheightReport>> {
     let bytes = Python::with_gil(|py| font_bytes.as_bytes(py));
-    let mut reporter = Reporter::new(bytes)?;
+    let reporter = Reporter::new(bytes)?;
     let locations = reporter.interesting_locations();
-    let reports = reporter
-        .check_location(&locations[0], &DIFFENATOR_LATIN)?
-        .map(|report| FontheightReport::new(report, &locations[0]))
-        .take(n)
-        .collect::<Vec<_>>();
 
-    Ok(reports)
+    locations
+        .iter()
+        .map(|location| -> anyhow::Result<FontheightReport> {
+            let report_iter =
+                reporter.check_location(location, &DIFFENATOR_LATIN)?;
+            Ok(FontheightReport {
+                location: location.to_simple(),
+                word_list_name: DIFFENATOR_LATIN.name().to_owned(),
+                exemplars: report_iter.collect_min_max_extremes(n).into(),
+            })
+        })
+        .collect::<Result<Vec<_>, _>>()
 }
 
 #[pymodule]
 fn fontheight(module: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<FontheightReport>()?;
+    module.add_class::<OwnedReportSummary>()?;
+    module.add_class::<OwnedReport>()?;
     module.add_function(wrap_pyfunction!(get_min_max_extremes, module)?)?;
     Ok(())
 }

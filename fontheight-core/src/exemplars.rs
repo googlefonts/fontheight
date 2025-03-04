@@ -1,29 +1,29 @@
 use std::{cmp::Ordering, collections::BinaryHeap};
 
-use crate::Report;
+use crate::WordExtremes;
 
 /// A summary of the lowest lows and highest highs.
 #[derive(Debug, Clone)]
-pub struct ReportSummary<'w> {
-    pub lowest: Vec<Report<'w>>,
-    pub highest: Vec<Report<'w>>,
+pub struct Exemplars<'w> {
+    pub lowest: Vec<WordExtremes<'w>>,
+    pub highest: Vec<WordExtremes<'w>>,
 }
 
 /// A builder to construct a limited size summary from a stream of words. We do
 /// this as an explicit step with a binary heap for assured runtime complexity.
 #[derive(Debug, Clone)]
-pub(crate) struct ReportSummarizer<'w> {
+pub(crate) struct ExemplarCollector<'w> {
     lowest: BinaryHeap<ByLowest<'w>>,
     highest: BinaryHeap<ByHighest<'w>>,
 }
 
 /// Report, but sorted ascending by lowest for a max-heap.
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
-struct ByLowest<'w>(Report<'w>);
+struct ByLowest<'w>(WordExtremes<'w>);
 
 /// Report, but sorted descending by highest for a min-heap.
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
-struct ByHighest<'w>(Report<'w>);
+struct ByHighest<'w>(WordExtremes<'w>);
 
 impl Ord for ByLowest<'_> {
     fn cmp(&self, other: &Self) -> Ordering {
@@ -55,7 +55,7 @@ impl PartialOrd for ByHighest<'_> {
     }
 }
 
-impl<'w> ReportSummarizer<'w> {
+impl<'w> ExemplarCollector<'w> {
     /// Build a summary with a maximum number of reports.
     pub(crate) fn new(top_n: usize) -> Self {
         Self {
@@ -65,7 +65,7 @@ impl<'w> ReportSummarizer<'w> {
     }
 
     /// Consider adding a new report, if it is low and/or high enough.
-    pub(crate) fn push(&mut self, elem: Report<'w>) {
+    pub(crate) fn push(&mut self, elem: WordExtremes<'w>) {
         // Store if this report is stronger than the weakest report that would
         // be evicted from the heap to accommodate it.
         let by_lowest = ByLowest(elem);
@@ -90,8 +90,8 @@ impl<'w> ReportSummarizer<'w> {
     }
 
     /// Consume this builder and produce the summary.
-    pub(crate) fn build(self) -> ReportSummary<'w> {
-        ReportSummary {
+    pub(crate) fn build(self) -> Exemplars<'w> {
+        Exemplars {
             lowest: self
                 .lowest
                 .into_sorted_vec()

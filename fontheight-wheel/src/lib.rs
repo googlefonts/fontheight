@@ -1,4 +1,4 @@
-use std::{fs, path::PathBuf};
+use std::{fmt::Write, fs, path::PathBuf};
 
 use anyhow::Context;
 use fontheight_core::{Exemplars, Reporter, SimpleLocation, WordExtremes};
@@ -13,11 +13,50 @@ struct Report {
     exemplars: OwnedExemplars,
 }
 
+#[pymethods]
+impl Report {
+    fn __repr__(&self) -> String {
+        let Report {
+            location,
+            word_list_name,
+            exemplars,
+        } = &self;
+        format!(
+            "Report(location={location:?}, \
+             word_list_name=\"{word_list_name}\", exemplars={})",
+            exemplars.__repr__()
+        )
+    }
+}
+
 #[pyclass(name = "Exemplars", frozen, get_all)]
 #[derive(Debug, Clone)]
 struct OwnedExemplars {
     lowest: Vec<OwnedWordExtremes>,
     highest: Vec<OwnedWordExtremes>,
+}
+
+#[pymethods]
+impl OwnedExemplars {
+    fn __repr__(&self) -> String {
+        let mut buf = String::from("Exemplars(lowest=[");
+
+        self.lowest.iter().for_each(|low| {
+            write!(&mut buf, "{}, ", low.__repr__()).unwrap();
+        });
+        buf.pop();
+        buf.pop();
+
+        buf.push_str("], highest=[");
+        self.highest.iter().for_each(|high| {
+            write!(&mut buf, "{}, ", high.__repr__()).unwrap();
+        });
+        buf.pop();
+        buf.pop();
+        buf.push_str("])");
+
+        buf
+    }
 }
 
 impl From<Exemplars<'_>> for OwnedExemplars {
@@ -36,6 +75,20 @@ struct OwnedWordExtremes {
     word: String,
     lowest: f64,
     highest: f64,
+}
+
+#[pymethods]
+impl OwnedWordExtremes {
+    fn __repr__(&self) -> String {
+        let OwnedWordExtremes {
+            word,
+            lowest,
+            highest,
+        } = &self;
+        format!(
+            "WordExtremes(word=\"{word}\", lowest={lowest}, highest={highest})"
+        )
+    }
 }
 
 impl From<WordExtremes<'_>> for OwnedWordExtremes {

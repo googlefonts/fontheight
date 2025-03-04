@@ -1,4 +1,4 @@
-use std::{cmp::Ordering, collections::HashMap};
+use std::collections::HashMap;
 
 use kurbo::Shape;
 use ordered_float::OrderedFloat;
@@ -8,12 +8,14 @@ use skrifa::{
     outline::{DrawError, DrawSettings},
     MetadataProvider,
 };
+use summary::{ReportSummarizer, ReportSummary};
 use thiserror::Error;
 
 use crate::{locations::interesting_locations, pens::BezierPen};
 
 mod locations;
 mod pens;
+mod summary;
 mod word_lists;
 
 pub use locations::Location;
@@ -67,10 +69,11 @@ pub struct ReportIterator<'a> {
 
 impl<'a> ReportIterator<'a> {
     pub fn collect_n_extremes(self, n: usize) -> ReportSummary<'a> {
-        self.fold(ReportSummary::new(n), |mut acc, report| {
+        self.fold(ReportSummarizer::new(n), |mut acc, report| {
             acc.push(report);
             acc
         })
+        .build()
     }
 }
 
@@ -117,57 +120,6 @@ impl<'a> Iterator for ReportIterator<'a> {
 pub struct Report<'w> {
     pub word: &'w str,
     pub extremes: VerticalExtremes,
-}
-
-#[derive(Debug, Clone)]
-pub struct ReportSummary<'w> {
-    lowest: Vec<Report<'w>>,
-    highest: Vec<Report<'w>>,
-    size: usize,
-}
-
-impl<'w> ReportSummary<'w> {
-    fn new(top_n: usize) -> Self {
-        ReportSummary {
-            lowest: Vec::with_capacity(top_n),
-            highest: Vec::with_capacity(top_n),
-            size: top_n,
-        }
-    }
-
-    fn push(&mut self, elem: Report<'w>) {
-        let lower = |a: &Report, b: &Report| a.extremes.lower_than(&b.extremes);
-        let higher =
-            |a: &Report, b: &Report| a.extremes.higher_than(&b.extremes);
-
-        if self.lowest.len() < self.size {
-            self.lowest.push(elem);
-            self.lowest.sort_unstable_by(lower);
-        } else {
-            let highest_low = self.lowest.last_mut().unwrap();
-            match lower(highest_low, &elem) {
-                Ordering::Greater | Ordering::Equal => {},
-                Ordering::Less => {
-                    *highest_low = elem;
-                    self.lowest.sort_unstable_by(lower);
-                },
-            }
-        }
-
-        if self.highest.len() < self.size {
-            self.highest.push(elem);
-            self.highest.sort_unstable_by(higher);
-        } else {
-            let lowest_high = self.highest.last_mut().unwrap();
-            match higher(lowest_high, &elem) {
-                Ordering::Greater | Ordering::Equal => {},
-                Ordering::Less => {
-                    *lowest_high = elem;
-                    self.highest.sort_unstable_by(higher);
-                },
-            }
-        }
-    }
 }
 
 #[derive(Debug)]
@@ -227,14 +179,6 @@ impl VerticalExtremes {
     #[inline]
     pub fn highest(&self) -> f64 {
         *self.highest
-    }
-
-    pub fn lower_than(&self, other: &Self) -> Ordering {
-        self.lowest.cmp(&other.lowest).reverse()
-    }
-
-    pub fn higher_than(&self, other: &Self) -> Ordering {
-        self.highest.cmp(&other.highest)
     }
 }
 

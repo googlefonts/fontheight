@@ -1,4 +1,4 @@
-use std::{collections::HashMap, ops::Not};
+use std::collections::HashMap;
 
 use exemplars::ExemplarCollector;
 pub use exemplars::Exemplars;
@@ -60,6 +60,7 @@ impl<'a> Reporter<'a> {
             rusty_face,
             word_iter: word_list.iter(),
             instance_extremes,
+            unicode_buffer: Some(UnicodeBuffer::new()),
         })
     }
 }
@@ -68,6 +69,7 @@ pub struct WordExtremesIterator<'a> {
     rusty_face: rustybuzz::Face<'a>,
     instance_extremes: InstanceExtremes,
     word_iter: WordListIter<'a>,
+    unicode_buffer: Option<UnicodeBuffer>,
 }
 
 impl<'a> WordExtremesIterator<'a> {
@@ -84,9 +86,17 @@ impl<'a> Iterator for WordExtremesIterator<'a> {
     type Item = WordExtremes<'a>;
 
     fn next(&mut self) -> Option<Self::Item> {
+        debug_assert!(
+            self.unicode_buffer.is_some(),
+            "WordExtremesIterator.unicode_buffer wasn't stored back in self \
+             during the previous iteration"
+        );
+
         // Consume words until we get a shaped buffer without .notdefs
         let (word, glyph_buffer) = self.word_iter.find_map(|word| {
-            let mut buffer = UnicodeBuffer::new();
+            // Take buffer; it should always be present
+            let mut buffer = self.unicode_buffer.take().unwrap();
+
             buffer.push_str(word);
             buffer.guess_segment_properties();
             let glyph_buffer = rustybuzz::shape(&self.rusty_face, &[], buffer);
@@ -96,7 +106,15 @@ impl<'a> Iterator for WordExtremesIterator<'a> {
                 .iter()
                 .any(|info| info.glyph_id == 0); // is .notdef
 
-            glyphs_missing.not().then_some((word, glyph_buffer))
+            if !glyphs_missing {
+                // Buffer still held, can't be replaced until after calculating
+                // VerticalExtremes
+                Some((word, glyph_buffer))
+            } else {
+                // Return buffer
+                self.unicode_buffer = Some(glyph_buffer.clear());
+                None
+            }
         })?;
 
         let word_extremes = glyph_buffer
@@ -121,6 +139,10 @@ impl<'a> Iterator for WordExtremesIterator<'a> {
                     lowest: lowest.min(low),
                 }
             });
+
+        // Return buffer
+        self.unicode_buffer = Some(glyph_buffer.clear());
+
         Some(WordExtremes {
             word,
             extremes: word_extremes,

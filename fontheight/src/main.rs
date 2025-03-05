@@ -42,11 +42,11 @@ fn _main() -> anyhow::Result<()> {
     let font_bytes =
         fs::read(&args.font_path).context("failed to read font file")?;
 
-    let mut reporter = Reporter::new(&font_bytes)?;
+    let reporter = Reporter::new(&font_bytes)?;
     let locations = reporter.interesting_locations();
     let reports = reporter
         .check_location(&locations[0], &DIFFENATOR_LATIN)?
-        .collect_n_extremes(args.results);
+        .collect_min_max_extremes(args.results);
 
     info!("{reports:#?}");
     Ok(())

@@ -31,7 +31,7 @@ struct Args {
     font_path: PathBuf,
 
     /// The number of words to log
-    #[arg(short, long)]
+    #[arg(short = 'n', long, default_value_t = 5)]
     results: usize,
 }
 

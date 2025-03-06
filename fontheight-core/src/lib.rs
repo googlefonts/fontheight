@@ -21,6 +21,8 @@ mod pens;
 mod word_lists;
 
 pub use locations::Location;
+#[cfg(feature = "rayon")]
+pub use word_lists::rayon::ParWordListIter;
 pub use word_lists::*;
 
 pub struct Reporter<'a> {

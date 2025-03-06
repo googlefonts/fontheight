@@ -1,11 +1,10 @@
-use std::{fs, path::PathBuf, process::ExitCode};
+use std::{fs, iter, path::PathBuf, process::ExitCode};
 
 use anyhow::Context;
 use clap::Parser;
 use env_logger::Env;
-use fontheight_core::Reporter;
-use log::{error, info, LevelFilter};
-use static_lang_word_lists::DIFFENATOR_LATIN;
+use fontheight_core::{Exemplars, Reporter};
+use log::{debug, error, info, LevelFilter};
 
 fn main() -> ExitCode {
     env_logger::builder()
@@ -44,9 +43,21 @@ fn _main() -> anyhow::Result<()> {
 
     let reporter = Reporter::new(&font_bytes)?;
     let locations = reporter.interesting_locations();
-    let reports = reporter
-        .check_location(&locations[0], &DIFFENATOR_LATIN)?
-        .collect_min_max_extremes(args.results);
+    let reports = locations
+        .iter()
+        .flat_map(|location| {
+            static_lang_word_lists::LOOKUP_TABLE
+                .values()
+                .zip(iter::repeat(location))
+        })
+        .map(|(word_list, location)| -> anyhow::Result<Exemplars> {
+            debug!("checking {} at {location:?}", word_list.name());
+            let exemplars = reporter
+                .check_location(location, word_list)?
+                .collect_min_max_extremes(args.results);
+            Ok(exemplars)
+        })
+        .collect::<Vec<_>>();
 
     info!("{reports:#?}");
     Ok(())

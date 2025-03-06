@@ -1,4 +1,7 @@
-use std::collections::{BTreeSet, HashMap};
+use std::{
+    collections::{BTreeSet, HashMap},
+    fmt,
+};
 
 use itertools::Itertools;
 use ordered_float::OrderedFloat;
@@ -6,7 +9,7 @@ use skrifa::{raw::collections::int_set::Domain, MetadataProvider};
 
 pub type SimpleLocation = HashMap<String, f32>;
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct Location {
     user_coords: HashMap<skrifa::Tag, f32>,
 }
@@ -36,6 +39,18 @@ impl Location {
                 value: *coord,
             })
             .collect()
+    }
+}
+
+impl fmt::Debug for Location {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_map()
+            .entries(
+                self.user_coords
+                    .iter()
+                    .map(|(tag, &val)| (tag.to_string(), val)),
+            )
+            .finish()
     }
 }
 

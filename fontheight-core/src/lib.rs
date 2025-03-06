@@ -84,6 +84,86 @@ impl<'a> WordExtremesIterator<'a> {
         })
         .build()
     }
+
+    #[cfg(feature = "rayon")]
+    pub fn par_collect_min_max_extremes(self, n: usize) -> Exemplars<'a> {
+        // Placeholder value, will be set by a scoped task
+        let mut collector = ExemplarCollector::new(0);
+
+        ::rayon::scope(|s| {
+            // Channel will never exceed the word list size, however there's no
+            // point in pre-allocating it when we aren't guaranteed to need that
+            // much capacity as we are consuming & producing values
+            // simultaneously, plus not all words are sent (one shaped with
+            // .notdefs are dropped)
+            let (sender, receiver) = crossbeam_channel::unbounded();
+
+            let collector_ref = &mut collector;
+            s.spawn(move |_| {
+                *collector_ref = receiver.iter().fold(
+                    ExemplarCollector::new(n),
+                    |mut acc, report| {
+                        acc.push(report);
+                        acc
+                    },
+                )
+            });
+
+            let rusty_face = &self.rusty_face;
+            let instance_extremes = &self.instance_extremes;
+            self.word_iter.for_each(|word| {
+                let sender = sender.clone();
+                s.spawn(move |_| {
+                    let mut buffer = UnicodeBuffer::new();
+
+                    buffer.push_str(word);
+                    buffer.guess_segment_properties();
+                    let glyph_buffer =
+                        rustybuzz::shape(rusty_face, &[], buffer);
+
+                    let glyphs_missing = glyph_buffer
+                        .glyph_infos()
+                        .iter()
+                        .any(|info| info.glyph_id == 0); // is .notdef
+
+                    if glyphs_missing {
+                        return;
+                    }
+
+                    let extremes = glyph_buffer
+                        .glyph_infos()
+                        .iter()
+                        .zip(glyph_buffer.glyph_positions())
+                        .map(|(info, pos)| {
+                            // TODO: Remove empty glyphs?
+                            let y_offset = pos.y_offset;
+                            let heights =
+                                instance_extremes.get(info.glyph_id).unwrap();
+
+                            (
+                                heights.lowest + y_offset as f64,
+                                heights.highest + y_offset as f64,
+                            )
+                        })
+                        .fold(
+                            VerticalExtremes::default(),
+                            |extremes, (low, high)| {
+                                let VerticalExtremes { highest, lowest } =
+                                    extremes;
+                                VerticalExtremes {
+                                    highest: highest.max(high),
+                                    lowest: lowest.min(low),
+                                }
+                            },
+                        );
+
+                    sender.send(WordExtremes { word, extremes }).unwrap();
+                });
+            });
+        });
+
+        collector.build()
+    }
 }
 
 impl<'a> Iterator for WordExtremesIterator<'a> {

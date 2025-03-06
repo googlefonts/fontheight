@@ -9,6 +9,7 @@ members = [
 
 [workspace.dependencies]
 log = "0.4.25"
+rayon = "1.10"
 
 [profile.release]
 lto = true

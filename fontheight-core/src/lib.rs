@@ -1,3 +1,5 @@
+#![cfg_attr(docsrs, feature(doc_auto_cfg))]
+
 use std::collections::HashMap;
 
 use exemplars::ExemplarCollector;

@@ -53,7 +53,6 @@ fn _main() -> anyhow::Result<()> {
             let reporter = Reporter::new(&font_bytes)?;
             let locations = reporter.interesting_locations();
             // TODO: an equivalent of Report from fontheight-wheel
-            // TODO: prune empty exemplars (unsupported scripts)
             let reports = locations
                 .iter()
                 .flat_map(|location| {
@@ -71,6 +70,11 @@ fn _main() -> anyhow::Result<()> {
                         word_list.name()
                     );
                     Ok(exemplars)
+                })
+                .filter(|exemplars_res| {
+                    exemplars_res
+                        .as_ref()
+                        .map_or(true, |exemplars| !exemplars.is_empty())
                 })
                 .collect::<Result<Vec<_>, _>>()?;
 

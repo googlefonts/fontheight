@@ -1,22 +1,24 @@
 use std::{fmt::Write, fs, path::PathBuf};
 
 use anyhow::Context;
-use fontheight_core::{Exemplars, Reporter, SimpleLocation, WordExtremes};
+use fontheight_core::{
+    Exemplars, Report, Reporter, SimpleLocation, WordExtremes,
+};
 use pyo3::{Bound, PyResult, prelude::*, pymodule};
 use static_lang_word_lists::DIFFENATOR_LATIN;
 
-#[pyclass(frozen, get_all)]
+#[pyclass(name = "Report", frozen, get_all)]
 #[derive(Debug, Clone)]
-struct Report {
+struct OwnedReport {
     location: SimpleLocation,
     word_list_name: String,
     exemplars: OwnedExemplars,
 }
 
 #[pymethods]
-impl Report {
+impl OwnedReport {
     fn __repr__(&self) -> String {
-        let Report {
+        let OwnedReport {
             location,
             word_list_name,
             exemplars,
@@ -26,6 +28,21 @@ impl Report {
              word_list_name=\"{word_list_name}\", exemplars={})",
             exemplars.__repr__()
         )
+    }
+}
+
+impl From<Report<'_>> for OwnedReport {
+    fn from(report: Report) -> Self {
+        let Report {
+            location,
+            word_list,
+            exemplars,
+        } = report;
+        OwnedReport {
+            location: location.to_simple(),
+            word_list_name: word_list.name().to_owned(),
+            exemplars: exemplars.into(),
+        }
     }
 }
 
@@ -112,7 +129,7 @@ impl From<&WordExtremes<'_>> for OwnedWordExtremes {
 fn get_min_max_extremes_from(
     path: PathBuf,
     n: usize,
-) -> anyhow::Result<Vec<Report>> {
+) -> anyhow::Result<Vec<OwnedReport>> {
     let bytes = fs::read(&path)
         .with_context(|| format!("failed to read {}", path.display()))?;
     get_min_max_extremes(&bytes, n)
@@ -122,26 +139,26 @@ fn get_min_max_extremes_from(
 fn get_min_max_extremes(
     font_bytes: &[u8],
     n: usize,
-) -> anyhow::Result<Vec<Report>> {
+) -> anyhow::Result<Vec<OwnedReport>> {
     let reporter = Reporter::new(font_bytes)?;
     let locations = reporter.interesting_locations();
     locations
         .iter()
-        .map(|location| -> anyhow::Result<Report> {
+        .map(|location| -> anyhow::Result<OwnedReport> {
             let report_iter =
                 reporter.check_location(location, &DIFFENATOR_LATIN)?;
-            Ok(Report {
-                location: location.to_simple(),
-                word_list_name: DIFFENATOR_LATIN.name().to_owned(),
-                exemplars: report_iter.collect_min_max_extremes(n).into(),
-            })
+            let report = report_iter
+                .collect_min_max_extremes(n)
+                .to_report(location, &DIFFENATOR_LATIN)
+                .into();
+            Ok(report)
         })
         .collect::<Result<Vec<_>, _>>()
 }
 
 #[pymodule]
 fn fontheight(module: &Bound<'_, PyModule>) -> PyResult<()> {
-    module.add_class::<Report>()?;
+    module.add_class::<OwnedReport>()?;
     module.add_class::<OwnedExemplars>()?;
     module.add_class::<OwnedWordExtremes>()?;
     module.add_function(wrap_pyfunction!(get_min_max_extremes, module)?)?;

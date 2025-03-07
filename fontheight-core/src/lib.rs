@@ -300,6 +300,28 @@ impl VerticalExtremes {
     }
 }
 
+#[derive(Debug, Clone)]
+pub struct Report<'a> {
+    pub location: &'a Location,
+    pub word_list: &'a WordList,
+    pub exemplars: Exemplars<'a>,
+}
+
+impl<'a> Report<'a> {
+    #[inline]
+    pub const fn new(
+        location: &'a Location,
+        word_list: &'a WordList,
+        exemplars: Exemplars<'a>,
+    ) -> Self {
+        Report {
+            location,
+            word_list,
+            exemplars,
+        }
+    }
+}
+
 #[derive(Debug, Error)]
 pub enum FontHeightError {
     #[error("rustybuzz could not parse the font")]

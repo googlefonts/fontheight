@@ -1,6 +1,6 @@
 use std::{fs, iter, path::PathBuf, process::ExitCode, time::Instant};
 
-use anyhow::Context;
+use anyhow::{bail, Context};
 use clap::Parser;
 use env_logger::Env;
 use fontheight_core::{Exemplars, Reporter};
@@ -28,8 +28,8 @@ fn main() -> ExitCode {
 #[derive(Debug, Parser)]
 #[command(version, about)]
 struct Args {
-    /// The TTF to analyze
-    font_path: PathBuf,
+    /// The TTF(s) to analyze
+    font_path: Vec<PathBuf>,
 
     /// The number of words to log
     #[arg(short = 'n', long, default_value_t = 5)]
@@ -39,32 +39,43 @@ struct Args {
 fn _main() -> anyhow::Result<()> {
     let args = Args::parse();
 
-    let font_bytes =
-        fs::read(&args.font_path).context("failed to read font file")?;
+    if args.font_path.is_empty() {
+        bail!("must provide one or more FONT_PATHs");
+    }
 
-    let start = Instant::now();
-    let reporter = Reporter::new(&font_bytes)?;
-    let locations = reporter.interesting_locations();
-    // TODO: an equivalent of Report from fontheight-wheel
-    // TODO: prune empty exemplars (unsupported scripts)
-    let reports = locations
+    args.font_path
         .iter()
-        .flat_map(|location| {
-            static_lang_word_lists::LOOKUP_TABLE
-                .values()
-                .zip(iter::repeat(location))
-        })
-        .par_bridge()
-        .map(|(word_list, location)| -> anyhow::Result<Exemplars> {
-            let exemplars = reporter
-                .check_location(location, word_list)?
-                .par_collect_min_max_extremes(args.results);
-            debug!("finished checking {} at {location:?}", word_list.name());
-            Ok(exemplars)
-        })
-        .collect::<Result<Vec<_>, _>>()?;
+        .try_for_each(|font_path| -> anyhow::Result<()> {
+            let font_bytes =
+                fs::read(font_path).context("failed to read font file")?;
 
-    info!("{reports:#?}");
-    info!("Took {:?}", start.elapsed());
-    Ok(())
+            let start = Instant::now();
+            let reporter = Reporter::new(&font_bytes)?;
+            let locations = reporter.interesting_locations();
+            // TODO: an equivalent of Report from fontheight-wheel
+            // TODO: prune empty exemplars (unsupported scripts)
+            let reports = locations
+                .iter()
+                .flat_map(|location| {
+                    static_lang_word_lists::LOOKUP_TABLE
+                        .values()
+                        .zip(iter::repeat(location))
+                })
+                .par_bridge()
+                .map(|(word_list, location)| -> anyhow::Result<Exemplars> {
+                    let exemplars = reporter
+                        .check_location(location, word_list)?
+                        .par_collect_min_max_extremes(args.results);
+                    debug!(
+                        "finished checking {} at {location:?}",
+                        word_list.name()
+                    );
+                    Ok(exemplars)
+                })
+                .collect::<Result<Vec<_>, _>>()?;
+
+            info!("{reports:#?}");
+            info!("Took {:?}", start.elapsed());
+            Ok(())
+        })
 }

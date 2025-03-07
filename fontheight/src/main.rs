@@ -1,10 +1,11 @@
-use std::{fs, iter, path::PathBuf, process::ExitCode};
+use std::{fs, iter, path::PathBuf, process::ExitCode, time::Instant};
 
 use anyhow::Context;
 use clap::Parser;
 use env_logger::Env;
 use fontheight_core::{Exemplars, Reporter};
 use log::{debug, error, info, LevelFilter};
+use rayon::prelude::*;
 
 fn main() -> ExitCode {
     env_logger::builder()
@@ -41,8 +42,11 @@ fn _main() -> anyhow::Result<()> {
     let font_bytes =
         fs::read(&args.font_path).context("failed to read font file")?;
 
+    let start = Instant::now();
     let reporter = Reporter::new(&font_bytes)?;
     let locations = reporter.interesting_locations();
+    // TODO: an equivalent of Report from fontheight-wheel
+    // TODO: prune empty exemplars (unsupported scripts)
     let reports = locations
         .iter()
         .flat_map(|location| {
@@ -50,15 +54,17 @@ fn _main() -> anyhow::Result<()> {
                 .values()
                 .zip(iter::repeat(location))
         })
+        .par_bridge()
         .map(|(word_list, location)| -> anyhow::Result<Exemplars> {
-            debug!("checking {} at {location:?}", word_list.name());
             let exemplars = reporter
                 .check_location(location, word_list)?
-                .collect_min_max_extremes(args.results);
+                .par_collect_min_max_extremes(args.results);
+            debug!("finished checking {} at {location:?}", word_list.name());
             Ok(exemplars)
         })
-        .collect::<Vec<_>>();
+        .collect::<Result<Vec<_>, _>>()?;
 
     info!("{reports:#?}");
+    info!("Took {:?}", start.elapsed());
     Ok(())
 }

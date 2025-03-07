@@ -9,11 +9,26 @@ license = "Apache-2.0"
 readme = "../README.md"
 repository = "https://github.com/googlefonts/fontheight"
 
+[features]
+default = [
+    "rayon",
+]
+rayon = [
+    "dep:crossbeam-channel",
+    "dep:rayon",
+]
+
 [dependencies]
+crossbeam-channel = { version = "0.5.14", optional = true }
 itertools = "0.14.0"
 kurbo = "0.11.1"
 log = { workspace = true }
 ordered-float = "4.6"
+rayon = { workspace = true, optional = true }
 rustybuzz = "0.20.1"
 skrifa = "0.26.5"
 thiserror = "2"
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]

@@ -91,8 +91,96 @@ impl<'a> Iterator for WordListIter<'a> {
     }
 }
 
+impl ExactSizeIterator for WordListIter<'_> {
+    fn len(&self) -> usize {
+        self.0.len()
+    }
+}
+
+impl DoubleEndedIterator for WordListIter<'_> {
+    fn next_back(&mut self) -> Option<Self::Item> {
+        self.0.next_back().map(String::as_ref)
+    }
+}
+
 #[derive(Debug, Error)]
 pub enum WordListError {
     #[error("failed to read from {}: {}", .0.display(), .1)]
     FailedToRead(PathBuf, io::Error),
+}
+
+#[cfg(feature = "rayon")]
+pub(crate) mod rayon {
+    use rayon::iter::{
+        plumbing::{
+            bridge, Consumer, Producer, ProducerCallback, UnindexedConsumer,
+        },
+        IndexedParallelIterator, ParallelIterator,
+    };
+
+    use super::{WordList, WordListIter};
+
+    #[derive(Debug)]
+    pub struct ParWordListIter<'a>(&'a [String]);
+
+    impl<'a> ParallelIterator for ParWordListIter<'a> {
+        type Item = &'a str;
+
+        fn drive_unindexed<C>(self, consumer: C) -> C::Result
+        where
+            C: UnindexedConsumer<Self::Item>,
+        {
+            bridge(self, consumer)
+        }
+
+        fn opt_len(&self) -> Option<usize> {
+            Some(self.0.len())
+        }
+    }
+
+    impl<'a> Producer for ParWordListIter<'a> {
+        type IntoIter = WordListIter<'a>;
+        type Item = &'a str;
+
+        fn into_iter(self) -> Self::IntoIter {
+            WordListIter(self.0.iter())
+        }
+
+        fn split_at(self, index: usize) -> (Self, Self) {
+            let (left, right) = self.0.split_at(index);
+            (ParWordListIter(left), ParWordListIter(right))
+        }
+    }
+
+    impl IndexedParallelIterator for ParWordListIter<'_> {
+        fn len(&self) -> usize {
+            self.0.len()
+        }
+
+        fn drive<C: Consumer<Self::Item>>(self, consumer: C) -> C::Result {
+            bridge(self, consumer)
+        }
+
+        fn with_producer<CB>(self, callback: CB) -> CB::Output
+        where
+            CB: ProducerCallback<Self::Item>,
+        {
+            callback.callback(self)
+        }
+    }
+
+    impl<'a> rayon::iter::IntoParallelIterator for &'a WordList {
+        type Item = &'a str;
+        type Iter = ParWordListIter<'a>;
+
+        fn into_par_iter(self) -> Self::Iter {
+            ParWordListIter(&self.words)
+        }
+    }
+
+    impl WordList {
+        pub fn par_iter(&self) -> ParWordListIter {
+            ParWordListIter(&self.words)
+        }
+    }
 }

@@ -1,6 +1,6 @@
 use std::{cmp::Ordering, collections::BinaryHeap};
 
-use crate::WordExtremes;
+use crate::{Location, Report, WordExtremes, WordList};
 
 /// A collection of the lowest lows and highest highs.
 #[derive(Debug, Clone)]
@@ -9,7 +9,7 @@ pub struct Exemplars<'w> {
     highest: Vec<WordExtremes<'w>>,
 }
 
-impl Exemplars<'_> {
+impl<'a> Exemplars<'a> {
     #[inline]
     pub fn lowest(&self) -> &[WordExtremes] {
         self.lowest.as_slice()
@@ -34,6 +34,15 @@ impl Exemplars<'_> {
              of members",
         );
         self.lowest.len()
+    }
+
+    #[inline]
+    pub fn to_report(
+        self,
+        location: &'a Location,
+        word_list: &'a WordList,
+    ) -> Report<'a> {
+        Report::new(location, word_list, self)
     }
 }
 

@@ -94,7 +94,7 @@ impl<'a> WordExtremesIterator<'a> {
             // Channel will never exceed the word list size, however there's no
             // point in pre-allocating it when we aren't guaranteed to need that
             // much capacity as we are consuming & producing values
-            // simultaneously, plus not all words are sent (one shaped with
+            // simultaneously, plus not all words are sent (ones shaped with
             // .notdefs are dropped)
             let (sender, receiver) = crossbeam_channel::unbounded();
 

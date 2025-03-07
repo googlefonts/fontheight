@@ -2,11 +2,39 @@ use std::{cmp::Ordering, collections::BinaryHeap};
 
 use crate::WordExtremes;
 
-/// A summary of the lowest lows and highest highs.
+/// A collection of the lowest lows and highest highs.
 #[derive(Debug, Clone)]
 pub struct Exemplars<'w> {
-    pub lowest: Vec<WordExtremes<'w>>,
-    pub highest: Vec<WordExtremes<'w>>,
+    lowest: Vec<WordExtremes<'w>>,
+    highest: Vec<WordExtremes<'w>>,
+}
+
+impl Exemplars<'_> {
+    #[inline]
+    pub fn lowest(&self) -> &[WordExtremes] {
+        self.lowest.as_slice()
+    }
+
+    #[inline]
+    pub fn highest(&self) -> &[WordExtremes] {
+        self.highest.as_slice()
+    }
+
+    #[inline]
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+
+    #[inline]
+    pub fn len(&self) -> usize {
+        debug_assert_eq!(
+            self.lowest.len(),
+            self.highest.len(),
+            "Exemplars.lowest & Exemplars.highest should have the same number \
+             of members",
+        );
+        self.lowest.len()
+    }
 }
 
 /// A builder to construct a limited size summary from a stream of words. We do

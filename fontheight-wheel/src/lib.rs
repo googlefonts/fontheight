@@ -60,11 +60,18 @@ impl OwnedExemplars {
 }
 
 impl From<Exemplars<'_>> for OwnedExemplars {
-    fn from(summary: Exemplars<'_>) -> Self {
-        let Exemplars { lowest, highest } = summary;
+    fn from(exemplars: Exemplars<'_>) -> Self {
         OwnedExemplars {
-            lowest: lowest.into_iter().map(OwnedWordExtremes::from).collect(),
-            highest: highest.into_iter().map(OwnedWordExtremes::from).collect(),
+            lowest: exemplars
+                .lowest()
+                .iter()
+                .map(OwnedWordExtremes::from)
+                .collect(),
+            highest: exemplars
+                .highest()
+                .iter()
+                .map(OwnedWordExtremes::from)
+                .collect(),
         }
     }
 }
@@ -91,8 +98,8 @@ impl OwnedWordExtremes {
     }
 }
 
-impl From<WordExtremes<'_>> for OwnedWordExtremes {
-    fn from(report: WordExtremes<'_>) -> Self {
+impl From<&WordExtremes<'_>> for OwnedWordExtremes {
+    fn from(report: &WordExtremes<'_>) -> Self {
         OwnedWordExtremes {
             word: report.word.to_owned(),
             lowest: report.extremes.lowest(),

@@ -148,7 +148,7 @@ pub fn get_min_max_extremes(
             let report_iter =
                 reporter.check_location(location, &DIFFENATOR_LATIN)?;
             let report = report_iter
-                .collect_min_max_extremes(n)
+                .par_collect_min_max_extremes(25, n)
                 .to_report(location, &DIFFENATOR_LATIN)
                 .into();
             Ok(report)

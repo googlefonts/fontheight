@@ -34,6 +34,10 @@ struct Args {
     /// The number of words to log
     #[arg(short = 'n', long, default_value_t = 5)]
     results: usize,
+
+    /// The number of words from each list to test
+    #[arg(long = "words", default_value_t = 25)]
+    words_per_list: usize,
 }
 
 fn _main() -> anyhow::Result<()> {
@@ -64,7 +68,10 @@ fn _main() -> anyhow::Result<()> {
                 .map(|(word_list, location)| -> anyhow::Result<Exemplars> {
                     let exemplars = reporter
                         .check_location(location, word_list)?
-                        .par_collect_min_max_extremes(args.results);
+                        .par_collect_min_max_extremes(
+                            args.words_per_list,
+                            args.results,
+                        );
                     debug!(
                         "finished checking {} at {location:?}",
                         word_list.name()

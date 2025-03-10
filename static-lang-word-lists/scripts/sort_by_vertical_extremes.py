@@ -66,7 +66,7 @@ def main():
         font_paths = sorted(FONT_DIR.glob(glob))
         assert len(font_paths) > 0, f'no fonts matched "{glob}"'
         for font in font_paths:
-            results = fontheight.get_all_script_extremes(font, current_word_list_name)
+            results = fontheight._get_all_word_list_extremes(font, current_word_list_name)
 
             # Highest pass
             for index, word_extreme in enumerate(

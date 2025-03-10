@@ -22,6 +22,7 @@ mod locations;
 mod pens;
 mod word_lists;
 
+pub use exemplars::CollectToExemplars;
 pub use locations::Location;
 #[cfg(feature = "rayon")]
 pub use word_lists::rayon::ParWordListIter;
@@ -77,16 +78,12 @@ pub struct WordExtremesIterator<'a> {
 }
 
 impl<'a> WordExtremesIterator<'a> {
-    pub fn collect_min_max_extremes(self, n: usize) -> Exemplars<'a> {
-        self.fold(ExemplarCollector::new(n), |mut acc, report| {
-            acc.push(report);
-            acc
-        })
-        .build()
-    }
-
     #[cfg(feature = "rayon")]
-    pub fn par_collect_min_max_extremes(self, n: usize) -> Exemplars<'a> {
+    pub fn par_collect_min_max_extremes(
+        self,
+        k_words: usize,
+        n_exemplars: usize,
+    ) -> Exemplars<'a> {
         // Placeholder value, will be set by a scoped task
         let mut collector = ExemplarCollector::new(0);
 
@@ -101,7 +98,7 @@ impl<'a> WordExtremesIterator<'a> {
             let collector_ref = &mut collector;
             s.spawn(move |_| {
                 *collector_ref = receiver.iter().fold(
-                    ExemplarCollector::new(n),
+                    ExemplarCollector::new(n_exemplars),
                     |mut acc, report| {
                         acc.push(report);
                         acc
@@ -111,7 +108,7 @@ impl<'a> WordExtremesIterator<'a> {
 
             let rusty_face = &self.rusty_face;
             let instance_extremes = &self.instance_extremes;
-            self.word_iter.for_each(|word| {
+            self.word_iter.take(k_words).for_each(|word| {
                 let sender = sender.clone();
                 s.spawn(move |_| {
                     let mut buffer = UnicodeBuffer::new();

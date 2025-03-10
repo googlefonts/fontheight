@@ -156,8 +156,9 @@ pub fn get_min_max_extremes(
         .collect::<Result<Vec<_>, _>>()
 }
 
-#[pyfunction]
-pub fn get_all_script_extremes(
+// Internal API for sort_by_vertical_extremes.py
+#[pyfunction(name = "_get_all_word_list_extremes")]
+pub fn get_all_word_list_extremes(
     path: PathBuf,
     word_list: &str,
 ) -> anyhow::Result<Vec<OwnedWordExtremes>> {
@@ -188,6 +189,7 @@ fn fontheight(module: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_function(wrap_pyfunction!(get_min_max_extremes, module)?)?;
     module
         .add_function(wrap_pyfunction!(get_min_max_extremes_from, module)?)?;
-    module.add_function(wrap_pyfunction!(get_all_script_extremes, module)?)?;
+    module
+        .add_function(wrap_pyfunction!(get_all_word_list_extremes, module)?)?;
     Ok(())
 }

@@ -1,11 +1,10 @@
-use std::{fmt::Write, fs, path::PathBuf};
+use std::{fmt::Write, fs, iter, path::PathBuf};
 
 use anyhow::{Context, anyhow};
 use fontheight_core::{
     Exemplars, Report, Reporter, SimpleLocation, WordExtremes,
 };
 use pyo3::{Bound, PyResult, prelude::*, pymodule};
-use static_lang_word_lists::{DIFFENATOR_LATIN, LOOKUP_TABLE};
 
 #[pyclass(name = "Report", frozen, get_all)]
 #[derive(Debug, Clone)]
@@ -128,28 +127,34 @@ impl From<&WordExtremes<'_>> for OwnedWordExtremes {
 #[pyfunction]
 pub fn get_min_max_extremes_from(
     path: PathBuf,
-    n: usize,
+    k_words: usize,
+    n_exemplars: usize,
 ) -> anyhow::Result<Vec<OwnedReport>> {
     let bytes = fs::read(&path)
         .with_context(|| format!("failed to read {}", path.display()))?;
-    get_min_max_extremes(&bytes, n)
+    get_min_max_extremes(&bytes, k_words, n_exemplars)
 }
 
 #[pyfunction]
 pub fn get_min_max_extremes(
     font_bytes: &[u8],
-    n: usize,
+    k_words: usize,
+    n_exemplars: usize,
 ) -> anyhow::Result<Vec<OwnedReport>> {
     let reporter = Reporter::new(font_bytes)?;
     let locations = reporter.interesting_locations();
     locations
         .iter()
-        .map(|location| -> anyhow::Result<OwnedReport> {
-            let report_iter =
-                reporter.check_location(location, &DIFFENATOR_LATIN)?;
+        .flat_map(|location| {
+            static_lang_word_lists::LOOKUP_TABLE
+                .values()
+                .zip(iter::repeat(location))
+        })
+        .map(|(word_list, location)| -> anyhow::Result<OwnedReport> {
+            let report_iter = reporter.check_location(location, word_list)?;
             let report = report_iter
-                .par_collect_min_max_extremes(25, n)
-                .to_report(location, &DIFFENATOR_LATIN)
+                .par_collect_min_max_extremes(k_words, n_exemplars)
+                .to_report(location, word_list)
                 .into();
             Ok(report)
         })
@@ -166,7 +171,7 @@ pub fn get_all_word_list_extremes(
         .with_context(|| format!("failed to read {}", path.display()))?;
     let reporter = Reporter::new(&font_bytes)?;
     let locations = reporter.interesting_locations();
-    let word_list = LOOKUP_TABLE
+    let word_list = static_lang_word_lists::LOOKUP_TABLE
         .get(word_list)
         .ok_or(anyhow!("no word list named \"{word_list}\""))?;
     locations.iter().try_fold(

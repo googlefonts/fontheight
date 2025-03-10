@@ -150,3 +150,29 @@ impl<'w> ExemplarCollector<'w> {
         }
     }
 }
+
+pub trait CollectToExemplars<'a>: private::Sealed {
+    fn collect_min_max_extremes(self, n: usize) -> Exemplars<'a>;
+}
+
+impl<'a, I> CollectToExemplars<'a> for I
+where
+    I: IntoIterator<Item = WordExtremes<'a>>,
+{
+    fn collect_min_max_extremes(self, n: usize) -> Exemplars<'a> {
+        self.into_iter()
+            .fold(ExemplarCollector::new(n), |mut acc, report| {
+                acc.push(report);
+                acc
+            })
+            .build()
+    }
+}
+
+mod private {
+    use super::*;
+
+    pub trait Sealed {}
+
+    impl<'a, I> Sealed for I where I: IntoIterator<Item = WordExtremes<'a>> {}
+}

@@ -110,7 +110,8 @@ def main():
         )
 
     all_scripts = set(
-        word_list_path.stem for word_list_path in WORD_LIST_DIR.glob("*.txt")
+        word_list_path.stem
+        for word_list_path in (WORD_LIST_DIR / "diffenator").glob("*.txt")
     )
     unchanged_scripts = sorted(all_scripts - scripts_sorted)
     if len(unchanged_scripts) > 0:

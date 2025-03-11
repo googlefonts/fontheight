@@ -132,6 +132,16 @@ impl<'w> ExemplarCollector<'w> {
         }
     }
 
+    pub(crate) fn merge_with(&mut self, other: Self) {
+        let ExemplarCollector { lowest, highest } = other;
+        highest
+            .into_iter()
+            .for_each(|ByHighest(extremes)| self.push(extremes));
+        lowest
+            .into_iter()
+            .for_each(|ByLowest(extremes)| self.push(extremes));
+    }
+
     /// Consume this builder and produce the summary.
     pub(crate) fn build(self) -> Exemplars<'w> {
         Exemplars {

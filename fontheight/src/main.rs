@@ -86,8 +86,9 @@ fn _main() -> anyhow::Result<()> {
                 })
                 .collect::<Result<Vec<_>, _>>()?;
 
+            let took = start.elapsed();
             println!("{reports:#?}");
-            info!("Took {:?}", start.elapsed());
+            info!("Took {took:?}");
             Ok(())
         })
 }

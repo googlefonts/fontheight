@@ -67,12 +67,12 @@ fn _main() -> anyhow::Result<()> {
                 })
                 .par_bridge()
                 .map(|(word_list, location)| -> anyhow::Result<Exemplars> {
-                    let exemplars = reporter
-                        .check_location(location, word_list)?
-                        .par_collect_min_max_extremes(
-                            args.words_per_list,
-                            args.results,
-                        );
+                    let exemplars = reporter.par_check_location(
+                        location,
+                        word_list,
+                        args.words_per_list,
+                        args.results,
+                    )?;
                     debug!(
                         "finished checking {} at {location:?}",
                         word_list.name()

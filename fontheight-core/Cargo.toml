@@ -13,13 +13,9 @@ repository = "https://github.com/googlefonts/fontheight"
 default = [
     "rayon",
 ]
-rayon = [
-    "dep:crossbeam-channel",
-    "dep:rayon",
-]
+rayon = ["dep:rayon"]
 
 [dependencies]
-crossbeam-channel = { version = "0.5.14", optional = true }
 itertools = "0.14.0"
 kurbo = "0.11.1"
 log = { workspace = true }

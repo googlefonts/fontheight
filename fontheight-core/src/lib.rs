@@ -1,6 +1,6 @@
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
 
-use std::collections::HashMap;
+use std::{collections::HashMap, convert::identity};
 
 use exemplars::ExemplarCollector;
 pub use exemplars::Exemplars;
@@ -68,63 +68,53 @@ impl<'a> Reporter<'a> {
             unicode_buffer: Some(UnicodeBuffer::new()),
         })
     }
-}
 
-pub struct WordExtremesIterator<'a> {
-    rusty_face: rustybuzz::Face<'a>,
-    instance_extremes: InstanceExtremes,
-    word_iter: WordListIter<'a>,
-    unicode_buffer: Option<UnicodeBuffer>,
-}
-
-impl<'a> WordExtremesIterator<'a> {
     #[cfg(feature = "rayon")]
-    pub fn par_collect_min_max_extremes(
-        self,
+    pub fn par_check_location(
+        &'a self,
+        location: &'a Location,
+        word_list: &'a WordList,
         k_words: usize,
         n_exemplars: usize,
-    ) -> Exemplars<'a> {
-        // Placeholder value, will be set by a scoped task
-        let mut collector = ExemplarCollector::new(0);
+    ) -> Result<Exemplars<'a>, SkrifaDrawError> {
+        use ::rayon::prelude::*;
 
-        ::rayon::scope(|s| {
-            // Channel will never exceed the word list size, however there's no
-            // point in pre-allocating it when we aren't guaranteed to need that
-            // much capacity as we are consuming & producing values
-            // simultaneously, plus not all words are sent (ones shaped with
-            // .notdefs are dropped)
-            let (sender, receiver) = crossbeam_channel::unbounded();
+        struct WorkerState {
+            unicode_buffer: Option<UnicodeBuffer>,
+            // shaping_plan: ShapePlan,
+        }
 
-            let collector_ref = &mut collector;
-            s.spawn(move |_| {
-                *collector_ref = receiver.iter().fold(
-                    ExemplarCollector::new(n_exemplars),
-                    |mut acc, report| {
-                        acc.push(report);
-                        acc
-                    },
-                )
-            });
+        let mut rusty_face = self.rusty_face.clone();
+        rusty_face.set_variations(&location.to_rustybuzz());
 
-            let rusty_face = &self.rusty_face;
-            let instance_extremes = &self.instance_extremes;
-            self.word_iter.take(k_words).for_each(|word| {
-                let sender = sender.clone();
-                s.spawn(move |_| {
-                    let mut buffer = UnicodeBuffer::new();
+        let instance_extremes =
+            InstanceExtremes::new(&self.skrifa_font, location)?;
+
+        let collector = word_list
+            .par_iter()
+            .take(k_words)
+            .map_init(
+                || WorkerState {
+                    unicode_buffer: Some(UnicodeBuffer::new()),
+                },
+                |state, word| {
+                    // Take buffer; it should always be present
+                    let mut buffer = state.unicode_buffer.take().unwrap();
 
                     buffer.push_str(word);
                     buffer.guess_segment_properties();
+                    // TODO: this is where you would use the shaping plan
                     let glyph_buffer =
-                        rustybuzz::shape(rusty_face, &[], buffer);
+                        rustybuzz::shape(&rusty_face, &[], buffer);
 
                     let glyphs_missing = glyph_buffer
                         .glyph_infos()
                         .iter()
                         .any(|info| info.glyph_id == 0); // is .notdef
-
                     if glyphs_missing {
-                        return;
+                        // Return buffer, abort mission
+                        state.unicode_buffer = Some(glyph_buffer.clear());
+                        return None;
                     }
 
                     let extremes = glyph_buffer
@@ -154,13 +144,36 @@ impl<'a> WordExtremesIterator<'a> {
                             },
                         );
 
-                    sender.send(WordExtremes { word, extremes }).unwrap();
-                });
-            });
-        });
+                    // Return buffer
+                    state.unicode_buffer = Some(glyph_buffer.clear());
+                    Some(WordExtremes { word, extremes })
+                },
+            )
+            .filter_map(identity)
+            .fold(
+                || ExemplarCollector::new(n_exemplars),
+                |mut acc, word_extremes| {
+                    acc.push(word_extremes);
+                    acc
+                },
+            )
+            .reduce(
+                || ExemplarCollector::new(n_exemplars),
+                |mut acc, other| {
+                    acc.merge_with(other);
+                    acc
+                },
+            );
 
-        collector.build()
+        Ok(collector.build())
     }
+}
+
+pub struct WordExtremesIterator<'a> {
+    rusty_face: rustybuzz::Face<'a>,
+    instance_extremes: InstanceExtremes,
+    word_iter: WordListIter<'a>,
+    unicode_buffer: Option<UnicodeBuffer>,
 }
 
 impl<'a> Iterator for WordExtremesIterator<'a> {

@@ -151,9 +151,8 @@ pub fn get_min_max_extremes(
                 .zip(iter::repeat(location))
         })
         .map(|(word_list, location)| -> anyhow::Result<OwnedReport> {
-            let report_iter = reporter.check_location(location, word_list)?;
-            let report = report_iter
-                .par_collect_min_max_extremes(k_words, n_exemplars)
+            let report = reporter
+                .par_check_location(location, word_list, k_words, n_exemplars)?
                 .to_report(location, word_list)
                 .into();
             Ok(report)

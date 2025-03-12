@@ -80,6 +80,11 @@ impl<'a> Reporter<'a> {
         use ::rayon::prelude::*;
 
         struct WorkerState {
+            // UnicodeBuffer is transformed into another type during shaping,
+            // and then can only be reverted once we've finished
+            // analysing the shaped buffer. The Option allows us to
+            // take ownership of it during each iteration for these
+            // type changes to happen, while still re-using the buffer
             unicode_buffer: Option<UnicodeBuffer>,
             // shaping_plan: ShapePlan,
         }
@@ -173,6 +178,10 @@ pub struct WordExtremesIterator<'a> {
     rusty_face: rustybuzz::Face<'a>,
     instance_extremes: InstanceExtremes,
     word_iter: WordListIter<'a>,
+    // UnicodeBuffer is transformed into another type during shaping, and then
+    // can only be reverted once we've finished analysing the shaped buffer.
+    // The Option allows us to take ownership of it during each iteration for
+    // these type changes to happen, while still re-using the buffer
     unicode_buffer: Option<UnicodeBuffer>,
 }
 

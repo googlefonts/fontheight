@@ -94,7 +94,10 @@ impl PartialOrd for ByHighest<'_> {
 
 impl<'w> ExemplarCollector<'w> {
     /// Build a summary with a maximum number of reports.
+    ///
+    /// `top_n` must be non-zero
     pub(crate) fn new(top_n: usize) -> Self {
+        assert_ne!(top_n, 0, "ExemplarCollector must have non-zero capacity");
         Self {
             lowest: BinaryHeap::with_capacity(top_n),
             highest: BinaryHeap::with_capacity(top_n),
@@ -112,8 +115,6 @@ impl<'w> ExemplarCollector<'w> {
             if by_lowest < *weakest_low {
                 *weakest_low = by_lowest;
             }
-        } else {
-            panic!("pushing to zero capacity ExemplarCollector");
         }
 
         // Store if this report is stronger than the weakest report that would
@@ -125,10 +126,6 @@ impl<'w> ExemplarCollector<'w> {
             if by_highest < *weakest_high {
                 *weakest_high = by_highest;
             }
-        } else {
-            // *Should* never get hit in favour of the panic above it, but
-            // symmetry is nice
-            panic!("pushing to zero capacity ExemplarCollector");
         }
     }
 

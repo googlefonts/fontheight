@@ -41,7 +41,7 @@ struct Args {
 
     /// The number of words from each list to test
     // TODO: an --all flag
-    #[arg(long = "words", default_value_t = 25)]
+    #[arg(short = 'k', long = "words", default_value_t = 25)]
     words_per_list: usize,
 }
 

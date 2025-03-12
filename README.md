@@ -49,7 +49,7 @@ Arguments:
 
 Options:
   -n, --results <RESULTS>       The number of words to log [default: 5]
-      --words <WORDS_PER_LIST>  The number of words from each list to test [default: 25]
+  -k, --words <WORDS_PER_LIST>  The number of words from each list to test [default: 25]
   -h, --help                    Print help
   -V, --version                 Print version
 ```

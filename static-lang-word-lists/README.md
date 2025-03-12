@@ -1,10 +1,16 @@
-# static-lang-word-lists
+# `static-lang-word-lists`
 
 ## Motivation
 
 Include word lists in the binary, don't take up more space than necessary, be publishable on crates.io (10 MiB size limit)
 
-## Solution
+## Usage
+
+⚠️ _Not yet available_ On crates.io as `static-lang-word-lists`
+
+For documentation, please refer to docs.rs
+
+## How this crate works
 
 A build script that downloads the word lists from GitHub, compresses them with Brotli, and embeds that data in the binary, lazily decompressed at runtime
 

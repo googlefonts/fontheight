@@ -14,6 +14,7 @@ JOBS: list[tuple[str, str]] = [
     ("diffenator/Canadian_Aboriginal.txt", "*CanadianAboriginal*.ttf"),
     ("diffenator/Chakma.txt", "*Chakma*.ttf"),
     ("diffenator/Cherokee.txt", "*Cherokee*.ttf"),
+    ("diffenator/Common.txt", "*LGC*.ttf"),
     ("diffenator/Cyrillic.txt", "*LGC*.ttf"),
     ("diffenator/Devanagari.txt", "*Devanagari*.ttf"),
     ("diffenator/Ethiopic.txt", "*Ethiopic*.ttf"),
@@ -105,9 +106,10 @@ def main():
         word_list_path.write_text("\n".join(ordered) + "\n", encoding="utf-8")
         scripts_sorted.add(word_list_path.stem)
         print(
-            f"Sorted {word_list_path.relative_to(WORD_LIST_DIR)} based on:\n  -",
+            f"Sorted {current_word_list_name} based on:\n  -",
             "\n  - ".join(font_path.name for font_path in font_paths),
         )
+        print()
 
     all_scripts = set(
         word_list_path.stem
@@ -115,6 +117,7 @@ def main():
     )
     unchanged_scripts = sorted(all_scripts - scripts_sorted)
     if len(unchanged_scripts) > 0:
+        # TODO: make this output the word list name as exported by the crate
         print(
             "Unsorted scripts:\n  -",
             "\n  - ".join(unchanged_scripts),

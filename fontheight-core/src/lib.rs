@@ -253,7 +253,7 @@ impl<'a> Iterator for WordExtremesIterator<'a> {
     }
 }
 
-#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+#[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct WordExtremes<'w> {
     pub word: &'w str,
     pub extremes: VerticalExtremes,
@@ -301,7 +301,7 @@ impl InstanceExtremes {
 #[error("could not draw glyph {0}: {1}")]
 pub struct SkrifaDrawError(skrifa::GlyphId, DrawError);
 
-#[derive(Debug, Clone, Copy, Default, Eq, PartialEq)]
+#[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash)]
 pub struct VerticalExtremes {
     lowest: OrderedFloat<f64>,
     highest: OrderedFloat<f64>,

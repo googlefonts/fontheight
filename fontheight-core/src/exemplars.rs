@@ -1,5 +1,7 @@
 use std::{cmp::Ordering, collections::BinaryHeap};
 
+use itertools::Itertools;
+
 use crate::{Location, Report, WordExtremes, WordList};
 
 /// A collection of the lowest lows and highest highs.
@@ -133,10 +135,10 @@ impl<'w> ExemplarCollector<'w> {
         let ExemplarCollector { lowest, highest } = other;
         highest
             .into_iter()
-            .for_each(|ByHighest(extremes)| self.push(extremes));
-        lowest
-            .into_iter()
-            .for_each(|ByLowest(extremes)| self.push(extremes));
+            .map(|ByHighest(extremes)| extremes)
+            .chain(lowest.into_iter().map(|ByLowest(extremes)| extremes))
+            .unique()
+            .for_each(|extremes| self.push(extremes));
     }
 
     /// Consume this builder and produce the summary.

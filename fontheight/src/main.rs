@@ -1,11 +1,15 @@
+mod fmt;
+
 use std::{fs, iter, path::PathBuf, process::ExitCode, time::Instant};
 
 use anyhow::{bail, Context};
 use clap::Parser;
 use env_logger::Env;
-use fontheight_core::{Exemplars, Reporter};
+use fontheight_core::Reporter;
 use log::{debug, error, info, LevelFilter};
 use rayon::prelude::*;
+
+use crate::fmt::{FormatReport, OutputFormat};
 
 fn main() -> ExitCode {
     env_logger::builder()
@@ -57,7 +61,7 @@ fn _main() -> anyhow::Result<()> {
             let start = Instant::now();
             let reporter = Reporter::new(&font_bytes)?;
             let locations = reporter.interesting_locations();
-            // TODO: an equivalent of Report from fontheight-wheel
+
             let reports = locations
                 .iter()
                 .flat_map(|location| {
@@ -66,28 +70,33 @@ fn _main() -> anyhow::Result<()> {
                         .zip(iter::repeat(location))
                 })
                 .par_bridge()
-                .map(|(word_list, location)| -> anyhow::Result<Exemplars> {
-                    let exemplars = reporter.par_check_location(
-                        location,
-                        word_list,
-                        args.words_per_list,
-                        args.results,
-                    )?;
+                .map(|(word_list, location)| -> anyhow::Result<_> {
+                    let report = reporter
+                        .par_check_location(
+                            location,
+                            word_list,
+                            args.words_per_list,
+                            args.results,
+                        )?
+                        .to_report(location, word_list);
                     debug!(
                         "finished checking {} at {location:?}",
                         word_list.name()
                     );
-                    Ok(exemplars)
+                    Ok(report)
                 })
-                .filter(|exemplars_res| {
-                    exemplars_res
+                .filter(|report_res| {
+                    report_res
                         .as_ref()
-                        .map_or(true, |exemplars| !exemplars.is_empty())
+                        .map_or(true, |report| !report.exemplars.is_empty())
                 })
                 .collect::<Result<Vec<_>, _>>()?;
 
             let took = start.elapsed();
-            println!("{reports:#?}");
+            println!("{}:", font_path.display());
+            reports.iter().for_each(|report| {
+                println!("{}", report.format(OutputFormat::Human));
+            });
             info!("Took {took:?}");
             Ok(())
         })

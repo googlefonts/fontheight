@@ -61,6 +61,11 @@ fn _main() -> anyhow::Result<()> {
             let start = Instant::now();
             let reporter = Reporter::new(&font_bytes)?;
             let locations = reporter.interesting_locations();
+            info!(
+                "Found {} interesting locations in {}",
+                locations.len(),
+                font_path.display(),
+            );
 
             let reports = locations
                 .iter()

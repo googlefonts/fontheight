@@ -23,7 +23,7 @@ impl fmt::Display for ReportFormatter<'_> {
                 report.exemplars.highest().iter().try_for_each(|exemplar| {
                     writeln!(
                         f,
-                        "      {:?} => {}",
+                        "      \"{}\" => {}",
                         exemplar.word,
                         exemplar.extremes.highest(),
                     )
@@ -37,14 +37,14 @@ impl fmt::Display for ReportFormatter<'_> {
                         if index != last {
                             writeln!(
                                 f,
-                                "      {:?} => {}",
+                                "      \"{}\" => {}",
                                 exemplar.word,
                                 exemplar.extremes.lowest(),
                             )
                         } else {
                             write!(
                                 f,
-                                "      {:?} => {}",
+                                "      \"{}\" => {}",
                                 exemplar.word,
                                 exemplar.extremes.lowest(),
                             )

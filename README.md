@@ -27,6 +27,10 @@ Fontheight comes in three flavours:
 
 #### Installation
 
+Currently, both installation methods involve compiling `fontheight` from its source code, meaning you need to have a Rust toolchain installed and `cargo` available in your terminal.
+If you're new to Rust, check out https://www.rust-lang.org/tools/install for instructions on getting it installed and configured.
+You only need a stable compiler for Font Height's crates.
+
 From GitHub:
 
 ```shell

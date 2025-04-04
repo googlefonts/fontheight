@@ -7,7 +7,7 @@ pub use exemplars::Exemplars;
 use kurbo::Shape;
 pub use locations::SimpleLocation;
 use ordered_float::OrderedFloat;
-use rustybuzz::UnicodeBuffer;
+use rustybuzz::{ShapePlan, UnicodeBuffer};
 use skrifa::{
     instance::Size,
     outline::{DrawError, DrawSettings},
@@ -77,6 +77,10 @@ impl<'a> Reporter<'a> {
     ) -> Result<Exemplars<'a>, SkrifaDrawError> {
         use rayon::prelude::*;
 
+        let (direction, script) = word_list.properties().unwrap_or_else(|| {
+            panic!("unable to determine properties of {}", word_list.name());
+        });
+
         struct WorkerState {
             // UnicodeBuffer is transformed into another type during shaping,
             // and then can only be reverted once we've finished
@@ -84,7 +88,7 @@ impl<'a> Reporter<'a> {
             // take ownership of it during each iteration for these
             // type changes to happen, while still re-using the buffer
             unicode_buffer: Option<UnicodeBuffer>,
-            // shaping_plan: ShapePlan,
+            shaping_plan: ShapePlan,
         }
 
         let mut rusty_face = self.rusty_face.clone();
@@ -99,16 +103,24 @@ impl<'a> Reporter<'a> {
             .map_init(
                 || WorkerState {
                     unicode_buffer: Some(UnicodeBuffer::new()),
+                    shaping_plan: ShapePlan::new(
+                        &self.rusty_face,
+                        direction,
+                        Some(script),
+                        None,
+                        &[],
+                    ),
                 },
                 |state, word| {
                     // Take buffer; it should always be present
                     let mut buffer = state.unicode_buffer.take().unwrap();
 
                     buffer.push_str(word);
-                    buffer.guess_segment_properties();
-                    // TODO: this is where you would use the shaping plan
-                    let glyph_buffer =
-                        rustybuzz::shape(&rusty_face, &[], buffer);
+                    let glyph_buffer = rustybuzz::shape_with_plan(
+                        &rusty_face,
+                        &state.shaping_plan,
+                        buffer,
+                    );
 
                     let glyphs_missing = glyph_buffer
                         .glyph_infos()

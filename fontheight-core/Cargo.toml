@@ -17,7 +17,7 @@ kurbo = "0.11.1"
 log = { workspace = true }
 ordered-float = "4.6"
 rayon = { workspace = true, optional = true }
-rustybuzz = "0.20.1"
+rustybuzz = { workspace = true }
 skrifa = "0.26.5"
 thiserror = { workspace = true }
 static-lang-word-lists = { version = "0.1.0", path = "../static-lang-word-lists" }

@@ -12,6 +12,7 @@ brotli-decompressor = "4"
 log = { workspace = true }
 phf = { version = "0.11.3", features = ["macros"] }
 rayon = { workspace = true, optional = true }
+rustybuzz = { workspace = true }
 thiserror = { workspace = true }
 
 [build-dependencies]

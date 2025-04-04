@@ -10,6 +10,7 @@ members = [
 [workspace.dependencies]
 log = "0.4.25"
 rayon = "1.10"
+rustybuzz = "0.20.1"
 thiserror = "2"
 
 [profile.release]

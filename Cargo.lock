@@ -691,6 +691,7 @@ dependencies = [
  "minreq",
  "phf",
  "rayon",
+ "rustybuzz",
  "thiserror",
 ]
 

@@ -288,6 +288,7 @@ checksum = "d0a5c400df2834b80a4c3327b3aad3a4c4cd4de0629063962b03235697506a28"
 [[package]]
 name = "diffenator3-lib"
 version = "0.1.0"
+source = "git+https://github.com/googlefonts/diffenator3?rev=6f87bb0#6f87bb0fe6270bc9fc07af2085a0372264391baf"
 dependencies = [
  "ab_glyph",
  "ab_glyph_rasterizer",
@@ -1004,6 +1005,7 @@ checksum = "d2df906b07856748fa3f6e0ad0cbaa047052d4a7dd609e231c4f72cee8c36f31"
 [[package]]
 name = "ttj"
 version = "0.1.0"
+source = "git+https://github.com/googlefonts/diffenator3?rev=6f87bb0#6f87bb0fe6270bc9fc07af2085a0372264391baf"
 dependencies = [
  "clap",
  "indexmap 1.9.3",

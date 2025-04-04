@@ -24,7 +24,7 @@ rayon = { workspace = true, optional = true }
 thread_local = {version = "1.1", optional = true }
 skrifa = "0.24.0"
 thiserror = "2"
-diffenator3-lib = { path ="../../../hacks/typography/diffenator3/diffenator3-lib" }
+diffenator3-lib = { git = "https://github.com/googlefonts/diffenator3", rev = "6f87bb0" }
 rustybuzz = "0.18.0"
 zeno = "0.3.2"
 

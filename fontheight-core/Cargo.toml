@@ -13,7 +13,7 @@ repository = "https://github.com/googlefonts/fontheight"
 default = [
     "rayon",
 ]
-rayon = ["dep:rayon"]
+rayon = ["dep:rayon", "dep:thread_local"]
 
 [dependencies]
 itertools = "0.14.0"
@@ -21,9 +21,12 @@ kurbo = "0.11.1"
 log = { workspace = true }
 ordered-float = "4.6"
 rayon = { workspace = true, optional = true }
-rustybuzz = "0.20.1"
-skrifa = "0.26.5"
+thread_local = {version = "1.1", optional = true }
+skrifa = "0.24.0"
 thiserror = "2"
+diffenator3-lib = { path ="../../../hacks/typography/diffenator3/diffenator3-lib" }
+rustybuzz = "0.18.0"
+zeno = "0.3.2"
 
 [package.metadata.docs.rs]
 all-features = true

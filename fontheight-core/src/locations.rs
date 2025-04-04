@@ -31,6 +31,15 @@ impl Location {
         )
     }
 
+    pub fn to_settings(&self) -> Vec<skrifa::setting::VariationSetting> {
+        self.user_coords
+            .iter()
+            .map(|(tag, coord)| {
+                skrifa::setting::VariationSetting::new(*tag, *coord)
+            })
+            .collect()
+    }
+
     pub fn to_rustybuzz(&self) -> Vec<rustybuzz::Variation> {
         self.user_coords
             .iter()

@@ -349,4 +349,6 @@ pub enum FontHeightError {
     Skrifa(#[from] skrifa::raw::ReadError),
     #[error(transparent)]
     Drawing(#[from] SkrifaDrawError),
+    #[error("could not determine the wordlist properties")]
+    WordListProperties,
 }

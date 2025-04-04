@@ -5,6 +5,7 @@ use std::{
     slice,
 };
 
+use rustybuzz::{script, Direction, Script};
 use thiserror::Error;
 
 #[derive(Debug)]
@@ -69,6 +70,20 @@ impl WordList {
     #[inline]
     pub fn get(&self, index: usize) -> Option<&str> {
         self.words.get(index).map(|word| word.as_str())
+    }
+
+    pub fn properties(&self) -> Option<(Direction, Script)> {
+        for word in self.words.iter().take(20) {
+            let mut buffer = rustybuzz::UnicodeBuffer::new();
+            buffer.push_str(word);
+            buffer.guess_segment_properties();
+            if buffer.direction() != Direction::Invalid
+                && buffer.script() != script::UNKNOWN
+            {
+                return Some((buffer.direction(), buffer.script()));
+            }
+        }
+        None
     }
 }
 

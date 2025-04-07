@@ -1,6 +1,6 @@
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
 
-use std::{collections::HashMap, convert::identity};
+use std::{collections::HashMap, convert::identity, str::FromStr};
 
 use exemplars::ExemplarCollector;
 pub use exemplars::Exemplars;
@@ -52,7 +52,7 @@ impl<'a> Reporter<'a> {
         &'a self,
         location: &'a Location,
         word_list: &'a WordList,
-    ) -> Result<WordExtremesIterator<'a>, SkrifaDrawError> {
+    ) -> Result<WordExtremesIterator<'a>, FontHeightError> {
         let mut rusty_face = self.rusty_face.clone();
         rusty_face.set_variations(&location.to_rustybuzz());
 
@@ -60,8 +60,8 @@ impl<'a> Reporter<'a> {
             InstanceExtremes::new(&self.skrifa_font, location)?;
 
         Ok(WordExtremesIterator {
+            rusty_plan: plan_from_metadata(&rusty_face, word_list)?,
             rusty_face,
-            rusty_plan: None,
             word_iter: word_list.iter(),
             instance_extremes,
             unicode_buffer: Some(UnicodeBuffer::new()),
@@ -101,7 +101,8 @@ impl<'a> Reporter<'a> {
             .map_init(
                 || WorkerState {
                     unicode_buffer: Some(UnicodeBuffer::new()),
-                    shaping_plan: None,
+                    shaping_plan: plan_from_metadata(&rusty_face, word_list)
+                        .unwrap_or_default(),
                 },
                 |state, word| {
                     // Take buffer; it should always be present
@@ -358,4 +359,125 @@ pub enum FontHeightError {
     Skrifa(#[from] skrifa::raw::ReadError),
     #[error(transparent)]
     Drawing(#[from] SkrifaDrawError),
+    #[error("{0}")]
+    OtherError(String),
+}
+
+fn plan_from_metadata(
+    rusty_face: &rustybuzz::Face,
+    word_list: &WordList,
+) -> Result<Option<rustybuzz::ShapePlan>, FontHeightError> {
+    let language = word_list
+        .language()
+        .map(|lang| {
+            rustybuzz::Language::from_str(lang).map_err(|e| {
+                FontHeightError::OtherError(format!(
+                    "Problem parsing wordlist language: {e}"
+                ))
+            })
+        })
+        .transpose()?;
+    Ok(word_list
+        .script()
+        .and_then(|script| {
+            rustybuzz::Script::from_iso15924_tag(
+                rustybuzz::ttf_parser::Tag::from_bytes_lossy(script.as_bytes()),
+            )
+        })
+        .map(|script| {
+            rustybuzz::ShapePlan::new(
+                rusty_face,
+                direction_from_script(script)
+                    .unwrap_or(rustybuzz::Direction::LeftToRight),
+                Some(script),
+                language.as_ref(),
+                &[],
+            )
+        }))
+}
+
+fn direction_from_script(
+    script: rustybuzz::Script,
+) -> Option<rustybuzz::Direction> {
+    // Copied from Rustybuzz
+
+    match script {
+        // Unicode-1.1 additions
+        rustybuzz::script::ARABIC |
+        rustybuzz::script::HEBREW |
+
+        // Unicode-3.0 additions
+        rustybuzz::script::SYRIAC |
+        rustybuzz::script::THAANA |
+
+        // Unicode-4.0 additions
+        rustybuzz::script::CYPRIOT |
+
+        // Unicode-4.1 additions
+        rustybuzz::script::KHAROSHTHI |
+
+        // Unicode-5.0 additions
+        rustybuzz::script::PHOENICIAN |
+        rustybuzz::script::NKO |
+
+        // Unicode-5.1 additions
+        rustybuzz::script::LYDIAN |
+
+        // Unicode-5.2 additions
+        rustybuzz::script::AVESTAN |
+        rustybuzz::script::IMPERIAL_ARAMAIC |
+        rustybuzz::script::INSCRIPTIONAL_PAHLAVI |
+        rustybuzz::script::INSCRIPTIONAL_PARTHIAN |
+        rustybuzz::script::OLD_SOUTH_ARABIAN |
+        rustybuzz::script::OLD_TURKIC |
+        rustybuzz::script::SAMARITAN |
+
+        // Unicode-6.0 additions
+        rustybuzz::script::MANDAIC |
+
+        // Unicode-6.1 additions
+        rustybuzz::script::MEROITIC_CURSIVE |
+        rustybuzz::script::MEROITIC_HIEROGLYPHS |
+
+        // Unicode-7.0 additions
+        rustybuzz::script::MANICHAEAN |
+        rustybuzz::script::MENDE_KIKAKUI |
+        rustybuzz::script::NABATAEAN |
+        rustybuzz::script::OLD_NORTH_ARABIAN |
+        rustybuzz::script::PALMYRENE |
+        rustybuzz::script::PSALTER_PAHLAVI |
+
+        // Unicode-8.0 additions
+        rustybuzz::script::HATRAN |
+
+        // Unicode-9.0 additions
+        rustybuzz::script::ADLAM |
+
+        // Unicode-11.0 additions
+        rustybuzz::script::HANIFI_ROHINGYA |
+        rustybuzz::script::OLD_SOGDIAN |
+        rustybuzz::script::SOGDIAN |
+
+        // Unicode-12.0 additions
+        rustybuzz::script::ELYMAIC |
+
+        // Unicode-13.0 additions
+        rustybuzz::script::CHORASMIAN |
+        rustybuzz::script::YEZIDI |
+
+        // Unicode-14.0 additions
+        rustybuzz::script::OLD_UYGHUR => {
+            Some(rustybuzz::Direction::RightToLeft)
+        }
+
+        // https://github.com/harfbuzz/harfbuzz/issues/1000
+        rustybuzz::script::OLD_HUNGARIAN |
+        rustybuzz::script::OLD_ITALIC |
+        rustybuzz::script::RUNIC |
+        rustybuzz::script::TIFINAGH => {
+            None
+        }
+
+        _ => Some(rustybuzz::Direction::LeftToRight),
+    }
 }

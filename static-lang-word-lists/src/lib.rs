@@ -1,4 +1,5 @@
 use std::sync::LazyLock;
+mod metadata;
 mod word_lists;
 
 #[cfg(feature = "rayon")]

@@ -35,7 +35,7 @@ fn main() {
     writeln!(
         &mut map_file,
         "pub static LOOKUP_TABLE: ::phf::Map<&'static str, &'static \
-         ::std::sync::LazyLock<WordList>> = ::phf::phf_map! {{"
+         ::std::sync::LazyLock<crate::WordList>> = ::phf::phf_map! {{"
     )
     .unwrap_or_else(|err| panic!("failed to write to map_codeden.rs: {err}"));
     let map_file = Mutex::new(map_file);

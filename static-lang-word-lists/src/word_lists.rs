@@ -9,6 +9,30 @@ use thiserror::Error;
 
 use crate::metadata::WordListMetadata;
 
+impl WordListMetadata {
+    pub(crate) fn load(
+        metadata_path: impl Into<std::path::PathBuf>,
+    ) -> Result<Self, WordListError> {
+        let path = metadata_path.into();
+        let metadata_content = fs::read_to_string(&path).map_err(|io_err| {
+            WordListError::FailedToRead(path.to_owned(), io_err)
+        })?;
+        let metadata: WordListMetadata =
+            serde_json::from_str(&metadata_content).map_err(|json_err| {
+                WordListError::MetadataError(path.to_owned(), json_err)
+            })?;
+        Ok(metadata)
+    }
+
+    pub(crate) fn new_from_name(name: impl Into<String>) -> Self {
+        WordListMetadata {
+            name: name.into(),
+            script: None,
+            language: None,
+        }
+    }
+}
+
 #[derive(Debug)]
 pub struct WordList {
     words: Vec<String>,
@@ -16,20 +40,42 @@ pub struct WordList {
 }
 
 impl WordList {
+    /// Load a word list from a file.
+    ///
+    /// The file is expected to contain one word per line.
+    /// The word list may also be accompanied by a metadata file in JSON format.
+    /// See [`WordListMetadata`] for the expected format.
     pub fn load(
-        name: impl Into<String>,
         path: impl AsRef<Path>,
+        metadata_path: Option<impl AsRef<Path>>,
     ) -> Result<Self, WordListError> {
         let path = path.as_ref();
         let file_content = fs::read_to_string(path).map_err(|io_err| {
             WordListError::FailedToRead(path.to_owned(), io_err)
         })?;
+        let metadata = if let Some(metadata_path) = metadata_path {
+            let metadata_path = metadata_path.as_ref();
+            WordListMetadata::load(metadata_path)?
+        } else {
+            // Fake metadata as much as we can
+            let name = path
+                .file_stem()
+                .ok_or_else(|| {
+                    WordListError::FailedToRead(
+                        path.to_owned(),
+                        io::Error::new(
+                            io::ErrorKind::InvalidData,
+                            "file name is empty",
+                        ),
+                    )
+                })?
+                .to_string_lossy()
+                .to_string()
+                .replace("/", "_");
+            WordListMetadata::new_from_name(name)
+        };
         Ok(WordList {
-            metadata: WordListMetadata {
-                name: name.into(),
-                script: None,
-                language: None,
-            },
+            metadata,
             words: file_content
                 .split_whitespace()
                 .filter(|word| !word.is_empty())
@@ -43,26 +89,15 @@ impl WordList {
         words: impl IntoIterator<Item = impl Into<String>>,
     ) -> Self {
         WordList {
-            metadata: WordListMetadata {
-                name: name.into(),
-                script: None,
-                language: None,
-            },
+            metadata: WordListMetadata::new_from_name(name.into()),
             words: words.into_iter().map(Into::into).collect(),
         }
     }
 
     // Private API used by static-lang-word-lists
     #[doc(hidden)]
-    pub fn new(name: String, words: Vec<String>) -> Self {
-        WordList {
-            metadata: WordListMetadata {
-                name,
-                script: None,
-                language: None,
-            },
-            words,
-        }
+    pub fn new(metadata: WordListMetadata, words: Vec<String>) -> Self {
+        WordList { metadata, words }
     }
 
     pub fn name(&self) -> &str {
@@ -134,6 +169,8 @@ impl DoubleEndedIterator for WordListIter<'_> {
 pub enum WordListError {
     #[error("failed to read from {}: {}", .0.display(), .1)]
     FailedToRead(PathBuf, io::Error),
+    #[error("failed to parse metadata from {}: {}", .0.display(), .1)]
+    MetadataError(PathBuf, serde_json::Error),
 }
 
 #[cfg(feature = "rayon")]

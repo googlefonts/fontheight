@@ -1,5 +1,6 @@
-use serde::{Deserialize, Serialize};
+// Shared with the build script; keep minimal.
 
+use serde::{Deserialize, Serialize};
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WordListMetadata {
     pub(crate) name: String,

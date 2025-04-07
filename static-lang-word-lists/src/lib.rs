@@ -39,7 +39,7 @@ macro_rules! wordlist {
                 let raw_words = unsafe { String::from_utf8_unchecked(buf) };
                 ::log::debug!("loaded {}", metadata.name);
                 WordList::new(
-                    metadata.name,
+                    metadata,
                     $crate::newline_delimited_words(raw_words),
                 )
             });

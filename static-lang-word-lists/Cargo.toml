@@ -2,18 +2,17 @@
 name = "static-lang-word-lists"
 version = "0.1.0"
 edition = "2021"
-authors = [
-    "Dalton Maag <sd@daltonmaag.com>",
-]
+authors = ["Dalton Maag <sd@daltonmaag.com>"]
 license = "Apache-2.0"
 readme = "README.md"
 repository = "https://github.com/googlefonts/fontheight"
 
 [dependencies]
 brotli-decompressor = "4"
-fontheight-core = { version = "0.1.0", path = "../fontheight-core" }
 log = { workspace = true }
 phf = { version = "0.11.3", features = ["macros"] }
+rayon = { workspace = true, optional = true }
+thiserror = { workspace = true }
 
 [build-dependencies]
 brotli = "7"

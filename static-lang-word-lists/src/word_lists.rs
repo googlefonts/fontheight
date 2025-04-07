@@ -7,12 +7,7 @@ use std::{
 
 use thiserror::Error;
 
-#[derive(Debug)]
-pub struct WordListMetadata {
-    name: String,
-    script: Option<String>,
-    language: Option<String>,
-}
+use crate::metadata::WordListMetadata;
 
 #[derive(Debug)]
 pub struct WordList {

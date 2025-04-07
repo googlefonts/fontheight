@@ -14,6 +14,8 @@ use heck::ToShoutySnakeCase;
 
 const BASE_URL: &str = "https://raw.githubusercontent.com/googlefonts/fontheight/refs/heads/main/static-lang-word-lists/data";
 
+include!("src/metadata.rs");
+
 // Provides WORD_LISTS: &[(&str, &str)] for word list name and relative paths
 // See egg.py for how this code is generated
 include!("chicken.rs");
@@ -44,51 +46,80 @@ fn main() {
         // Bind references to names so they can be copied to each spawned thread
         let codegen_file = &word_list_file;
         let map_file = &map_file;
-        WORD_LISTS.iter().copied().for_each(|(name, path)| {
-            s.spawn(move || {
-                let ident = name.to_shouty_snake_case();
-                let bytes =
-                    if option_env!("STATIC_LANG_WORD_LISTS_LOCAL").is_none() {
-                        download_validate(path)
-                    } else {
-                        let repo_path = Path::new("data").join(path);
-                        fs::read(&repo_path).unwrap_or_else(|err| {
-                            panic!(
-                                "failed to read local word list file {}: {err}",
-                                repo_path.display()
+        WORD_LISTS
+            .iter()
+            .copied()
+            .for_each(|(metadata_file, path)| {
+                s.spawn(move || {
+                    let metadata = if let Some(metadata_file) = metadata_file {
+                        let content = get_a_file(metadata_file);
+                        let metadata: WordListMetadata =
+                            serde_json::from_slice(&content).unwrap_or_else(
+                                |err| {
+                                    panic!(
+                                        "failed to deserialize \
+                                         {metadata_file}: {err}"
+                                    );
+                                },
                             );
-                        })
+                        metadata
+                    } else {
+                        // Fake it
+                        WordListMetadata {
+                            name: path.replace(".txt", "").replace("/", "_"),
+                            script: None,
+                            language: None,
+                        }
                     };
-                let br_path = compress(&bytes, path);
+                    let name = metadata.name;
+                    let ident = name.to_shouty_snake_case();
+                    let bytes = get_a_file(path);
+                    let br_path = compress(&bytes, path);
 
-                let mut codegen_file = codegen_file.lock().unwrap();
-                writeln!(
-                    &mut codegen_file,
-                    r#"
+                    let mut codegen_file = codegen_file.lock().unwrap();
+                    writeln!(
+                        &mut codegen_file,
+                        r#"
                     wordlist! {{
                         ident: {ident},
                         name: {name},
                         bytes: include_bytes!(r"{}"),
                     }}"#,
-                    br_path.display(),
-                )
-                .unwrap_or_else(|err| {
-                    panic!("failed to write to word_list_codegen.rs: {err}");
-                });
-
-                let mut map_file = map_file.lock().unwrap();
-                writeln!(&mut map_file, r#"    "{name}" => &{ident},"#)
+                        br_path.display(),
+                    )
                     .unwrap_or_else(|err| {
-                        panic!("failed to write to map_codeden.rs: {err}")
+                        panic!(
+                            "failed to write to word_list_codegen.rs: {err}"
+                        );
                     });
+
+                    let mut map_file = map_file.lock().unwrap();
+                    writeln!(&mut map_file, r#"    "{name}" => &{ident},"#)
+                        .unwrap_or_else(|err| {
+                            panic!("failed to write to map_codeden.rs: {err}")
+                        });
+                });
             });
-        });
     });
 
     let mut map_file = map_file.into_inner().unwrap();
     writeln!(&mut map_file, "}};").unwrap_or_else(|err| {
         panic!("failed to write to map_codeden.rs: {err}")
     });
+}
+
+fn get_a_file(path: &str) -> Vec<u8> {
+    if option_env!("STATIC_LANG_WORD_LISTS_LOCAL").is_none() {
+        download_validate(path)
+    } else {
+        let repo_path = Path::new("data").join(path);
+        fs::read(&repo_path).unwrap_or_else(|err| {
+            panic!(
+                "failed to read local word list file {}: {err}",
+                repo_path.display()
+            );
+        })
+    }
 }
 
 fn download_validate(relative_path: &str) -> Vec<u8> {

@@ -20,13 +20,12 @@ use crate::{locations::interesting_locations, pens::BezierPen};
 mod exemplars;
 mod locations;
 mod pens;
-mod word_lists;
 
 pub use exemplars::CollectToExemplars;
 pub use locations::Location;
 #[cfg(feature = "rayon")]
-pub use word_lists::rayon::ParWordListIter;
-pub use word_lists::*;
+pub use static_lang_word_lists::rayon::ParWordListIter;
+pub use static_lang_word_lists::{WordList, WordListIter};
 
 pub struct Reporter<'a> {
     rusty_face: rustybuzz::Face<'a>,
@@ -77,7 +76,7 @@ impl<'a> Reporter<'a> {
         k_words: usize,
         n_exemplars: usize,
     ) -> Result<Exemplars<'a>, SkrifaDrawError> {
-        use ::rayon::prelude::*;
+        use rayon::prelude::*;
 
         struct WorkerState {
             // UnicodeBuffer is transformed into another type during shaping,

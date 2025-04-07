@@ -110,7 +110,7 @@ pub enum WordListError {
 }
 
 #[cfg(feature = "rayon")]
-pub(crate) mod rayon {
+pub mod rayon {
     use rayon::iter::{
         plumbing::{
             bridge, Consumer, Producer, ProducerCallback, UnindexedConsumer,

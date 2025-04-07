@@ -1,6 +1,9 @@
 use std::sync::LazyLock;
+mod word_lists;
 
-pub use fontheight_core::WordList;
+#[cfg(feature = "rayon")]
+pub use word_lists::rayon;
+pub use word_lists::{WordList, WordListError, WordListIter};
 
 pub type LazyWordList = LazyLock<WordList>;
 
@@ -29,7 +32,7 @@ macro_rules! wordlist {
                 // SAFETY: UTF-8 validity is checked by the build script
                 let raw_words = unsafe { String::from_utf8_unchecked(buf) };
                 ::log::debug!("loaded {NAME}");
-                ::fontheight_core::WordList::new(
+                WordList::new(
                     NAME.to_owned(),
                     $crate::newline_delimited_words(raw_words),
                 )

@@ -2,18 +2,14 @@
 name = "fontheight-core"
 version = "0.1.0"
 edition = "2021"
-authors = [
-    "Dalton Maag <sd@daltonmaag.com>",
-]
+authors = ["Dalton Maag <sd@daltonmaag.com>"]
 license = "Apache-2.0"
 readme = "../README.md"
 repository = "https://github.com/googlefonts/fontheight"
 
 [features]
-default = [
-    "rayon",
-]
-rayon = ["dep:rayon"]
+default = ["rayon"]
+rayon = ["dep:rayon", "static-lang-word-lists/rayon"]
 
 [dependencies]
 itertools = "0.14.0"
@@ -23,7 +19,8 @@ ordered-float = "4.6"
 rayon = { workspace = true, optional = true }
 rustybuzz = "0.20.1"
 skrifa = "0.26.5"
-thiserror = "2"
+thiserror = { workspace = true }
+static-lang-word-lists = { version = "0.1.0", path = "../static-lang-word-lists" }
 
 [package.metadata.docs.rs]
 all-features = true

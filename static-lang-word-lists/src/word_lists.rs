@@ -8,9 +8,16 @@ use std::{
 use thiserror::Error;
 
 #[derive(Debug)]
-pub struct WordList {
+pub struct WordListMetadata {
     name: String,
+    script: Option<String>,
+    language: Option<String>,
+}
+
+#[derive(Debug)]
+pub struct WordList {
     words: Vec<String>,
+    metadata: WordListMetadata,
 }
 
 impl WordList {
@@ -23,7 +30,11 @@ impl WordList {
             WordListError::FailedToRead(path.to_owned(), io_err)
         })?;
         Ok(WordList {
-            name: name.into(),
+            metadata: WordListMetadata {
+                name: name.into(),
+                script: None,
+                language: None,
+            },
             words: file_content
                 .split_whitespace()
                 .filter(|word| !word.is_empty())
@@ -37,7 +48,11 @@ impl WordList {
         words: impl IntoIterator<Item = impl Into<String>>,
     ) -> Self {
         WordList {
-            name: name.into(),
+            metadata: WordListMetadata {
+                name: name.into(),
+                script: None,
+                language: None,
+            },
             words: words.into_iter().map(Into::into).collect(),
         }
     }
@@ -45,11 +60,28 @@ impl WordList {
     // Private API used by static-lang-word-lists
     #[doc(hidden)]
     pub fn new(name: String, words: Vec<String>) -> Self {
-        WordList { name, words }
+        WordList {
+            metadata: WordListMetadata {
+                name,
+                script: None,
+                language: None,
+            },
+            words,
+        }
     }
 
     pub fn name(&self) -> &str {
-        &self.name
+        &self.metadata.name
+    }
+
+    #[inline]
+    pub fn script(&self) -> Option<&str> {
+        self.metadata.script.as_deref()
+    }
+
+    #[inline]
+    pub fn language(&self) -> Option<&str> {
+        self.metadata.language.as_deref()
     }
 
     pub fn iter(&self) -> WordListIter {

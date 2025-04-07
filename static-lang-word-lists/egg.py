@@ -29,7 +29,6 @@ tuples = []
 for text_file in DATA_DIR.rglob("*.txt"):
     text_file = text_file.relative_to(DATA_DIR)
     metadatafile = text_file.with_suffix(".json")
-    print("Processing", text_file, metadatafile)
     if (DATA_DIR / metadatafile).exists():
         metadata = 'Some(r"' + str(metadatafile).replace("\\", "/") + '")'
     else:

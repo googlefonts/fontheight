@@ -2,7 +2,7 @@ use std::sync::LazyLock;
 mod word_lists;
 
 #[cfg(feature = "rayon")]
-pub use word_lists::rayon;
+pub use word_lists::rayon::ParWordListIter;
 pub use word_lists::{WordList, WordListError, WordListIter};
 
 pub type LazyWordList = LazyLock<WordList>;

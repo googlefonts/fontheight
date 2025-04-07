@@ -23,9 +23,8 @@ mod pens;
 
 pub use exemplars::CollectToExemplars;
 pub use locations::Location;
-#[cfg(feature = "rayon")]
-pub use static_lang_word_lists::rayon::ParWordListIter;
-pub use static_lang_word_lists::{WordList, WordListIter};
+pub use static_lang_word_lists::WordList;
+use static_lang_word_lists::WordListIter;
 
 pub struct Reporter<'a> {
     rusty_face: rustybuzz::Face<'a>,

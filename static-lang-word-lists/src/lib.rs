@@ -18,10 +18,13 @@ fn newline_delimited_words(input: impl AsRef<str>) -> Vec<String> {
 }
 
 macro_rules! wordlist {
-    (ident: $ident:ident,name: $name:ident,bytes: $bytes:expr $(,)?) => {
+    (ident: $ident:ident,metadata: $metadata:tt,bytes: $bytes:expr $(,)?) => {
         pub static $ident: $crate::LazyWordList =
             ::std::sync::LazyLock::new(|| {
-                static NAME: &str = ::std::stringify!($name);
+                let metadata: $crate::metadata::WordListMetadata =
+                    serde_json::from_str($metadata).unwrap_or_else(|err| {
+                        panic!("failed to deserialize metadata: {err}")
+                    });
                 let mut brotli_bytes: &[u8] = $bytes;
                 let mut buf =
                     ::std::vec::Vec::with_capacity(brotli_bytes.len());
@@ -29,12 +32,14 @@ macro_rules! wordlist {
                     &mut brotli_bytes,
                     &mut buf,
                 )
-                .unwrap_or_else(|err| panic!("failed to decode {NAME}: {err}"));
+                .unwrap_or_else(|err| {
+                    panic!("failed to decode {}: {err}", metadata.name)
+                });
                 // SAFETY: UTF-8 validity is checked by the build script
                 let raw_words = unsafe { String::from_utf8_unchecked(buf) };
-                ::log::debug!("loaded {NAME}");
+                ::log::debug!("loaded {}", metadata.name);
                 WordList::new(
-                    NAME.to_owned(),
+                    metadata.name,
                     $crate::newline_delimited_words(raw_words),
                 )
             });

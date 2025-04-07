@@ -61,6 +61,7 @@ impl<'a> Reporter<'a> {
 
         Ok(WordExtremesIterator {
             rusty_face,
+            rusty_plan: None,
             word_iter: word_list.iter(),
             instance_extremes,
             unicode_buffer: Some(UnicodeBuffer::new()),
@@ -76,6 +77,7 @@ impl<'a> Reporter<'a> {
         n_exemplars: usize,
     ) -> Result<Exemplars<'a>, SkrifaDrawError> {
         use rayon::prelude::*;
+        use rustybuzz::ShapePlan;
 
         struct WorkerState {
             // UnicodeBuffer is transformed into another type during shaping,
@@ -84,7 +86,7 @@ impl<'a> Reporter<'a> {
             // take ownership of it during each iteration for these
             // type changes to happen, while still re-using the buffer
             unicode_buffer: Option<UnicodeBuffer>,
-            // shaping_plan: ShapePlan,
+            shaping_plan: Option<ShapePlan>,
         }
 
         let mut rusty_face = self.rusty_face.clone();
@@ -99,6 +101,7 @@ impl<'a> Reporter<'a> {
             .map_init(
                 || WorkerState {
                     unicode_buffer: Some(UnicodeBuffer::new()),
+                    shaping_plan: None,
                 },
                 |state, word| {
                     // Take buffer; it should always be present
@@ -107,8 +110,11 @@ impl<'a> Reporter<'a> {
                     buffer.push_str(word);
                     buffer.guess_segment_properties();
                     // TODO: this is where you would use the shaping plan
-                    let glyph_buffer =
-                        rustybuzz::shape(&rusty_face, &[], buffer);
+                    let glyph_buffer = if let Some(plan) = &state.shaping_plan {
+                        rustybuzz::shape_with_plan(&rusty_face, plan, buffer)
+                    } else {
+                        rustybuzz::shape(&rusty_face, &[], buffer)
+                    };
 
                     let glyphs_missing = glyph_buffer
                         .glyph_infos()
@@ -175,6 +181,7 @@ impl<'a> Reporter<'a> {
 pub struct WordExtremesIterator<'a> {
     rusty_face: rustybuzz::Face<'a>,
     instance_extremes: InstanceExtremes,
+    rusty_plan: Option<rustybuzz::ShapePlan>,
     word_iter: WordListIter<'a>,
     // UnicodeBuffer is transformed into another type during shaping, and then
     // can only be reverted once we've finished analysing the shaped buffer.
@@ -200,7 +207,11 @@ impl<'a> Iterator for WordExtremesIterator<'a> {
 
             buffer.push_str(word);
             buffer.guess_segment_properties();
-            let glyph_buffer = rustybuzz::shape(&self.rusty_face, &[], buffer);
+            let glyph_buffer = if let Some(plan) = &self.rusty_plan {
+                rustybuzz::shape_with_plan(&self.rusty_face, plan, buffer)
+            } else {
+                rustybuzz::shape(&self.rusty_face, &[], buffer)
+            };
 
             let glyphs_missing = glyph_buffer
                 .glyph_infos()

@@ -9,6 +9,7 @@ name: Build & test
 # Make sure CI fails on all warnings, including Clippy lints
 env:
   RUSTFLAGS: "-Dwarnings"
+  STATIC_LANG_WORD_LISTS_LOCAL: true
 
 jobs:
   build-test:

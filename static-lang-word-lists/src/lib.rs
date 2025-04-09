@@ -22,7 +22,7 @@ macro_rules! wordlist {
         pub static $ident: $crate::LazyWordList =
             ::std::sync::LazyLock::new(|| {
                 let metadata: $crate::metadata::WordListMetadata =
-                    serde_json::from_str($metadata).unwrap_or_else(|err| {
+                    ::serde_json::from_str($metadata).unwrap_or_else(|err| {
                         panic!("failed to deserialize metadata: {err}")
                     });
                 let mut brotli_bytes: &[u8] = $bytes;

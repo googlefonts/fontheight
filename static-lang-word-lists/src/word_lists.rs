@@ -100,6 +100,7 @@ impl WordList {
         WordList { metadata, words }
     }
 
+    #[inline]
     pub fn name(&self) -> &str {
         &self.metadata.name
     }

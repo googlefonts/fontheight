@@ -14,10 +14,8 @@ use heck::ToShoutySnakeCase;
 
 const BASE_URL: &str = "https://raw.githubusercontent.com/googlefonts/fontheight/refs/heads/main/static-lang-word-lists/data";
 
-include!("src/metadata.rs");
-
-// Provides WORD_LISTS: &[(&str, &str)] for word list name and relative paths
-// See egg.py for how this code is generated
+// Provides WORD_LISTS: &[(&str, &str, &str)] for word list name, metadata name,
+// and relative paths. See egg.py for how this code is generated
 include!("chicken.rs");
 
 fn main() {
@@ -49,31 +47,21 @@ fn main() {
         WORD_LISTS
             .iter()
             .copied()
-            .for_each(|(metadata_file, path)| {
+            .for_each(|(name, metadata_file, path)| {
                 s.spawn(move || {
-                    let metadata_content = if let Some(metadata_file) =
-                        metadata_file
-                    {
-                        String::from_utf8(get_a_file(metadata_file))
-                            .expect("metadata file was not UTF-8")
-                    } else {
-                        // Fake it
-                        let metadata = WordListMetadata {
-                            name: path.replace(".txt", "").replace("/", "_"),
-                            script: None,
-                            language: None,
+                    let metadata_content =
+                        if let Some(metadata_file) = metadata_file {
+                            String::from_utf8(get_a_file(metadata_file))
+                                .expect("metadata file was not UTF-8")
+                        } else {
+                            format!(
+                                "{{
+                            \"name\": \"{name}\",
+                            \"script\": null,
+                            \"language\": null,
+                        }}"
+                            )
                         };
-                        serde_json::to_string(&metadata).expect("Can't happen")
-                    };
-                    let metadata: WordListMetadata = serde_json::from_str(
-                        &metadata_content,
-                    )
-                    .unwrap_or_else(|err| {
-                        panic!(
-                            "failed to deserialize {metadata_content}: {err}"
-                        );
-                    });
-                    let name = metadata.name;
                     let ident = name.to_shouty_snake_case();
                     let bytes = get_a_file(path);
                     let br_path = compress(&bytes, path);

@@ -8,7 +8,7 @@ readme = "README.md"
 repository = "https://github.com/googlefonts/fontheight"
 
 [dependencies]
-brotli-decompressor = "4"
+brotli-decompressor = "5"
 log = { workspace = true }
 phf = { version = "0.11.3", features = ["macros"] }
 rayon = { workspace = true, optional = true }
@@ -21,7 +21,6 @@ default-features = false
 features = ["parse"]
 
 [build-dependencies]
-brotli = "7"
-const_format = "0.2.34"
+brotli = "8"
 minreq = { version = "2.13", features = ["https"] }
 heck = "0.5.0"

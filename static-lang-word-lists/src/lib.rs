@@ -21,6 +21,8 @@ macro_rules! wordlist {
     (ident: $ident:ident,metadata: $metadata:expr,bytes: $bytes:expr $(,)?) => {
         pub static $ident: $crate::LazyWordList =
             ::std::sync::LazyLock::new(|| {
+                // Note: validity of TOML file was not validated during build,
+                // so we must check here
                 let metadata: $crate::word_lists::WordListMetadata =
                     ::toml::from_str($metadata).unwrap_or_else(|err| {
                         panic!("failed to deserialize metadata: {err}")

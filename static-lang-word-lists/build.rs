@@ -49,13 +49,9 @@ fn main() {
             .copied()
             .for_each(|(name, metadata_file, path)| {
                 s.spawn(move || {
-                    let metadata_content = match metadata_file {
-                        Some(metadata_file) => {
-                            String::from_utf8(get_a_file(metadata_file))
-                                .expect("metadata file was not UTF-8")
-                        },
-                        None => format!(r#"name = "{name}""#),
-                    };
+                    let metadata_content =
+                        String::from_utf8(get_a_file(metadata_file))
+                            .expect("metadata file was not UTF-8");
                     let ident = name.to_shouty_snake_case();
                     let bytes = get_a_file(path);
                     let br_path = compress(&bytes, path);

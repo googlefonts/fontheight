@@ -22,5 +22,6 @@ features = ["parse"]
 
 [build-dependencies]
 brotli = "7"
+const_format = "0.2.34"
 minreq = { version = "2.13", features = ["https"] }
 heck = "0.5.0"

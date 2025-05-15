@@ -10,22 +10,7 @@ use std::{
 use brotli::enc::{
     backward_references::BrotliEncoderMode, BrotliEncoderParams,
 };
-use const_format::concatcp;
 use heck::ToShoutySnakeCase;
-
-const fn branch_name() -> &'static str {
-    //noinspection RsReplaceMatchExpr
-    match option_env!("GITHUB_REF_NAME") {
-        Some(ref_name) => ref_name,
-        None => "main",
-    }
-}
-
-const BASE_URL: &str = concatcp!(
-    "https://raw.githubusercontent.com/googlefonts/fontheight/refs/heads/",
-    branch_name(),
-    "/static-lang-word-lists/data",
-);
 
 // Provides WORD_LISTS: &[(&str, &str, &str)] for word list name, metadata name,
 // and relative paths. See egg.py for how this code is generated
@@ -115,11 +100,13 @@ fn get_a_file(path: &str) -> Vec<u8> {
 }
 
 fn download_validate(relative_path: &str) -> Vec<u8> {
-    let response = minreq::get(format!("{BASE_URL}/{relative_path}"))
-        .send()
-        .unwrap_or_else(|err| {
-            panic!("failed to fetch {relative_path} from GitHub: {err}");
-        });
+    let url = format!(
+        "https://raw.githubusercontent.com/googlefonts/fontheight/refs/heads/{}/static-lang-word-lists/data/{relative_path}",
+        option_env!("GITHUB_REF_NAME").unwrap_or("main")
+    );
+    let response = minreq::get(url).send().unwrap_or_else(|err| {
+        panic!("failed to fetch {relative_path} from GitHub: {err}");
+    });
     assert_eq!(
         response.status_code, 200,
         "failed to get {relative_path}: {}",

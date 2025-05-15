@@ -49,19 +49,13 @@ fn main() {
             .copied()
             .for_each(|(name, metadata_file, path)| {
                 s.spawn(move || {
-                    let metadata_content =
-                        if let Some(metadata_file) = metadata_file {
+                    let metadata_content = match metadata_file {
+                        Some(metadata_file) => {
                             String::from_utf8(get_a_file(metadata_file))
                                 .expect("metadata file was not UTF-8")
-                        } else {
-                            format!(
-                                "{{
-                            \"name\": \"{name}\",
-                            \"script\": null,
-                            \"language\": null,
-                        }}"
-                            )
-                        };
+                        },
+                        None => format!(r#"name = "{name}""#),
+                    };
                     let ident = name.to_shouty_snake_case();
                     let bytes = get_a_file(path);
                     let br_path = compress(&bytes, path);
@@ -69,12 +63,11 @@ fn main() {
                     let mut codegen_file = codegen_file.lock().unwrap();
                     writeln!(
                         &mut codegen_file,
-                        r##"
-                    wordlist! {{
-                        ident: {ident},
-                        metadata: r#"{metadata_content}"#,
-                        bytes: include_bytes!(r"{}"),
-                    }}"##,
+                        r##"wordlist! {{
+                            ident: {ident},
+                            metadata: r#"{metadata_content}"#,
+                            bytes: include_bytes!(r"{}"),
+                        }}"##,
                         br_path.display(),
                     )
                     .unwrap_or_else(|err| {

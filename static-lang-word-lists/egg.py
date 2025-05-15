@@ -9,7 +9,7 @@ Is this code to generate code to help generate code? Yes.
 """
 
 from pathlib import Path
-import json
+import tomllib
 
 DATA_DIR = Path(__file__).parent / "data"
 GENERATED_FILE = Path(__file__).parent / "chicken.rs"
@@ -29,10 +29,10 @@ def path_to_upper_camel_case(path: Path) -> str:
 tuples = []
 for text_file in sorted(DATA_DIR.rglob("*.txt")):
     text_file = text_file.relative_to(DATA_DIR)
-    metadatafile = text_file.with_suffix(".json")
-    if (DATA_DIR / metadatafile).exists():
-        metadata = 'Some(r"' + str(metadatafile).replace("\\", "/") + '")'
-        name = json.loads((DATA_DIR / metadatafile).read_text(encoding="utf-8"))["name"]
+    metadata_file = text_file.with_suffix(".toml")
+    if (DATA_DIR / metadata_file).exists():
+        metadata = 'Some(r"' + str(metadata_file).replace("\\", "/") + '")'
+        name = tomllib.loads((DATA_DIR / metadata_file).read_text(encoding="utf-8"))["name"]
     else:
         metadata = "None"
         name = path_to_upper_camel_case(text_file)

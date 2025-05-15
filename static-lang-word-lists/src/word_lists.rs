@@ -5,26 +5,32 @@ use std::{
     slice,
 };
 
+use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-use crate::metadata::WordListMetadata;
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct WordListMetadata {
+    pub(crate) name: String,
+    script: Option<String>,
+    language: Option<String>,
+}
 
 impl WordListMetadata {
-    pub(crate) fn load(
-        metadata_path: impl Into<std::path::PathBuf>,
-    ) -> Result<Self, WordListError> {
+    #[allow(clippy::result_large_err)]
+    fn load(metadata_path: impl Into<PathBuf>) -> Result<Self, WordListError> {
         let path = metadata_path.into();
         let metadata_content = fs::read_to_string(&path).map_err(|io_err| {
             WordListError::FailedToRead(path.to_owned(), io_err)
         })?;
-        let metadata: WordListMetadata =
-            serde_json::from_str(&metadata_content).map_err(|json_err| {
+        let metadata: WordListMetadata = toml::from_str(&metadata_content)
+            .map_err(|json_err| {
                 WordListError::MetadataError(path.to_owned(), json_err)
             })?;
         Ok(metadata)
     }
 
-    pub(crate) fn new_from_name(name: impl Into<String>) -> Self {
+    fn new_from_name(name: impl Into<String>) -> Self {
         WordListMetadata {
             name: name.into(),
             script: None,
@@ -45,6 +51,7 @@ impl WordList {
     /// The file is expected to contain one word per line.
     /// The word list may also be accompanied by a metadata file in JSON format.
     /// See [`WordListMetadata`] for the expected format.
+    #[allow(clippy::result_large_err)]
     pub fn load(
         path: impl AsRef<Path>,
         metadata_path: Option<impl AsRef<Path>>,
@@ -171,7 +178,7 @@ pub enum WordListError {
     #[error("failed to read from {}: {}", .0.display(), .1)]
     FailedToRead(PathBuf, io::Error),
     #[error("failed to parse metadata from {}: {}", .0.display(), .1)]
-    MetadataError(PathBuf, serde_json::Error),
+    MetadataError(PathBuf, toml::de::Error),
 }
 
 #[cfg(feature = "rayon")]

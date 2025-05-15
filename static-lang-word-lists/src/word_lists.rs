@@ -18,9 +18,9 @@ pub struct WordListMetadata {
 
 impl WordListMetadata {
     #[allow(clippy::result_large_err)]
-    fn load(metadata_path: impl Into<PathBuf>) -> Result<Self, WordListError> {
-        let path = metadata_path.into();
-        let metadata_content = fs::read_to_string(&path).map_err(|io_err| {
+    fn load(metadata_path: impl AsRef<Path>) -> Result<Self, WordListError> {
+        let path = metadata_path.as_ref();
+        let metadata_content = fs::read_to_string(path).map_err(|io_err| {
             WordListError::FailedToRead(path.to_owned(), io_err)
         })?;
         let metadata: WordListMetadata = toml::from_str(&metadata_content)

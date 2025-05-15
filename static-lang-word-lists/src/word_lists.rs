@@ -49,40 +49,46 @@ impl WordList {
     /// Load a word list from a file.
     ///
     /// The file is expected to contain one word per line.
-    /// The word list may also be accompanied by a metadata file in JSON format.
-    /// See [`WordListMetadata`] for the expected format.
+    /// The word list may also be accompanied by a metadata TOML file.
+    /// See [`WordListMetadata`] for the expected fields.
     #[allow(clippy::result_large_err)]
     pub fn load(
         path: impl AsRef<Path>,
-        metadata_path: Option<impl AsRef<Path>>,
+        metadata_path: impl AsRef<Path>,
+    ) -> Result<Self, WordListError> {
+        let mut word_list = WordList::load_without_metadata(path)?;
+        word_list.metadata = WordListMetadata::load(metadata_path)?;
+        Ok(word_list)
+    }
+
+    /// Load a word list from a file.
+    ///
+    /// The file is expected to contain one word per line.
+    /// Always prefer [`WordList::load`] if metadata is available.
+    #[allow(clippy::result_large_err)]
+    pub fn load_without_metadata(
+        path: impl AsRef<Path>,
     ) -> Result<Self, WordListError> {
         let path = path.as_ref();
         let file_content = fs::read_to_string(path).map_err(|io_err| {
             WordListError::FailedToRead(path.to_owned(), io_err)
         })?;
-        let metadata = if let Some(metadata_path) = metadata_path {
-            let metadata_path = metadata_path.as_ref();
-            WordListMetadata::load(metadata_path)?
-        } else {
-            // Fake metadata as much as we can
-            let name = path
-                .file_stem()
-                .ok_or_else(|| {
-                    WordListError::FailedToRead(
-                        path.to_owned(),
-                        io::Error::new(
-                            io::ErrorKind::InvalidData,
-                            "file name is empty",
-                        ),
-                    )
-                })?
-                .to_string_lossy()
-                .to_string()
-                .replace("/", "_");
-            WordListMetadata::new_from_name(name)
-        };
+        let name = path
+            .file_stem()
+            .ok_or_else(|| {
+                WordListError::FailedToRead(
+                    path.to_owned(),
+                    io::Error::new(
+                        io::ErrorKind::InvalidData,
+                        "file name is empty",
+                    ),
+                )
+            })?
+            .to_string_lossy()
+            .replace("/", "_");
+
         Ok(WordList {
-            metadata,
+            metadata: WordListMetadata::new_from_name(name),
             words: file_content
                 .split_whitespace()
                 .filter(|word| !word.is_empty())

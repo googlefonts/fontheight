@@ -10,9 +10,22 @@ use std::{
 use brotli::enc::{
     backward_references::BrotliEncoderMode, BrotliEncoderParams,
 };
+use const_format::concatcp;
 use heck::ToShoutySnakeCase;
 
-const BASE_URL: &str = "https://raw.githubusercontent.com/googlefonts/fontheight/refs/heads/main/static-lang-word-lists/data";
+const fn branch_name() -> &'static str {
+    //noinspection RsReplaceMatchExpr
+    match option_env!("GITHUB_REF_NAME") {
+        Some(ref_name) => ref_name,
+        None => "main",
+    }
+}
+
+const BASE_URL: &str = concatcp!(
+    "https://raw.githubusercontent.com/googlefonts/fontheight/refs/heads/",
+    branch_name(),
+    "/static-lang-word-lists/data",
+);
 
 // Provides WORD_LISTS: &[(&str, &str, &str)] for word list name, metadata name,
 // and relative paths. See egg.py for how this code is generated

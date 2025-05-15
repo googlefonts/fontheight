@@ -1,5 +1,5 @@
 use std::sync::LazyLock;
-mod metadata;
+
 mod word_lists;
 
 #[cfg(feature = "rayon")]
@@ -18,11 +18,11 @@ fn newline_delimited_words(input: impl AsRef<str>) -> Vec<String> {
 }
 
 macro_rules! wordlist {
-    (ident: $ident:ident,metadata: $metadata:tt,bytes: $bytes:expr $(,)?) => {
+    (ident: $ident:ident,metadata: $metadata:expr,bytes: $bytes:expr $(,)?) => {
         pub static $ident: $crate::LazyWordList =
             ::std::sync::LazyLock::new(|| {
-                let metadata: $crate::metadata::WordListMetadata =
-                    ::serde_json::from_str($metadata).unwrap_or_else(|err| {
+                let metadata: $crate::word_lists::WordListMetadata =
+                    ::toml::from_str($metadata).unwrap_or_else(|err| {
                         panic!("failed to deserialize metadata: {err}")
                     });
                 let mut brotli_bytes: &[u8] = $bytes;

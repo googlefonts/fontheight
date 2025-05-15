@@ -104,12 +104,12 @@ fn download_validate(relative_path: &str) -> Vec<u8> {
         "https://raw.githubusercontent.com/googlefonts/fontheight/refs/heads/{}/static-lang-word-lists/data/{relative_path}",
         option_env!("GITHUB_REF_NAME").unwrap_or("main")
     );
-    let response = minreq::get(url).send().unwrap_or_else(|err| {
+    let response = minreq::get(&url).send().unwrap_or_else(|err| {
         panic!("failed to fetch {relative_path} from GitHub: {err}");
     });
     assert_eq!(
         response.status_code, 200,
-        "failed to get {relative_path}: {}",
+        "failed to get {relative_path}: {} from {url}",
         response.status_code
     );
     let bytes = response.into_bytes();

@@ -100,9 +100,11 @@ fn get_a_file(path: &str) -> Vec<u8> {
 }
 
 fn download_validate(relative_path: &str) -> Vec<u8> {
+    let git_ref = option_env!("GITHUB_HEAD_REF")
+        .filter(|val| !val.is_empty())
+        .unwrap_or("main");
     let url = format!(
-        "https://raw.githubusercontent.com/googlefonts/fontheight/refs/heads/{}/static-lang-word-lists/data/{relative_path}",
-        option_env!("GITHUB_HEAD_REF").unwrap_or("main")
+        "https://raw.githubusercontent.com/googlefonts/fontheight/refs/heads/{git_ref}/static-lang-word-lists/data/{relative_path}"
     );
     let response = minreq::get(&url).send().unwrap_or_else(|err| {
         panic!("failed to fetch {relative_path} from GitHub: {err}");

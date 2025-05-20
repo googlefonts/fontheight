@@ -357,6 +357,8 @@ impl<'a> Report<'a> {
 pub enum FontHeightError {
     #[error("rustybuzz could not parse the font")]
     Rustybuzz,
+    #[error("rustybuzz did not recognise the language: {0}")]
+    RustybuzzUnknownLanguage(&'static str),
     #[error("skrifa could not parse the font: {0}")]
     Skrifa(#[from] skrifa::raw::ReadError),
     #[error(transparent)]
@@ -372,11 +374,8 @@ fn plan_from_metadata(
     let language = word_list
         .language()
         .map(|lang| {
-            rustybuzz::Language::from_str(lang).map_err(|e| {
-                FontHeightError::OtherError(format!(
-                    "Problem parsing wordlist language: {e}"
-                ))
-            })
+            rustybuzz::Language::from_str(lang)
+                .map_err(FontHeightError::RustybuzzUnknownLanguage)
         })
         .transpose()?;
     Ok(word_list

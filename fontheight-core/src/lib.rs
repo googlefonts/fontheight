@@ -79,14 +79,14 @@ impl<'a> Reporter<'a> {
         use rayon::prelude::*;
         use rustybuzz::ShapePlan;
 
-        struct WorkerState {
+        struct WorkerState<'a> {
             // UnicodeBuffer is transformed into another type during shaping,
             // and then can only be reverted once we've finished
             // analysing the shaped buffer. The Option allows us to
             // take ownership of it during each iteration for these
             // type changes to happen, while still re-using the buffer
             unicode_buffer: Option<UnicodeBuffer>,
-            shaping_plan: Option<ShapePlan>,
+            shaping_plan: Option<&'a ShapePlan>,
         }
 
         let mut rusty_face = self.rusty_face.clone();
@@ -95,14 +95,16 @@ impl<'a> Reporter<'a> {
         let instance_extremes =
             InstanceExtremes::new(&self.skrifa_font, location)?;
 
+        let plan =
+            plan_from_metadata(&rusty_face, word_list).unwrap_or_default();
+
         let collector = word_list
             .par_iter()
             .take(k_words)
             .map_init(
                 || WorkerState {
                     unicode_buffer: Some(UnicodeBuffer::new()),
-                    shaping_plan: plan_from_metadata(&rusty_face, word_list)
-                        .unwrap_or_default(),
+                    shaping_plan: plan.as_ref(),
                 },
                 |state, word| {
                     // Take buffer; it should always be present

@@ -30,6 +30,13 @@ fn main() {
     let map_path = out_dir_path("map_codegen.rs");
     let mut map_file = open_path(&map_path);
 
+    let wordlist_source_dir =
+        &(if option_env!("STATIC_LANG_WORD_LISTS_LOCAL").is_none() {
+            download_to_tmpdir()
+        } else {
+            PathBuf::from("data")
+        });
+
     writeln!(
         &mut map_file,
         "pub static LOOKUP_TABLE: ::phf::Map<&'static str, &'static \
@@ -47,11 +54,13 @@ fn main() {
             .copied()
             .for_each(|(name, metadata_file, path)| {
                 s.spawn(move || {
-                    let metadata_content =
-                        String::from_utf8(get_a_file(metadata_file))
-                            .expect("metadata file was not UTF-8");
+                    let metadata_content = String::from_utf8(get_a_file(
+                        metadata_file,
+                        wordlist_source_dir,
+                    ))
+                    .expect("metadata file was not UTF-8");
                     let ident = name.to_shouty_snake_case();
-                    let bytes = get_a_file(path);
+                    let bytes = get_a_file(path, wordlist_source_dir);
                     let br_path = compress(&bytes, path);
 
                     let mut codegen_file = codegen_file.lock().unwrap();
@@ -85,41 +94,66 @@ fn main() {
     });
 }
 
-fn get_a_file(path: &str) -> Vec<u8> {
-    if option_env!("STATIC_LANG_WORD_LISTS_LOCAL").is_none() {
-        download_validate(path)
-    } else {
-        let repo_path = Path::new("data").join(path);
-        fs::read(&repo_path).unwrap_or_else(|err| {
-            panic!(
-                "failed to read local word list file {}: {err}",
-                repo_path.display()
-            );
-        })
-    }
+fn get_a_file(path: &str, data_dir: &Path) -> Vec<u8> {
+    let repo_path = data_dir.join(path);
+    fs::read(&repo_path).unwrap_or_else(|err| {
+        panic!(
+            "failed to read local word list file {}: {err}",
+            repo_path.display()
+        );
+    })
 }
 
-fn download_validate(relative_path: &str) -> Vec<u8> {
+fn download_to_tmpdir() -> PathBuf {
+    let outdir = env::temp_dir().join("static-lang-word-lists-data");
     let git_ref = option_env!("GITHUB_HEAD_REF")
         .filter(|val| !val.is_empty())
         .unwrap_or("main");
-    let url = format!(
-        "https://raw.githubusercontent.com/googlefonts/fontheight/refs/heads/{git_ref}/static-lang-word-lists/data/{relative_path}"
-    );
+    let url =
+        format!("https://github.com/googlefonts/fontheight/zipball/{git_ref}");
     let response = minreq::get(&url).send().unwrap_or_else(|err| {
-        panic!("failed to fetch {relative_path} from GitHub: {err}");
+        panic!("failed to fetch word lists from GitHub: {err}");
     });
     assert_eq!(
         response.status_code, 200,
-        "failed to get {relative_path}: {} from {url}",
+        "failed to download wordlists: {} from {url}",
         response.status_code
     );
     let bytes = response.into_bytes();
-    assert!(
-        std::str::from_utf8(&bytes).is_ok(),
-        "{relative_path} was not UTF-8"
-    );
-    bytes
+    let mut archive =
+        zip::ZipArchive::new(Cursor::new(bytes)).unwrap_or_else(|err| {
+            panic!("failed to unzip word lists: {err}");
+        });
+    for i in 0..archive.len() {
+        let mut file = archive.by_index(i).unwrap();
+        let filename = match file.enclosed_name() {
+            // Drop the first two components ("googlefonts-fontheight-<hash>",
+            // "static-word-lists") and keep the rest of the path.
+            Some(path) => path.components().skip(2).collect::<PathBuf>(),
+            None => continue,
+        };
+        if filename.components().any(|c| c.as_os_str() == "data")
+            && file.is_file()
+        {
+            let final_path = outdir.join(&filename);
+            fs::create_dir_all(final_path.parent().unwrap()).unwrap_or_else(
+                |err| {
+                    panic!(
+                        "failed to create parent directory for \
+                         {final_path:?}: {err}"
+                    );
+                },
+            );
+            let mut outfile =
+                fs::File::create(&final_path).unwrap_or_else(|err| {
+                    panic!("failed to create file {final_path:?}: {err}");
+                });
+            std::io::copy(&mut file, &mut outfile).unwrap_or_else(|err| {
+                panic!("failed to copy file {filename:?} in {outdir:?}: {err}");
+            });
+        }
+    }
+    outdir.join("data")
 }
 
 fn compress(bytes: &[u8], relative_path: &str) -> PathBuf {

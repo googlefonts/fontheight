@@ -24,4 +24,10 @@ features = ["parse"]
 brotli = "8"
 minreq = { version = "2.13", features = ["https"] }
 heck = "0.5.0"
-zip = "3"
+
+[build-dependencies.zip]
+version = "3"
+default-features = false
+features = [
+    "deflate",
+]

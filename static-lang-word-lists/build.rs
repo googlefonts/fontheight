@@ -1,8 +1,11 @@
 use std::{
-    env, fs,
+    env,
+    ffi::OsStr,
+    fs,
     fs::{File, OpenOptions},
+    io,
     io::{Cursor, Write},
-    path::{Path, PathBuf},
+    path::{Component, Path, PathBuf},
     sync::Mutex,
     thread,
 };
@@ -11,6 +14,7 @@ use brotli::enc::{
     backward_references::BrotliEncoderMode, BrotliEncoderParams,
 };
 use heck::ToShoutySnakeCase;
+use zip::ZipArchive;
 
 // Provides WORD_LISTS: &[(&str, &str, &str)] for word list name, metadata name,
 // and relative paths. See egg.py for how this code is generated
@@ -21,21 +25,18 @@ fn main() {
     println!("cargo::rerun-if-changed=build.rs");
     println!("cargo::rerun-if-env-changed=STATIC_LANG_WORD_LISTS_LOCAL");
 
-    if option_env!("STATIC_LANG_WORD_LISTS_LOCAL").is_some() {
-        println!("cargo::warning=building from local files");
-    }
-
     let word_list_path = out_dir_path("word_list_codegen.rs");
     let word_list_file = Mutex::new(open_path(&word_list_path));
     let map_path = out_dir_path("map_codegen.rs");
     let mut map_file = open_path(&map_path);
 
     let wordlist_source_dir =
-        &(if option_env!("STATIC_LANG_WORD_LISTS_LOCAL").is_none() {
-            download_to_tmpdir()
+        if option_env!("STATIC_LANG_WORD_LISTS_LOCAL").is_none() {
+            download_repo_word_lists()
         } else {
+            println!("cargo::warning=building from local files");
             PathBuf::from("data")
-        });
+        };
 
     writeln!(
         &mut map_file,
@@ -47,6 +48,7 @@ fn main() {
 
     thread::scope(|s| {
         // Bind references to names so they can be copied to each spawned thread
+        let wordlist_source_dir = wordlist_source_dir.as_path();
         let codegen_file = &word_list_file;
         let map_file = &map_file;
         WORD_LISTS
@@ -104,56 +106,79 @@ fn get_a_file(path: &str, data_dir: &Path) -> Vec<u8> {
     })
 }
 
-fn download_to_tmpdir() -> PathBuf {
-    let outdir = env::temp_dir().join("static-lang-word-lists-data");
+fn download_repo_word_lists() -> PathBuf {
     let git_ref = option_env!("GITHUB_HEAD_REF")
         .filter(|val| !val.is_empty())
         .unwrap_or("main");
     let url =
         format!("https://github.com/googlefonts/fontheight/zipball/{git_ref}");
+
     let response = minreq::get(&url).send().unwrap_or_else(|err| {
-        panic!("failed to fetch word lists from GitHub: {err}");
+        panic!("failed to download fontheight repo from GitHub: {err}");
     });
     assert_eq!(
         response.status_code, 200,
-        "failed to download wordlists: {} from {url}",
+        "failed to download repo: {} from {url}",
         response.status_code
     );
     let bytes = response.into_bytes();
+
+    let out_dir = out_dir_path("static-lang-word-lists");
     let mut archive =
-        zip::ZipArchive::new(Cursor::new(bytes)).unwrap_or_else(|err| {
-            panic!("failed to unzip word lists: {err}");
+        ZipArchive::new(Cursor::new(bytes)).unwrap_or_else(|err| {
+            panic!("failed to read repo zip archive: {err}");
         });
-    for i in 0..archive.len() {
-        let mut file = archive.by_index(i).unwrap();
-        let filename = match file.enclosed_name() {
-            // Drop the first two components ("googlefonts-fontheight-<hash>",
-            // "static-word-lists") and keep the rest of the path.
-            Some(path) => path.components().skip(2).collect::<PathBuf>(),
-            None => continue,
-        };
-        if filename.components().any(|c| c.as_os_str() == "data")
-            && file.is_file()
-        {
-            let final_path = outdir.join(&filename);
-            fs::create_dir_all(final_path.parent().unwrap()).unwrap_or_else(
-                |err| {
-                    panic!(
-                        "failed to create parent directory for \
-                         {final_path:?}: {err}"
-                    );
-                },
-            );
-            let mut outfile =
-                fs::File::create(&final_path).unwrap_or_else(|err| {
-                    panic!("failed to create file {final_path:?}: {err}");
-                });
-            std::io::copy(&mut file, &mut outfile).unwrap_or_else(|err| {
-                panic!("failed to copy file {filename:?} in {outdir:?}: {err}");
-            });
+    for index in 0..archive.len() {
+        let compressed_entry = archive.by_index_raw(index).unwrap();
+        if !compressed_entry.is_file() {
+            continue;
         }
+        let Some(file_name) = compressed_entry.enclosed_name() else {
+            continue;
+        };
+
+        // Check path is relevant
+        let mut components = file_name.components();
+        components.next(); // Drop root `googlefonts-fontheight-<hash>`
+        if components.next()
+            != Some(Component::Normal(OsStr::new("static-lang-word-lists")))
+        {
+            continue;
+        }
+        if components.next() != Some(Component::Normal(OsStr::new("data"))) {
+            continue;
+        }
+
+        // Now we know we want it, decompress it
+        drop(compressed_entry);
+        let mut decompressed_entry = archive.by_index(index).unwrap();
+
+        let final_path = out_dir
+            .components()
+            .chain(file_name.components().skip(2))
+            .collect::<PathBuf>();
+        fs::create_dir_all(final_path.parent().unwrap()).unwrap_or_else(
+            |err| {
+                panic!(
+                    "failed to create parent directory for {}: {err}",
+                    final_path.display(),
+                );
+            },
+        );
+        let mut out_file = File::create(&final_path).unwrap_or_else(|err| {
+            panic!("failed to create file {}: {err}", final_path.display());
+        });
+        io::copy(&mut decompressed_entry, &mut out_file).unwrap_or_else(
+            |err| {
+                panic!(
+                    "failed to copy file {} in {}: {err}",
+                    file_name.display(),
+                    out_dir.display(),
+                );
+            },
+        );
     }
-    outdir.join("data")
+    out_dir.join("data")
 }
 
 fn compress(bytes: &[u8], relative_path: &str) -> PathBuf {

@@ -360,7 +360,7 @@ pub enum FontHeightError {
     RustybuzzUnknownLanguage(&'static str),
     #[error("skrifa could not parse the font: {0}")]
     Skrifa(#[from] skrifa::raw::ReadError),
-    #[error("Tag was invalid: {0}")]
+    #[error("invalid tag: {0}")]
     InvalidTag(#[from] skrifa::raw::types::InvalidTag),
     #[error(transparent)]
     Drawing(#[from] SkrifaDrawError),

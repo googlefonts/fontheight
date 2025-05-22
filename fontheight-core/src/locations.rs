@@ -7,14 +7,32 @@ use itertools::Itertools;
 use ordered_float::OrderedFloat;
 use skrifa::{raw::collections::int_set::Domain, MetadataProvider};
 
+use crate::FontHeightError;
+
 pub type SimpleLocation = HashMap<String, f32>;
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct Location {
     user_coords: HashMap<skrifa::Tag, f32>,
 }
 
 impl Location {
+    pub fn new(user_coords: HashMap<skrifa::Tag, f32>) -> Self {
+        Self { user_coords }
+    }
+
+    pub fn from_simple(
+        location: SimpleLocation,
+    ) -> Result<Self, FontHeightError> {
+        let user_coords = location
+            .into_iter()
+            .map(|(tag, val)| {
+                skrifa::Tag::new_checked(tag.as_bytes()).map(|t| (t, val))
+            })
+            .collect::<Result<_, _>>()?;
+        Ok(Self { user_coords })
+    }
+
     pub fn to_simple(&self) -> SimpleLocation {
         self.user_coords
             .iter()

@@ -34,7 +34,7 @@ pub struct Reporter<'a> {
 impl<'a> Reporter<'a> {
     pub fn new(font_bytes: &'a [u8]) -> Result<Self, FontHeightError> {
         let rusty_face = rustybuzz::Face::from_slice(font_bytes, 0)
-            .ok_or(FontHeightError::Rustybuzz)?;
+            .ok_or(FontHeightError::RustybuzzParse)?;
 
         let skrifa_font = skrifa::FontRef::new(font_bytes)?;
 
@@ -60,7 +60,7 @@ impl<'a> Reporter<'a> {
             InstanceExtremes::new(&self.skrifa_font, location)?;
 
         Ok(WordExtremesIterator {
-            rusty_plan: plan_from_metadata(&rusty_face, word_list)?,
+            rusty_plan: word_list.shaping_plan(&rusty_face)?,
             rusty_face,
             word_iter: word_list.iter(),
             instance_extremes,
@@ -95,8 +95,7 @@ impl<'a> Reporter<'a> {
         let instance_extremes =
             InstanceExtremes::new(&self.skrifa_font, location)?;
 
-        let plan =
-            plan_from_metadata(&rusty_face, word_list).unwrap_or_default();
+        let plan = word_list.shaping_plan(&rusty_face).unwrap_or_default();
 
         let collector = word_list
             .par_iter()
@@ -356,51 +355,61 @@ impl<'a> Report<'a> {
 #[derive(Debug, Error)]
 pub enum FontHeightError {
     #[error("rustybuzz could not parse the font")]
-    Rustybuzz,
+    RustybuzzParse,
     #[error("rustybuzz did not recognise the language: {0}")]
     RustybuzzUnknownLanguage(&'static str),
     #[error("skrifa could not parse the font: {0}")]
     Skrifa(#[from] skrifa::raw::ReadError),
     #[error(transparent)]
     Drawing(#[from] SkrifaDrawError),
-    #[error("{0}")]
-    OtherError(String),
 }
 
-fn plan_from_metadata(
-    rusty_face: &rustybuzz::Face,
-    word_list: &WordList,
-) -> Result<Option<rustybuzz::ShapePlan>, FontHeightError> {
-    let language = word_list
-        .language()
-        .map(|lang| {
-            rustybuzz::Language::from_str(lang)
-                .map_err(FontHeightError::RustybuzzUnknownLanguage)
-        })
-        .transpose()?;
-    Ok(word_list
-        .script()
-        .and_then(|script| {
-            rustybuzz::Script::from_iso15924_tag(
-                rustybuzz::ttf_parser::Tag::from_bytes_lossy(script.as_bytes()),
-            )
-        })
-        .map(|script| {
-            rustybuzz::ShapePlan::new(
-                rusty_face,
-                direction_from_script(script)
-                    .unwrap_or(rustybuzz::Direction::LeftToRight),
-                Some(script),
-                language.as_ref(),
-                &[],
-            )
-        }))
+trait WordListExt {
+    fn shaping_plan(
+        &self,
+        rusty_face: &rustybuzz::Face,
+    ) -> Result<Option<rustybuzz::ShapePlan>, FontHeightError>;
+}
+
+impl WordListExt for WordList {
+    fn shaping_plan(
+        &self,
+        rusty_face: &rustybuzz::Face,
+    ) -> Result<Option<rustybuzz::ShapePlan>, FontHeightError> {
+        let script = self
+            .script()
+            .map(str::as_bytes)
+            .map(rustybuzz::ttf_parser::Tag::from_bytes_lossy)
+            .and_then(rustybuzz::Script::from_iso15924_tag);
+        let shaping_plan = match script {
+            Some(script) => {
+                let language = self
+                    .language()
+                    .map(|lang| {
+                        rustybuzz::Language::from_str(lang)
+                            .map_err(FontHeightError::RustybuzzUnknownLanguage)
+                    })
+                    .transpose()?;
+                Some(rustybuzz::ShapePlan::new(
+                    rusty_face,
+                    direction_from_script(script)
+                        .unwrap_or(rustybuzz::Direction::LeftToRight),
+                    Some(script),
+                    language.as_ref(),
+                    &[],
+                ))
+            },
+            None => None,
+        };
+        Ok(shaping_plan)
+    }
 }
 
 fn direction_from_script(
     script: rustybuzz::Script,
 ) -> Option<rustybuzz::Direction> {
     // Copied from Rustybuzz
+    // https://docs.rs/rustybuzz/0.20.1/src/rustybuzz/hb/common.rs.html#72-154
 
     match script {
         // Unicode-1.1 additions

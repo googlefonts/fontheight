@@ -1,11 +1,12 @@
 use std::{
-    collections::{BTreeSet, HashMap},
+    collections::{BTreeSet, HashMap, HashSet},
     fmt,
 };
 
 use itertools::Itertools;
 use ordered_float::OrderedFloat;
 use skrifa::{raw::collections::int_set::Domain, MetadataProvider};
+use thiserror::Error;
 
 use crate::FontHeightError;
 
@@ -58,6 +59,28 @@ impl Location {
             })
             .collect()
     }
+
+    pub fn validate_for(
+        &self,
+        font: &skrifa::FontRef,
+    ) -> Result<(), MismatchedAxesError> {
+        let mut extras =
+            self.user_coords.keys().copied().collect::<HashSet<_>>();
+        let missing = font
+            .axes()
+            .iter()
+            .map(|axis| axis.tag())
+            .filter(|tag| !extras.remove(tag))
+            .collect::<Vec<_>>();
+        if extras.is_empty() && missing.is_empty() {
+            Ok(())
+        } else {
+            Err(MismatchedAxesError {
+                missing,
+                extras: Vec::from_iter(extras),
+            })
+        }
+    }
 }
 
 impl fmt::Debug for Location {
@@ -69,6 +92,34 @@ impl fmt::Debug for Location {
                     .map(|(tag, &val)| (tag.to_string(), val)),
             )
             .finish()
+    }
+}
+
+#[derive(Debug, Error)]
+pub struct MismatchedAxesError {
+    extras: Vec<skrifa::Tag>,
+    missing: Vec<skrifa::Tag>,
+}
+
+impl fmt::Display for MismatchedAxesError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str("mismatched axes: ")?;
+        match (self.extras.is_empty(), self.missing.is_empty()) {
+            (false, false) => write!(
+                f,
+                "in font but not Location {:?}; in Location but not font {:?}",
+                self.missing, self.extras,
+            ),
+            (true, false) => {
+                write!(f, "in font but not Location {:?}", self.missing)
+            },
+            (false, true) => {
+                write!(f, "in Location but not font {:?}", self.extras)
+            },
+            (true, true) => unreachable!(
+                "MismatchedAxesError constructed with two empty lists"
+            ),
+        }
     }
 }
 

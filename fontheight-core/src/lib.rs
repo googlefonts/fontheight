@@ -3,28 +3,25 @@
 use std::{collections::HashMap, convert::identity, str::FromStr};
 
 use exemplars::ExemplarCollector;
-pub use exemplars::Exemplars;
+pub use exemplars::{CollectToExemplars, Exemplars};
 use kurbo::Shape;
-pub use locations::SimpleLocation;
+use locations::interesting_locations;
+pub use locations::{Location, MismatchedAxesError, SimpleLocation};
 use ordered_float::OrderedFloat;
+use pens::BezierPen;
 use rustybuzz::UnicodeBuffer;
 use skrifa::{
     instance::Size,
     outline::{DrawError, DrawSettings},
     MetadataProvider,
 };
+pub use static_lang_word_lists::WordList;
+use static_lang_word_lists::WordListIter;
 use thiserror::Error;
-
-use crate::{locations::interesting_locations, pens::BezierPen};
 
 mod exemplars;
 mod locations;
 mod pens;
-
-pub use exemplars::CollectToExemplars;
-pub use locations::Location;
-pub use static_lang_word_lists::WordList;
-use static_lang_word_lists::WordListIter;
 
 pub struct Reporter<'a> {
     rusty_face: rustybuzz::Face<'a>,
@@ -53,11 +50,12 @@ impl<'a> Reporter<'a> {
         location: &'a Location,
         word_list: &'a WordList,
     ) -> Result<WordExtremesIterator<'a>, FontHeightError> {
-        let mut rusty_face = self.rusty_face.clone();
-        rusty_face.set_variations(&location.to_rustybuzz());
-
+        // Creating InstanceExtremes also validates the Location; do this first
         let instance_extremes =
             InstanceExtremes::new(&self.skrifa_font, location)?;
+
+        let mut rusty_face = self.rusty_face.clone();
+        rusty_face.set_variations(&location.to_rustybuzz());
 
         Ok(WordExtremesIterator {
             rusty_plan: word_list.shaping_plan(&rusty_face)?,
@@ -75,7 +73,7 @@ impl<'a> Reporter<'a> {
         word_list: &'a WordList,
         k_words: Option<usize>,
         n_exemplars: usize,
-    ) -> Result<Exemplars<'a>, SkrifaDrawError> {
+    ) -> Result<Exemplars<'a>, FontHeightError> {
         use rayon::prelude::*;
         use rustybuzz::ShapePlan;
 
@@ -89,11 +87,12 @@ impl<'a> Reporter<'a> {
             shaping_plan: Option<&'a ShapePlan>,
         }
 
-        let mut rusty_face = self.rusty_face.clone();
-        rusty_face.set_variations(&location.to_rustybuzz());
-
+        // Creating InstanceExtremes also validates the Location; do this first
         let instance_extremes =
             InstanceExtremes::new(&self.skrifa_font, location)?;
+
+        let mut rusty_face = self.rusty_face.clone();
+        rusty_face.set_variations(&location.to_rustybuzz());
 
         let plan = word_list.shaping_plan(&rusty_face).unwrap_or_default();
 
@@ -277,7 +276,8 @@ impl InstanceExtremes {
     pub fn new(
         font: &skrifa::FontRef,
         location: &Location,
-    ) -> Result<Self, SkrifaDrawError> {
+    ) -> Result<Self, FontHeightError> {
+        location.validate_for(font)?;
         let instance_extremes = font
             .outline_glyphs()
             .iter()
@@ -364,6 +364,8 @@ pub enum FontHeightError {
     InvalidTag(#[from] skrifa::raw::types::InvalidTag),
     #[error(transparent)]
     Drawing(#[from] SkrifaDrawError),
+    #[error(transparent)]
+    MismatchedAxes(#[from] MismatchedAxesError),
 }
 
 trait WordListExt {

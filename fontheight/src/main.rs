@@ -80,7 +80,7 @@ fn _main() -> anyhow::Result<()> {
                         .par_check_location(
                             location,
                             word_list,
-                            args.words_per_list,
+                            Some(args.words_per_list),
                             args.results,
                         )?
                         .to_report(location, word_list);

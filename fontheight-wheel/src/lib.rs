@@ -127,7 +127,7 @@ impl From<&WordExtremes<'_>> for OwnedWordExtremes {
 #[pyfunction]
 pub fn get_min_max_extremes_from(
     path: PathBuf,
-    k_words: usize,
+    k_words: Option<usize>,
     n_exemplars: usize,
 ) -> anyhow::Result<Vec<OwnedReport>> {
     let bytes = fs::read(&path)
@@ -138,7 +138,7 @@ pub fn get_min_max_extremes_from(
 #[pyfunction]
 pub fn get_min_max_extremes(
     font_bytes: &[u8],
-    k_words: usize,
+    k_words: Option<usize>,
     n_exemplars: usize,
 ) -> anyhow::Result<Vec<OwnedReport>> {
     let reporter = Reporter::new(font_bytes)?;

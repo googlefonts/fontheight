@@ -4,7 +4,6 @@ use std::{collections::HashMap, convert::identity};
 
 use exemplars::ExemplarCollector;
 pub use exemplars::Exemplars;
-use itertools::Either;
 use kurbo::Shape;
 pub use locations::SimpleLocation;
 use ordered_float::OrderedFloat;
@@ -94,13 +93,9 @@ impl<'a> Reporter<'a> {
         let instance_extremes =
             InstanceExtremes::new(&self.skrifa_font, location)?;
 
-        let collector = word_list.par_iter();
-        let collector = if let Some(k_words) = k_words {
-            Either::Left(collector.take(k_words))
-        } else {
-            Either::Right(collector)
-        };
-        let collector = collector
+        let collector = word_list
+            .par_iter()
+            .take(k_words.unwrap_or(usize::MAX))
             .map_init(
                 || WorkerState {
                     unicode_buffer: Some(UnicodeBuffer::new()),

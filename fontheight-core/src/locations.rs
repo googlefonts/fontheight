@@ -3,8 +3,6 @@ use std::{
     fmt,
 };
 
-// Re-exported as it appears in public API of Location::axis
-pub use font_types::InvalidTag;
 use itertools::Itertools;
 use ordered_float::OrderedFloat;
 use skrifa::{raw::collections::int_set::Domain, MetadataProvider};
@@ -28,7 +26,7 @@ impl Location {
         &mut self,
         tag: impl AsRef<[u8]>,
         value: impl Into<f32>,
-    ) -> Result<(), InvalidTag> {
+    ) -> Result<(), skrifa::raw::types::InvalidTag> {
         let tag = skrifa::Tag::new_checked(tag.as_ref())?;
         self.user_coords.insert(tag, value.into());
         Ok(())

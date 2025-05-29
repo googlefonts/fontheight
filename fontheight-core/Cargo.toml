@@ -12,7 +12,6 @@ default = ["rayon"]
 rayon = ["dep:rayon", "static-lang-word-lists/rayon"]
 
 [dependencies]
-font-types = "0.8.2"
 itertools = "0.14.0"
 kurbo = "0.11.1"
 log = { workspace = true }

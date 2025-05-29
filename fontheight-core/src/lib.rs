@@ -6,10 +6,12 @@ use exemplars::ExemplarCollector;
 pub use exemplars::{CollectToExemplars, Exemplars};
 use kurbo::Shape;
 use locations::interesting_locations;
-pub use locations::{Location, MismatchedAxesError, SimpleLocation, InvalidTag};
+pub use locations::{Location, MismatchedAxesError, SimpleLocation};
 use ordered_float::OrderedFloat;
 use pens::BezierPen;
 use rustybuzz::UnicodeBuffer;
+// It's returned in public API (Location::axis), so re-export it
+pub use skrifa::raw::types::InvalidTag;
 use skrifa::{
     instance::Size,
     outline::{DrawError, DrawSettings},

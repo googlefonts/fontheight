@@ -1,3 +1,5 @@
+#![allow(missing_docs)]
+
 mod fmt;
 
 use std::{fs, iter, path::PathBuf, process::ExitCode, time::Instant};

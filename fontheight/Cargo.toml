@@ -23,3 +23,6 @@ default-features = false
 features = [
     "auto-color",
 ]
+
+[lints]
+workspace = true

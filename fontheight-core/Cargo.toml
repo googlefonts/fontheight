@@ -25,3 +25,6 @@ static-lang-word-lists = { version = "0.1.0", path = "../static-lang-word-lists"
 [package.metadata.docs.rs]
 all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
+
+[lints]
+workspace = true

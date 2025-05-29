@@ -6,7 +6,7 @@ use exemplars::ExemplarCollector;
 pub use exemplars::{CollectToExemplars, Exemplars};
 use kurbo::Shape;
 use locations::interesting_locations;
-pub use locations::{Location, MismatchedAxesError, SimpleLocation};
+pub use locations::{Location, MismatchedAxesError, SimpleLocation, InvalidTag};
 use ordered_float::OrderedFloat;
 use pens::BezierPen;
 use rustybuzz::UnicodeBuffer;

@@ -30,3 +30,13 @@ opt-level = 1
 opt-level = 3
 [profile.release.package.brotli]
 opt-level = 3
+
+[workspace.lints.rust]
+missing_docs = "warn"
+unsafe_op_in_unsafe_fn = "forbid"
+
+[workspace.lints.rustdoc]
+broken_intra_doc_links = "forbid"
+
+[workspace.lints.clippy]
+undocumented_unsafe_blocks = "warn"

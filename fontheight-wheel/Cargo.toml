@@ -18,3 +18,7 @@ features = [
     "extension-module",
     "anyhow",
 ]
+
+# FIXME: enable workspace lints when pushing for a release
+# [lints]
+# workspace = true

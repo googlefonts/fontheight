@@ -1,11 +1,43 @@
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
+// Copied from the top of the repo README with minor edits
+//! Font Height is a tool that provides recommendations on setting font
+//! vertical metrics based on **shaped words**.
+//!
+//! ## Motivation
+//!
+//! Vertical metrics frequently decide clipping boundaries, but are not used
+//! consistently across platforms: e.g. Windows uses OS/2 WinAscent/WinDescent,
+//! whereas for system fonts [Android uses TypoAscent/TypoDescent and a combination of custom heuristics](https://simoncozens.github.io/android-clipping/).
+//!
+//! It is often desirable to derive metrics from shaped words as opposed to
+//! individual glyphs, as words may reach greater extents:
+//!
+//! > Early versions of this specification suggested that the usWinAscent value
+//! > be computed as the yMax for all characters in the Windows “ANSI” character
+//! > set.
+//! > For new fonts, the value should be determined based on the primary
+//! > languages the font is designed to support, and should take into
+//! > consideration additional height that could be required to accommodate tall
+//! > glyphs or mark positioning.
+//!
+//! ⬆️ [OS/2 — OS/2 and Windows Metrics Table, OpenType Specification 1.9.1](https://learn.microsoft.com/en-us/typography/opentype/spec/os2#uswinascent)
+//!
+//! For this reason, vertical metrics must be chosen with a combination of
+//! design (e.g. aesthetic, legibility) and engineering (e.g. clipping)
+//! considerations in mind. For the latter, `fontheight` evaluates the extents
+//! of a corpus of shaped text across each writing system that a font intends to
+//! support.
 
-use std::{collections::HashMap, convert::identity, str::FromStr};
+use std::{
+    collections::{BTreeSet, HashMap},
+    convert::identity,
+    str::FromStr,
+};
 
 use exemplars::ExemplarCollector;
 pub use exemplars::{CollectToExemplars, Exemplars};
+use itertools::Itertools;
 use kurbo::Shape;
-use locations::interesting_locations;
 pub use locations::{Location, MismatchedAxesError, SimpleLocation};
 use ordered_float::OrderedFloat;
 use pens::BezierPen;
@@ -25,12 +57,17 @@ mod exemplars;
 mod locations;
 mod pens;
 
+/// Font Height's entrypoint. Parses fonts and can check word lists at
+/// specified locations.
 pub struct Reporter<'a> {
     rusty_face: rustybuzz::Face<'a>,
     skrifa_font: skrifa::FontRef<'a>,
 }
 
 impl<'a> Reporter<'a> {
+    /// Parses the byte slice as a font to create a new [`Reporter`].
+    ///
+    /// Fails if the bytes couldn't be parsed.
     pub fn new(font_bytes: &'a [u8]) -> Result<Self, FontHeightError> {
         let rusty_face = rustybuzz::Face::from_slice(font_bytes, 0)
             .ok_or(FontHeightError::RustybuzzParse)?;
@@ -43,10 +80,49 @@ impl<'a> Reporter<'a> {
         })
     }
 
+    /// Gets all combinations of axis coordinates seen in named instances, axis
+    /// extremes, and default locations.
     pub fn interesting_locations(&self) -> Vec<Location> {
-        interesting_locations(&self.skrifa_font)
+        let font = &self.skrifa_font;
+        let mut axis_coords =
+            vec![BTreeSet::<OrderedFloat<f32>>::new(); font.axes().len()];
+
+        font.named_instances()
+            .iter()
+            .flat_map(|instance| instance.user_coords().enumerate())
+            .for_each(|(axis, coord)| {
+                axis_coords[axis].insert(coord.into());
+            });
+
+        font.axes().iter().for_each(|axis| {
+            axis_coords[axis.index()].extend(&[
+                axis.default_value().into(),
+                axis.min_value().into(),
+                axis.max_value().into(),
+            ]);
+        });
+
+        axis_coords
+            .iter()
+            .multi_cartesian_product()
+            .map(|coords| {
+                let inner = coords
+                    .into_iter()
+                    .zip(font.axes().iter())
+                    .map(|(coord, axis)| (axis.tag(), From::from(*coord)))
+                    .collect();
+                Location::new(inner)
+            })
+            .collect()
     }
 
+    /// Create an iterator for [`WordExtremes`] at a given location.
+    ///
+    /// Fails if the [`Location`] isn't valid for the font (e.g. specifying axes
+    /// that don't exist).
+    ///
+    /// See [`Location`] if you want to specify locations yourself, or otherwise
+    /// you could consider using [`Reporter::interesting_locations`].
     pub fn check_location(
         &'a self,
         location: &'a Location,
@@ -68,6 +144,13 @@ impl<'a> Reporter<'a> {
         })
     }
 
+    /// Create a parallel iterator for [`WordExtremes`] at a given location.
+    ///
+    /// Fails if the [`Location`] isn't valid for the font (e.g. specifying axes
+    /// that don't exist).
+    ///
+    /// See [`Location`] if you want to specify locations yourself, or otherwise
+    /// you could consider using [`Reporter::interesting_locations`].
     #[cfg(feature = "rayon")]
     pub fn par_check_location(
         &'a self,
@@ -181,6 +264,10 @@ impl<'a> Reporter<'a> {
     }
 }
 
+/// An iterator of [`WordExtremes`] for one specific font, [`WordList`], and
+/// [`Location`].
+///
+/// Produced by a [`Reporter`].
 pub struct WordExtremesIterator<'a> {
     rusty_face: rustybuzz::Face<'a>,
     instance_extremes: InstanceExtremes,
@@ -265,9 +352,12 @@ impl<'a> Iterator for WordExtremesIterator<'a> {
     }
 }
 
+/// A word and the vertical extremes it reached when shaped.
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct WordExtremes<'w> {
+    /// The word that was shaped.
     pub word: &'w str,
+    /// The high & low point reached while shaping.
     pub extremes: VerticalExtremes,
 }
 
@@ -305,15 +395,18 @@ impl InstanceExtremes {
         Ok(InstanceExtremes(instance_extremes))
     }
 
+    /// Get the [`VerticalExtremes`] for the given glyph ID.
     pub fn get(&self, glyph_id: u32) -> Option<VerticalExtremes> {
         self.0.get(&glyph_id).copied()
     }
 }
 
+/// [`skrifa`] failed to draw a glyph.
 #[derive(Debug, Error)]
 #[error("could not draw glyph {0}: {1}")]
 pub struct SkrifaDrawError(skrifa::GlyphId, DrawError);
 
+/// The highest & lowest point on the vertical (y) axis.
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash)]
 pub struct VerticalExtremes {
     lowest: OrderedFloat<f64>,
@@ -321,25 +414,35 @@ pub struct VerticalExtremes {
 }
 
 impl VerticalExtremes {
+    /// The lowest/smaller extreme.
     #[inline]
     pub fn lowest(&self) -> f64 {
         *self.lowest
     }
 
+    /// The highest/bigger extreme.
     #[inline]
     pub fn highest(&self) -> f64 {
         *self.highest
     }
 }
 
+/// A report documenting the furthest extents reached at a location by a word
+/// list.
 #[derive(Debug, Clone)]
 pub struct Report<'a> {
+    /// The [`Location`] the exemplars were found at.
     pub location: &'a Location,
+    /// The [`WordList`] that was shaped.
+    ///
+    /// Will always be the full word list, even if only part of it was tested.
     pub word_list: &'a WordList,
+    /// The highest & lowest-reaching words shaped.
     pub exemplars: Exemplars<'a>,
 }
 
 impl<'a> Report<'a> {
+    /// Create a new report from its fields
     #[inline]
     pub const fn new(
         location: &'a Location,
@@ -354,18 +457,25 @@ impl<'a> Report<'a> {
     }
 }
 
+/// Font Height hit an error, sorry!
 #[derive(Debug, Error)]
 pub enum FontHeightError {
+    /// [`rustybuzz`] could not parse the font.
     #[error("rustybuzz could not parse the font")]
     RustybuzzParse,
+    /// [`rustybuzz`] didn't recognise the language of the word list you chose.
     #[error("rustybuzz did not recognise the language: {0}")]
     RustybuzzUnknownLanguage(&'static str),
+    /// [`skrifa`] could not parse the font.
     #[error("skrifa could not parse the font: {0}")]
     Skrifa(#[from] skrifa::raw::ReadError),
+    /// An axis tag you provided was invalid.
     #[error("invalid tag: {0}")]
-    InvalidTag(#[from] skrifa::raw::types::InvalidTag),
+    InvalidTag(#[from] InvalidTag),
+    /// We couldn't shape the text.
     #[error(transparent)]
     Drawing(#[from] SkrifaDrawError),
+    /// The axes your [`Location`] specified didn't match those in the font.
     #[error(transparent)]
     MismatchedAxes(#[from] MismatchedAxesError),
 }

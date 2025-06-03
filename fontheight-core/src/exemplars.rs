@@ -5,6 +5,9 @@ use itertools::Itertools;
 use crate::{Location, Report, WordExtremes, WordList};
 
 /// A collection of the lowest lows and highest highs.
+///
+/// Note that there may be some overlap between the lowest lows and highest
+/// highs, they're not guaranteed to be mutually exclusive.
 #[derive(Debug, Clone)]
 pub struct Exemplars<'w> {
     lowest: Vec<WordExtremes<'w>>,
@@ -12,21 +15,37 @@ pub struct Exemplars<'w> {
 }
 
 impl<'a> Exemplars<'a> {
+    /// Retrieve the lowest-reaching words.
+    ///
+    /// This slice will always be the same length as [`highest`](Self::highest).
     #[inline]
     pub fn lowest(&self) -> &[WordExtremes] {
         self.lowest.as_slice()
     }
 
+    /// Retrieve the highest-reaching words.
+    ///
+    /// This slice will always be the same length as [`lowest`](Self::lowest).
     #[inline]
     pub fn highest(&self) -> &[WordExtremes] {
         self.highest.as_slice()
     }
 
+    /// Returns `true` if there are no exemplars.
+    ///
+    /// Exceedingly unlikely in the real world, unless you passed `0` to `n` of
+    /// [`collect_min_max_extremes`](CollectToExemplars::collect_min_max_extremes)
+    /// or `n_exemplars` of
+    /// [`Reporter::par_check_location`](crate::Reporter::par_check_location).
     #[inline]
     pub fn is_empty(&self) -> bool {
         self.len() == 0
     }
 
+    /// Returns the number of exemplars in each list ([`highest`](Self::highest)
+    /// and [`lowest`](Self::lowest) are always equal in length).
+    ///
+    /// Note: this is not the total number of highest & lowest elements.
     #[inline]
     pub fn len(&self) -> usize {
         debug_assert_eq!(
@@ -38,6 +57,10 @@ impl<'a> Exemplars<'a> {
         self.lowest.len()
     }
 
+    /// Wraps the exemplars into a report.
+    ///
+    /// It is not validated that the [`Location`] and [`WordList`] are the ones
+    /// used to find the exemplars in the first place.
     #[inline]
     pub fn to_report(
         self,

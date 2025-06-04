@@ -10,7 +10,7 @@ use thiserror::Error;
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct WordListMetadata {
+pub(crate) struct WordListMetadata {
     pub(crate) name: String,
     script: Option<String>,
     language: Option<String>,
@@ -39,6 +39,7 @@ impl WordListMetadata {
     }
 }
 
+/// A list of words, with optional additional metadata.
 #[derive(Debug)]
 pub struct WordList {
     words: Vec<String>,
@@ -50,7 +51,11 @@ impl WordList {
     ///
     /// The file is expected to contain one word per line.
     /// The word list may also be accompanied by a metadata TOML file.
-    /// See [`WordListMetadata`] for the expected fields.
+    // TODO: some kind of schema or similar
+    /// A fully specified metadata file may look like this:
+    /// ```toml
+    #[doc = include_str!("../data/diffenator/Latin.toml")]
+    /// ```
     #[allow(clippy::result_large_err)]
     pub fn load(
         path: impl AsRef<Path>,
@@ -97,6 +102,9 @@ impl WordList {
         })
     }
 
+    /// Create a new word list from an iterable.
+    ///
+    /// Metadata is unspecified.
     pub fn define(
         name: impl Into<String>,
         words: impl IntoIterator<Item = impl Into<String>>,
@@ -109,42 +117,46 @@ impl WordList {
 
     // Private API used by static-lang-word-lists
     #[doc(hidden)]
+    #[allow(private_interfaces)] // Fine because of #[doc(hidden)]
     pub fn new(metadata: WordListMetadata, words: Vec<String>) -> Self {
         WordList { metadata, words }
     }
 
+    /// Get the name of the word list.
     #[inline]
     pub fn name(&self) -> &str {
         &self.metadata.name
     }
 
+    /// Get the script of the word list, if known.
+    // TODO: what standard/format is this?
     #[inline]
     pub fn script(&self) -> Option<&str> {
         self.metadata.script.as_deref()
     }
 
+    /// Get the language of the word list, if known.
+    // TODO: what standard/format is this?
     #[inline]
     pub fn language(&self) -> Option<&str> {
         self.metadata.language.as_deref()
     }
 
+    /// Iterate through the word list.
     pub fn iter(&self) -> WordListIter {
         WordListIter(self.words.iter())
     }
 
+    /// Get how many words there are in the word list.
     #[inline]
     pub fn len(&self) -> usize {
         self.words.len()
     }
 
+    /// Returns `true` if there are no words in the word list.
     #[inline]
     pub fn is_empty(&self) -> bool {
         self.words.is_empty()
-    }
-
-    #[inline]
-    pub fn get(&self, index: usize) -> Option<&str> {
-        self.words.get(index).map(|word| word.as_str())
     }
 }
 
@@ -156,6 +168,9 @@ impl Index<usize> for WordList {
     }
 }
 
+/// An iterator over a [`WordList`].
+///
+/// Returned by [`WordList::iter`].
 #[derive(Debug)]
 pub struct WordListIter<'a>(slice::Iter<'a, String>);
 
@@ -179,10 +194,13 @@ impl DoubleEndedIterator for WordListIter<'_> {
     }
 }
 
+/// An error encountered while loading a [`WordList`] and its metadata.
 #[derive(Debug, Error)]
 pub enum WordListError {
+    /// Unable to read either the word list or the metadata file.
     #[error("failed to read from {}: {}", .0.display(), .1)]
     FailedToRead(PathBuf, io::Error),
+    /// Unable to parse the metadata.
     #[error("failed to parse metadata from {}: {}", .0.display(), .1)]
     MetadataError(PathBuf, toml::de::Error),
 }
@@ -198,6 +216,9 @@ pub(crate) mod rayon {
 
     use super::{WordList, WordListIter};
 
+    /// A [`rayon`]-powered parallel iterator over a [`WordList`].
+    ///
+    /// Returned by [`WordList::par_iter`].
     #[derive(Debug)]
     pub struct ParWordListIter<'a>(&'a [String]);
 
@@ -257,6 +278,7 @@ pub(crate) mod rayon {
     }
 
     impl WordList {
+        /// Iterate through the word list in parallel with `rayon`.
         pub fn par_iter(&self) -> ParWordListIter {
             ParWordListIter(&self.words)
         }

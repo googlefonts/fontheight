@@ -6,20 +6,23 @@ use std::{
 use skrifa::{raw::collections::int_set::Domain, MetadataProvider};
 use thiserror::Error;
 
-use crate::FontHeightError;
-
+/// A mapping of axis names as [`String`]s to values
 pub type SimpleLocation = HashMap<String, f32>;
 
+/// A mapping of axis names to values
 #[derive(Clone, Default)]
 pub struct Location {
     user_coords: HashMap<skrifa::Tag, f32>,
 }
 
 impl Location {
-    pub fn new(user_coords: HashMap<skrifa::Tag, f32>) -> Self {
+    pub(crate) fn new(user_coords: HashMap<skrifa::Tag, f32>) -> Self {
         Self { user_coords }
     }
 
+    /// Set the value of an axis.
+    ///
+    /// Fails if `tag` isn't a valid axis tag.
     pub fn axis(
         &mut self,
         tag: impl AsRef<[u8]>,
@@ -30,18 +33,16 @@ impl Location {
         Ok(())
     }
 
+    /// Converts a [`SimpleLocation`] to a Font Height `Location`
+    ///
+    /// Fails if any keys of the [`SimpleLocation`] aren't valid axis tags
     pub fn from_simple(
         location: SimpleLocation,
-    ) -> Result<Self, FontHeightError> {
-        let user_coords = location
-            .into_iter()
-            .map(|(tag, val)| {
-                skrifa::Tag::new_checked(tag.as_bytes()).map(|t| (t, val))
-            })
-            .collect::<Result<_, _>>()?;
-        Ok(Self { user_coords })
+    ) -> Result<Self, skrifa::raw::types::InvalidTag> {
+        Self::try_from(location)
     }
 
+    /// Creates a [`SimpleLocation`] from `&self`.
     pub fn to_simple(&self) -> SimpleLocation {
         self.user_coords
             .iter()
@@ -49,7 +50,8 @@ impl Location {
             .collect()
     }
 
-    pub fn to_skrifa(
+    /// Creates a [`skrifa::instance::Location`] from `&self`.
+    pub(crate) fn to_skrifa(
         &self,
         font: &skrifa::FontRef,
     ) -> skrifa::instance::Location {
@@ -58,7 +60,7 @@ impl Location {
         )
     }
 
-    pub fn to_rustybuzz(&self) -> Vec<rustybuzz::Variation> {
+    pub(crate) fn to_rustybuzz(&self) -> Vec<rustybuzz::Variation> {
         self.user_coords
             .iter()
             .map(|(tag, coord)| rustybuzz::Variation {
@@ -68,6 +70,11 @@ impl Location {
             .collect()
     }
 
+    /// Checks that `&self` doesn't specify any axes that aren't present in
+    /// `font`.
+    ///
+    /// Omitting axes is allowed as most libraries will just use the default
+    /// value if one isn't provided for an axis.
     pub fn validate_for(
         &self,
         font: &skrifa::FontRef,
@@ -100,6 +107,22 @@ impl fmt::Debug for Location {
     }
 }
 
+impl TryFrom<SimpleLocation> for Location {
+    type Error = skrifa::raw::types::InvalidTag;
+
+    fn try_from(location: SimpleLocation) -> Result<Self, Self::Error> {
+        let user_coords = location
+            .into_iter()
+            .map(|(tag, val)| {
+                skrifa::Tag::new_checked(tag.as_bytes()).map(|t| (t, val))
+            })
+            .collect::<Result<_, _>>()?;
+        Ok(Self { user_coords })
+    }
+}
+
+/// Returned by [`Location::validate_for`], indicating axes are specified in the
+/// [`Location`] that aren't in the `font`
 #[derive(Debug, Error)]
 #[error("mismatched axes: present in Location but not font {extras:?}")]
 pub struct MismatchedAxesError {

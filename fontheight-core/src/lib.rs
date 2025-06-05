@@ -361,10 +361,13 @@ pub struct WordExtremes<'w> {
     pub extremes: VerticalExtremes,
 }
 
+/// A cache of the vertical bounds for all the glyphs in a font at a certain
+/// location.
 #[derive(Debug)]
 pub struct InstanceExtremes(HashMap<u32, VerticalExtremes>);
 
 impl InstanceExtremes {
+    /// Create the cache for the given `font` at the [`location`](`Location`).
     pub fn new(
         font: &skrifa::FontRef,
         location: &Location,

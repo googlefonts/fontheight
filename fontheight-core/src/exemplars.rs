@@ -183,7 +183,11 @@ impl<'w> ExemplarCollector<'w> {
     }
 }
 
+/// A helper trait to collect iterators of [`WordExtremes`] into an
+/// [`Exemplars`] collection.
 pub trait CollectToExemplars<'a>: private::Sealed {
+    /// Collect the `n` highest and `n` lowest words observed into an
+    /// [`Exemplars`].
     fn collect_min_max_extremes(self, n: usize) -> Exemplars<'a>;
 }
 

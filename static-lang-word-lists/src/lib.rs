@@ -1,3 +1,7 @@
+// TODO: a custom README would be better, talk more about usage than
+//       implementation
+#![doc = include_str!("../README.md")]
+
 use std::sync::LazyLock;
 
 mod word_lists;
@@ -6,6 +10,7 @@ mod word_lists;
 pub use word_lists::rayon::ParWordListIter;
 pub use word_lists::{WordList, WordListError, WordListIter};
 
+/// A lazy-loaded [`WordList`].
 pub type LazyWordList = LazyLock<WordList>;
 
 fn newline_delimited_words(input: impl AsRef<str>) -> Vec<String> {
@@ -19,6 +24,12 @@ fn newline_delimited_words(input: impl AsRef<str>) -> Vec<String> {
 
 macro_rules! wordlist {
     (ident: $ident:ident,metadata: $metadata:expr,bytes: $bytes:expr $(,)?) => {
+        /// The
+        #[doc = ::std::stringify!($ident)]
+        /// word list.
+        ///
+        /// Compiled into the binary compressed with Brotli, decompressed at
+        /// runtime.
         pub static $ident: $crate::LazyWordList =
             ::std::sync::LazyLock::new(|| {
                 // Note: validity of TOML file was not validated during build,

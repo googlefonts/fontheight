@@ -31,3 +31,6 @@ default-features = false
 features = [
     "deflate",
 ]
+
+[lints]
+workspace = true

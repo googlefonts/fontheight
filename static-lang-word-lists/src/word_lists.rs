@@ -115,10 +115,7 @@ impl WordList {
         }
     }
 
-    // Private API used by static-lang-word-lists
-    #[doc(hidden)]
-    #[allow(private_interfaces)] // Fine because of #[doc(hidden)]
-    pub fn new(metadata: WordListMetadata, words: Vec<String>) -> Self {
+    pub(crate) fn new(metadata: WordListMetadata, words: Vec<String>) -> Self {
         WordList { metadata, words }
     }
 

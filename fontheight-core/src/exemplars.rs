@@ -6,8 +6,8 @@ use crate::{Location, Report, WordExtremes, WordList};
 
 /// A collection of the lowest lows and highest highs.
 ///
-/// Note that there may be some overlap between the lowest lows and highest
-/// highs, they're not guaranteed to be mutually exclusive.
+/// Note: there may be some overlap between the lowest lows and highest highs,
+/// they're not guaranteed to be mutually exclusive.
 #[derive(Debug, Clone)]
 pub struct Exemplars<'w> {
     lowest: Vec<WordExtremes<'w>>,

@@ -4,7 +4,8 @@ use std::{
 };
 
 use skrifa::{raw::collections::int_set::Domain, MetadataProvider};
-use thiserror::Error;
+
+use crate::errors::{InvalidTagError, MismatchedAxesError};
 
 /// A mapping of axis names as [`String`]s to values
 pub type SimpleLocation = HashMap<String, f32>;
@@ -13,7 +14,8 @@ pub type SimpleLocation = HashMap<String, f32>;
 ///
 /// ```
 /// # use fontheight_core::Location;
-/// # fn main() -> Result<(), skrifa::raw::types::InvalidTag> {
+/// # use fontheight_core::errors::InvalidTagError;
+/// # fn main() -> Result<(), InvalidTagError> {
 /// let mut loc = Location::new();
 /// loc.axis("wght", 400.0)?
 ///     .axis("ital", 1.0)?
@@ -44,7 +46,8 @@ impl Location {
     ///
     /// ```
     /// # use fontheight_core::Location;
-    /// # fn main() -> Result<(), skrifa::raw::types::InvalidTag> {
+    /// # use fontheight_core::errors::InvalidTagError;
+    /// # fn main() -> Result<(), InvalidTagError> {
     /// let mut loc = Location::new();
     /// loc.axis("wght", 400.0)?
     ///     .axis("ital", 1.0)?
@@ -56,7 +59,7 @@ impl Location {
         &mut self,
         tag: impl AsRef<[u8]>,
         value: f32,
-    ) -> Result<&mut Self, skrifa::raw::types::InvalidTag> {
+    ) -> Result<&mut Self, InvalidTagError> {
         let tag = skrifa::Tag::new_checked(tag.as_ref())?;
         self.user_coords.insert(tag, value);
         Ok(self)
@@ -67,7 +70,7 @@ impl Location {
     /// Fails if any keys of the [`SimpleLocation`] aren't valid axis tags.
     pub fn from_simple(
         location: SimpleLocation,
-    ) -> Result<Self, skrifa::raw::types::InvalidTag> {
+    ) -> Result<Self, InvalidTagError> {
         Self::try_from(location)
     }
 
@@ -137,7 +140,7 @@ impl fmt::Debug for Location {
 }
 
 impl TryFrom<SimpleLocation> for Location {
-    type Error = skrifa::raw::types::InvalidTag;
+    type Error = InvalidTagError;
 
     fn try_from(location: SimpleLocation) -> Result<Self, Self::Error> {
         let user_coords = location
@@ -148,12 +151,4 @@ impl TryFrom<SimpleLocation> for Location {
             .collect::<Result<_, _>>()?;
         Ok(Self { user_coords })
     }
-}
-
-/// Returned by [`Location::validate_for`], indicating axes are specified in the
-/// [`Location`] that aren't in the `font`.
-#[derive(Debug, Error)]
-#[error("mismatched axes: present in Location but not font {extras:?}")]
-pub struct MismatchedAxesError {
-    extras: Vec<skrifa::Tag>,
 }

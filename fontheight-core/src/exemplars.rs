@@ -147,10 +147,10 @@ impl<'w> ExemplarCollector<'w> {
         let by_highest = ByHighest(elem);
         if self.highest.len() < self.highest.capacity() {
             self.highest.push(by_highest);
-        } else if let Some(mut weakest_high) = self.highest.peek_mut() {
-            if by_highest < *weakest_high {
-                *weakest_high = by_highest;
-            }
+        } else if let Some(mut weakest_high) = self.highest.peek_mut()
+            && by_highest < *weakest_high
+        {
+            *weakest_high = by_highest;
         }
     }
 

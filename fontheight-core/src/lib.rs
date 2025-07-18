@@ -42,7 +42,7 @@ pub use locations::{Location, SimpleLocation};
 use ordered_float::OrderedFloat;
 use pens::BezierPen;
 use rustybuzz::UnicodeBuffer;
-use skrifa::{instance::Size, outline::DrawSettings, MetadataProvider};
+use skrifa::{MetadataProvider, instance::Size, outline::DrawSettings};
 pub use static_lang_word_lists::WordList;
 use static_lang_word_lists::WordListIter;
 

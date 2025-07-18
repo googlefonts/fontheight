@@ -1,10 +1,10 @@
 [workspace]
 resolver = "2"
 members = [
-    "fontheight",
-    "fontheight-core",
-    "fontheight-wheel",
+    "cli",
+    "core",
     "static-lang-word-lists",
+    "wheel",
 ]
 
 [workspace.dependencies]

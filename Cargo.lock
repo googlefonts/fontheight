@@ -331,19 +331,6 @@ dependencies = [
 name = "fontheight"
 version = "0.1.0"
 dependencies = [
- "anyhow",
- "clap",
- "env_logger",
- "fontheight-core",
- "log",
- "rayon",
- "static-lang-word-lists",
-]
-
-[[package]]
-name = "fontheight-core"
-version = "0.1.0"
-dependencies = [
  "itertools",
  "kurbo",
  "log",
@@ -356,11 +343,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "fontheight-cli"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "env_logger",
+ "fontheight",
+ "log",
+ "rayon",
+ "static-lang-word-lists",
+]
+
+[[package]]
 name = "fontheight-wheel"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "fontheight-core",
+ "fontheight",
  "pyo3",
  "static-lang-word-lists",
 ]

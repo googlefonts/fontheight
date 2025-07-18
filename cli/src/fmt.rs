@@ -1,6 +1,6 @@
 use std::fmt;
 
-use fontheight_core::Report;
+use fontheight::Report;
 
 #[derive(Debug, Copy, Clone)]
 pub struct ReportFormatter<'a> {

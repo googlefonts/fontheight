@@ -9,33 +9,62 @@ use thiserror::Error;
 /// A mapping of axis names as [`String`]s to values
 pub type SimpleLocation = HashMap<String, f32>;
 
-/// A mapping of axis names to values
+/// A mapping of axis names to values.
+///
+/// ```
+/// # use fontheight_core::Location;
+/// # fn main() -> Result<(), skrifa::raw::types::InvalidTag> {
+/// let mut loc = Location::new();
+/// loc.axis("wght", 400.0)?
+///     .axis("ital", 1.0)?
+///     .axis("wdth", 1000.0)?;
+/// # Ok(())
+/// # }
+/// ```
 #[derive(Clone, Default)]
 pub struct Location {
     user_coords: HashMap<skrifa::Tag, f32>,
 }
 
 impl Location {
-    pub(crate) fn new(user_coords: HashMap<skrifa::Tag, f32>) -> Self {
+    /// Create a new location.
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub(crate) fn from_skrifa(user_coords: HashMap<skrifa::Tag, f32>) -> Self {
         Self { user_coords }
     }
 
     /// Set the value of an axis.
     ///
     /// Fails if `tag` isn't a valid axis tag.
+    ///
+    /// Designed to support method chaining:
+    ///
+    /// ```
+    /// # use fontheight_core::Location;
+    /// # fn main() -> Result<(), skrifa::raw::types::InvalidTag> {
+    /// let mut loc = Location::new();
+    /// loc.axis("wght", 400.0)?
+    ///     .axis("ital", 1.0)?
+    ///     .axis("wdth", 1000.0)?;
+    /// # Ok(())
+    /// # }
+    /// ```
     pub fn axis(
         &mut self,
         tag: impl AsRef<[u8]>,
-        value: impl Into<f32>,
-    ) -> Result<(), skrifa::raw::types::InvalidTag> {
+        value: f32,
+    ) -> Result<&mut Self, skrifa::raw::types::InvalidTag> {
         let tag = skrifa::Tag::new_checked(tag.as_ref())?;
-        self.user_coords.insert(tag, value.into());
-        Ok(())
+        self.user_coords.insert(tag, value);
+        Ok(self)
     }
 
-    /// Converts a [`SimpleLocation`] to a Font Height `Location`
+    /// Converts a [`SimpleLocation`] to a Font Height `Location`.
     ///
-    /// Fails if any keys of the [`SimpleLocation`] aren't valid axis tags
+    /// Fails if any keys of the [`SimpleLocation`] aren't valid axis tags.
     pub fn from_simple(
         location: SimpleLocation,
     ) -> Result<Self, skrifa::raw::types::InvalidTag> {
@@ -122,7 +151,7 @@ impl TryFrom<SimpleLocation> for Location {
 }
 
 /// Returned by [`Location::validate_for`], indicating axes are specified in the
-/// [`Location`] that aren't in the `font`
+/// [`Location`] that aren't in the `font`.
 #[derive(Debug, Error)]
 #[error("mismatched axes: present in Location but not font {extras:?}")]
 pub struct MismatchedAxesError {

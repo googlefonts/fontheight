@@ -111,7 +111,7 @@ impl<'a> Reporter<'a> {
                     .zip(font.axes().iter())
                     .map(|(coord, axis)| (axis.tag(), From::from(*coord)))
                     .collect();
-                Location::new(inner)
+                Location::from_skrifa(inner)
             })
             .collect()
     }

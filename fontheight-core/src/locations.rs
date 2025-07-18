@@ -3,7 +3,7 @@ use std::{
     fmt,
 };
 
-use skrifa::{raw::collections::int_set::Domain, MetadataProvider};
+use skrifa::{MetadataProvider, raw::collections::int_set::Domain};
 
 use crate::errors::{InvalidTagError, MismatchedAxesError};
 

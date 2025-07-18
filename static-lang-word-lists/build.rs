@@ -13,7 +13,7 @@ use std::{
 };
 
 use brotli::enc::{
-    backward_references::BrotliEncoderMode, BrotliEncoderParams,
+    BrotliEncoderParams, backward_references::BrotliEncoderMode,
 };
 use heck::ToShoutySnakeCase;
 use zip::ZipArchive;

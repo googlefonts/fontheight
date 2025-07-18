@@ -205,10 +205,10 @@ pub enum WordListError {
 #[cfg(feature = "rayon")]
 pub(crate) mod rayon {
     use rayon::iter::{
-        plumbing::{
-            bridge, Consumer, Producer, ProducerCallback, UnindexedConsumer,
-        },
         IndexedParallelIterator, ParallelIterator,
+        plumbing::{
+            Consumer, Producer, ProducerCallback, UnindexedConsumer, bridge,
+        },
     };
 
     use super::{WordList, WordListIter};

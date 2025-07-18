@@ -17,10 +17,10 @@ rayon = ["dep:rayon", "static-lang-word-lists/rayon"]
 itertools = "0.14.0"
 kurbo = "0.11.1"
 log = { workspace = true }
-ordered-float = "4.6"
+ordered-float = "5"
 rayon = { workspace = true, optional = true }
 rustybuzz = "0.20.1"
-skrifa = "0.26.5"
+skrifa = "0.32.0"
 thiserror = { workspace = true }
 static-lang-word-lists = { version = "0.1.0", path = "../static-lang-word-lists" }
 

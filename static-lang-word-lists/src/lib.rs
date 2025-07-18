@@ -23,7 +23,7 @@ fn newline_delimited_words(input: impl AsRef<str>) -> Vec<String> {
 }
 
 macro_rules! wordlist {
-    (ident: $ident:ident,metadata: $metadata:expr,bytes: $bytes:expr $(,)?) => {
+    (ident: $ident:ident, metadata: $metadata:expr, bytes: $bytes:expr $(,)?) => {
         /// The
         #[doc = ::std::stringify!($ident)]
         /// word list.

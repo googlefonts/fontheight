@@ -1,9 +1,7 @@
 use std::{fmt::Write, fs, iter, path::PathBuf};
 
 use anyhow::{Context, anyhow};
-use fontheight_core::{
-    Exemplars, Report, Reporter, SimpleLocation, WordExtremes,
-};
+use fontheight::{Exemplars, Report, Reporter, SimpleLocation, WordExtremes};
 use pyo3::{Bound, PyResult, prelude::*, pymodule};
 
 #[pyclass(name = "Report", frozen, get_all)]
@@ -186,7 +184,7 @@ pub fn get_all_word_list_extremes(
 }
 
 #[pymodule]
-fn fontheight(module: &Bound<'_, PyModule>) -> PyResult<()> {
+fn libfontheight(module: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<OwnedReport>()?;
     module.add_class::<OwnedExemplars>()?;
     module.add_class::<OwnedWordExtremes>()?;

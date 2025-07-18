@@ -7,7 +7,7 @@ use std::{fs, iter, path::PathBuf, process::ExitCode, time::Instant};
 use anyhow::{Context, bail};
 use clap::Parser;
 use env_logger::Env;
-use fontheight_core::Reporter;
+use fontheight::Reporter;
 use log::{LevelFilter, debug, error, info};
 use rayon::prelude::*;
 

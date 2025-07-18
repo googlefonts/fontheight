@@ -13,8 +13,8 @@ pub type SimpleLocation = HashMap<String, f32>;
 /// A mapping of axis names to values.
 ///
 /// ```
-/// # use fontheight_core::Location;
-/// # use fontheight_core::errors::InvalidTagError;
+/// # use fontheight::Location;
+/// # use fontheight::errors::InvalidTagError;
 /// # fn main() -> Result<(), InvalidTagError> {
 /// let mut loc = Location::new();
 /// loc.axis("wght", 400.0)?
@@ -45,8 +45,8 @@ impl Location {
     /// Designed to support method chaining:
     ///
     /// ```
-    /// # use fontheight_core::Location;
-    /// # use fontheight_core::errors::InvalidTagError;
+    /// # use fontheight::Location;
+    /// # use fontheight::errors::InvalidTagError;
     /// # fn main() -> Result<(), InvalidTagError> {
     /// let mut loc = Location::new();
     /// loc.axis("wght", 400.0)?

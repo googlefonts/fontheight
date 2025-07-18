@@ -2,14 +2,16 @@
 name = "fontheight-wheel"
 version = "0.1.0"
 edition = "2024"
+# This is a wheel, it shouldn't be going on crates.io
+publish = false
 
 [lib]
-name = "fontheight"
+name = "libfontheight"
 crate-type = ["cdylib"]
 
 [dependencies]
 anyhow = "1"
-fontheight-core = { version = "0.1.0", path = "../fontheight-core" }
+fontheight = { version = "0.1.0", path = "../core" }
 static-lang-word-lists = { version = "0.1.0", path = "../static-lang-word-lists" }
 
 [dependencies.pyo3]

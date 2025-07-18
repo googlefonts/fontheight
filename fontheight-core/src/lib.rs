@@ -38,21 +38,20 @@ use exemplars::ExemplarCollector;
 pub use exemplars::{CollectToExemplars, Exemplars};
 use itertools::Itertools;
 use kurbo::Shape;
-pub use locations::{Location, MismatchedAxesError, SimpleLocation};
+pub use locations::{Location, SimpleLocation};
 use ordered_float::OrderedFloat;
 use pens::BezierPen;
 use rustybuzz::UnicodeBuffer;
-// It's returned in public API (Location::axis), so re-export it
-pub use skrifa::raw::types::InvalidTag;
-use skrifa::{
-    instance::Size,
-    outline::{DrawError, DrawSettings},
-    MetadataProvider,
-};
+use skrifa::{instance::Size, outline::DrawSettings, MetadataProvider};
 pub use static_lang_word_lists::WordList;
 use static_lang_word_lists::WordListIter;
-use thiserror::Error;
 
+use crate::errors::{
+    FontHeightError, RustybuzzUnknownLanguageError, SkrifaDrawError,
+    SkrifaReadError,
+};
+
+pub mod errors;
 mod exemplars;
 mod locations;
 mod pens;
@@ -72,7 +71,8 @@ impl<'a> Reporter<'a> {
         let rusty_face = rustybuzz::Face::from_slice(font_bytes, 0)
             .ok_or(FontHeightError::RustybuzzParse)?;
 
-        let skrifa_font = skrifa::FontRef::new(font_bytes)?;
+        let skrifa_font =
+            skrifa::FontRef::new(font_bytes).map_err(SkrifaReadError::from)?;
 
         Ok(Reporter {
             rusty_face,
@@ -404,11 +404,6 @@ impl InstanceExtremes {
     }
 }
 
-/// [`skrifa`] failed to draw a glyph.
-#[derive(Debug, Error)]
-#[error("could not draw glyph {0}: {1}")]
-pub struct SkrifaDrawError(skrifa::GlyphId, DrawError);
-
 /// The highest & lowest point on the vertical (y) axis.
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash)]
 pub struct VerticalExtremes {
@@ -460,29 +455,6 @@ impl<'a> Report<'a> {
     }
 }
 
-/// Font Height hit an error, sorry!
-#[derive(Debug, Error)]
-pub enum FontHeightError {
-    /// [`rustybuzz`] could not parse the font.
-    #[error("rustybuzz could not parse the font")]
-    RustybuzzParse,
-    /// [`rustybuzz`] didn't recognise the language of the word list you chose.
-    #[error("rustybuzz did not recognise the language: {0}")]
-    RustybuzzUnknownLanguage(&'static str),
-    /// [`skrifa`] could not parse the font.
-    #[error("skrifa could not parse the font: {0}")]
-    Skrifa(#[from] skrifa::raw::ReadError),
-    /// An axis tag you provided was invalid.
-    #[error("invalid tag: {0}")]
-    InvalidTag(#[from] InvalidTag),
-    /// We couldn't shape the text.
-    #[error(transparent)]
-    Drawing(#[from] SkrifaDrawError),
-    /// The axes your [`Location`] specified didn't match those in the font.
-    #[error(transparent)]
-    MismatchedAxes(#[from] MismatchedAxesError),
-}
-
 trait WordListExt {
     fn shaping_plan(
         &self,
@@ -505,8 +477,11 @@ impl WordListExt for WordList {
                 let language = self
                     .language()
                     .map(|lang| {
-                        rustybuzz::Language::from_str(lang)
-                            .map_err(FontHeightError::RustybuzzUnknownLanguage)
+                        // rustybuzz's own error here is just "invalid language"
+                        // (v0.20.1), so discard it for our own
+                        rustybuzz::Language::from_str(lang).map_err(|_| {
+                            RustybuzzUnknownLanguageError::new(lang)
+                        })
                     })
                     .transpose()?;
                 Some(rustybuzz::ShapePlan::new(

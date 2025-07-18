@@ -12,15 +12,18 @@ keywords = ["word-list", "words"]
 [dependencies]
 brotli-decompressor = "5"
 log = { workspace = true }
-phf = { version = "0.11.3", features = ["macros"] }
+phf = { version = "0.12.1", features = ["macros"] }
 rayon = { workspace = true, optional = true }
 thiserror = { workspace = true }
 serde = { version = "1.0", features = ["derive"] }
 
 [dependencies.toml]
-version = "0.8.22"
+version = "0.9.2"
 default-features = false
-features = ["parse"]
+features = [
+    "parse",
+    "serde",
+]
 
 [build-dependencies]
 brotli = "8"

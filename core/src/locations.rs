@@ -30,6 +30,7 @@ pub struct Location {
 
 impl Location {
     /// Create a new location.
+    #[must_use]
     pub fn new() -> Self {
         Default::default()
     }
@@ -75,6 +76,7 @@ impl Location {
     }
 
     /// Creates a [`SimpleLocation`] from `&self`.
+    #[must_use]
     pub fn to_simple(&self) -> SimpleLocation {
         self.user_coords
             .iter()

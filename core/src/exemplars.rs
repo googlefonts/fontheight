@@ -19,6 +19,7 @@ impl<'a> Exemplars<'a> {
     ///
     /// This slice will always be the same length as [`highest`](Self::highest).
     #[inline]
+    #[must_use]
     pub fn lowest(&self) -> &[WordExtremes<'_>] {
         self.lowest.as_slice()
     }
@@ -27,6 +28,7 @@ impl<'a> Exemplars<'a> {
     ///
     /// This slice will always be the same length as [`lowest`](Self::lowest).
     #[inline]
+    #[must_use]
     pub fn highest(&self) -> &[WordExtremes<'_>] {
         self.highest.as_slice()
     }
@@ -38,6 +40,7 @@ impl<'a> Exemplars<'a> {
     /// or `n_exemplars` of
     /// [`Reporter::par_check_location`](crate::Reporter::par_check_location).
     #[inline]
+    #[must_use]
     pub fn is_empty(&self) -> bool {
         self.len() == 0
     }
@@ -47,6 +50,7 @@ impl<'a> Exemplars<'a> {
     ///
     /// Note: this is not the total number of highest & lowest elements.
     #[inline]
+    #[must_use]
     pub fn len(&self) -> usize {
         debug_assert_eq!(
             self.lowest.len(),
@@ -62,6 +66,7 @@ impl<'a> Exemplars<'a> {
     /// It is not validated that the [`Location`] and [`WordList`] are the ones
     /// used to find the exemplars in the first place.
     #[inline]
+    #[must_use]
     pub fn to_report(
         self,
         location: &'a Location,

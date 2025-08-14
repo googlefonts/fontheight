@@ -105,6 +105,7 @@ impl WordList {
     /// Create a new word list from an iterable.
     ///
     /// Metadata is unspecified.
+    #[must_use]
     pub fn define(
         name: impl Into<String>,
         words: impl IntoIterator<Item = impl Into<String>>,
@@ -115,12 +116,14 @@ impl WordList {
         }
     }
 
+    #[must_use]
     pub(crate) fn new(metadata: WordListMetadata, words: Vec<String>) -> Self {
         WordList { metadata, words }
     }
 
     /// Get the name of the word list.
     #[inline]
+    #[must_use]
     pub fn name(&self) -> &str {
         &self.metadata.name
     }
@@ -128,6 +131,7 @@ impl WordList {
     /// Get the script of the word list, if known.
     // TODO: what standard/format is this?
     #[inline]
+    #[must_use]
     pub fn script(&self) -> Option<&str> {
         self.metadata.script.as_deref()
     }
@@ -135,23 +139,27 @@ impl WordList {
     /// Get the language of the word list, if known.
     // TODO: what standard/format is this?
     #[inline]
+    #[must_use]
     pub fn language(&self) -> Option<&str> {
         self.metadata.language.as_deref()
     }
 
     /// Iterate through the word list.
+    #[must_use]
     pub fn iter(&self) -> WordListIter<'_> {
         WordListIter(self.words.iter())
     }
 
     /// Get how many words there are in the word list.
     #[inline]
+    #[must_use]
     pub fn len(&self) -> usize {
         self.words.len()
     }
 
     /// Returns `true` if there are no words in the word list.
     #[inline]
+    #[must_use]
     pub fn is_empty(&self) -> bool {
         self.words.is_empty()
     }
@@ -276,6 +284,7 @@ pub(crate) mod rayon {
 
     impl WordList {
         /// Iterate through the word list in parallel with `rayon`.
+        #[must_use]
         pub fn par_iter(&self) -> ParWordListIter<'_> {
             ParWordListIter(&self.words)
         }

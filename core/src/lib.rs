@@ -86,6 +86,7 @@ impl<'a> Reporter<'a> {
     /// `fontheight` changing [`rustybuzz`] version) are **not** covered by this
     /// crate's efforts to follow SemVer.
     #[inline]
+    #[must_use]
     pub fn rustybuzz_face(&self) -> &rustybuzz::Face<'_> {
         &self.rusty_face
     }
@@ -96,12 +97,14 @@ impl<'a> Reporter<'a> {
     /// `fontheight` changing [`skrifa`] version) are **not** covered by this
     /// crate's efforts to follow SemVer.
     #[inline]
+    #[must_use]
     pub fn skrifa_fontref(&self) -> &skrifa::FontRef<'_> {
         &self.skrifa_font
     }
 
     /// Gets all combinations of axis coordinates seen in named instances, axis
     /// extremes, and default locations.
+    #[must_use]
     pub fn interesting_locations(&self) -> Vec<Location> {
         let font = &self.skrifa_font;
         let mut axis_coords =
@@ -434,12 +437,14 @@ pub struct VerticalExtremes {
 impl VerticalExtremes {
     /// The lowest/smaller extreme.
     #[inline]
+    #[must_use]
     pub fn lowest(&self) -> f64 {
         *self.lowest
     }
 
     /// The highest/bigger extreme.
     #[inline]
+    #[must_use]
     pub fn highest(&self) -> f64 {
         *self.highest
     }
@@ -462,6 +467,7 @@ pub struct Report<'a> {
 impl<'a> Report<'a> {
     /// Create a new report from its fields
     #[inline]
+    #[must_use]
     pub const fn new(
         location: &'a Location,
         word_list: &'a WordList,

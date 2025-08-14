@@ -80,6 +80,26 @@ impl<'a> Reporter<'a> {
         })
     }
 
+    /// Access the [`rustybuzz`]-parsed font.
+    ///
+    /// ⚠️ Warning: changes to the return type of this function (i.e. by
+    /// `fontheight` changing [`rustybuzz`] version) are **not** covered by this
+    /// crate's efforts to follow SemVer.
+    #[inline]
+    pub fn rustybuzz_face(&self) -> &rustybuzz::Face<'_> {
+        &self.rusty_face
+    }
+
+    /// Access the [`skrifa`]-parsed font.
+    ///
+    /// ⚠️ Warning: changes to the return type of this function (i.e. by
+    /// `fontheight` changing [`skrifa`] version) are **not** covered by this
+    /// crate's efforts to follow SemVer.
+    #[inline]
+    pub fn skrifa_fontref(&self) -> &skrifa::FontRef<'_> {
+        &self.skrifa_font
+    }
+
     /// Gets all combinations of axis coordinates seen in named instances, axis
     /// extremes, and default locations.
     pub fn interesting_locations(&self) -> Vec<Location> {

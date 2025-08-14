@@ -140,7 +140,7 @@ impl WordList {
     }
 
     /// Iterate through the word list.
-    pub fn iter(&self) -> WordListIter {
+    pub fn iter(&self) -> WordListIter<'_> {
         WordListIter(self.words.iter())
     }
 
@@ -276,7 +276,7 @@ pub(crate) mod rayon {
 
     impl WordList {
         /// Iterate through the word list in parallel with `rayon`.
-        pub fn par_iter(&self) -> ParWordListIter {
+        pub fn par_iter(&self) -> ParWordListIter<'_> {
             ParWordListIter(&self.words)
         }
     }

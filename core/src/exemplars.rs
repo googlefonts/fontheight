@@ -19,7 +19,7 @@ impl<'a> Exemplars<'a> {
     ///
     /// This slice will always be the same length as [`highest`](Self::highest).
     #[inline]
-    pub fn lowest(&self) -> &[WordExtremes] {
+    pub fn lowest(&self) -> &[WordExtremes<'_>] {
         self.lowest.as_slice()
     }
 
@@ -27,7 +27,7 @@ impl<'a> Exemplars<'a> {
     ///
     /// This slice will always be the same length as [`lowest`](Self::lowest).
     #[inline]
-    pub fn highest(&self) -> &[WordExtremes] {
+    pub fn highest(&self) -> &[WordExtremes<'_>] {
         self.highest.as_slice()
     }
 
@@ -136,10 +136,10 @@ impl<'w> ExemplarCollector<'w> {
         let by_lowest = ByLowest(elem);
         if self.lowest.len() < self.lowest.capacity() {
             self.lowest.push(by_lowest);
-        } else if let Some(mut weakest_low) = self.lowest.peek_mut() {
-            if by_lowest < *weakest_low {
-                *weakest_low = by_lowest;
-            }
+        } else if let Some(mut weakest_low) = self.lowest.peek_mut()
+            && by_lowest < *weakest_low
+        {
+            *weakest_low = by_lowest;
         }
 
         // Store if this report is stronger than the weakest report that would

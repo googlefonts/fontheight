@@ -20,8 +20,8 @@ For the latter, `fontheight` evaluates the extents of a corpus of shaped text ac
 
 Fontheight comes in three flavours:
 1. A commandline tool (`fontheight`)
-2. A basic Python API (`fontheight-wheel`)
-3. A Rust library (`fontheight-core`)
+2. A Rust library (also called `fontheight`)
+3. A basic Python API (`fontheight-wheel`)
 
 ### `fontheight` as a commandline tool
 
@@ -34,14 +34,15 @@ You only need a stable compiler for Font Height's crates.
 From GitHub:
 
 ```shell
-STATIC_LANG_WORD_LISTS_LOCAL=1 cargo install --locked --git https://github.com/googlefonts/fontheight fontheight
+STATIC_LANG_WORD_LISTS_LOCAL=1 cargo install --locked --git https://github.com/googlefonts/fontheight fontheight-cli
 ```
 
-⚠️ _Not yet available_
 From crates.io (note: the build script for `static-lang-word-lists` requires network access):
 ```shell
-cargo install --locked fontheight
+cargo install --locked fontheight-cli
 ```
+
+Note: after installing, the command you run is `fontheight` (not `fontheight-cli`).
 
 #### Usage
 
@@ -214,11 +215,11 @@ Sorted DiffenatorVai based on:
 
 ⚠️ _Not yet available_
 
-The API will be available under the package `libfontheight` and then is imported as `fontheight`
+The API will be available under the package `libfontheight` and then is imported as `fontheight`.
 
 #### Usage
 
-See the method signatures & data types below, approximately written in Python. `k_words` is equivalent to `--words` in the CLI, and `n_exemplars` is equivalent to `-n/--results`
+See the method signatures & data types below, approximately written in Python. `k_words` is equivalent to `--words` in the CLI, and `n_exemplars` is equivalent to `-n/--results`.
 
 ```python
 import fontheight
@@ -251,6 +252,6 @@ class fontheight.WordExtremes:
 
 ### `fontheight`'s Rust crate
 
-⚠️ _Not yet available_ On crates.io as `fontheight-core`
+On crates.io as `fontheight`.
 
-For documentation, please refer to docs.rs
+For documentation, please refer to [docs.rs](https://docs.rs/fontheight/latest).

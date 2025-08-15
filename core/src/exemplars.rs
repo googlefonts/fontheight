@@ -1,7 +1,5 @@
 use std::{cmp::Ordering, collections::BinaryHeap};
 
-use itertools::Itertools;
-
 use crate::{Location, Report, WordExtremes, WordList};
 
 /// A collection of the lowest lows and highest highs.
@@ -159,7 +157,10 @@ impl<'w> ExemplarCollector<'w> {
         }
     }
 
+    #[cfg(feature = "rayon")]
     pub(crate) fn merge_with(&mut self, other: Self) {
+        use itertools::Itertools;
+
         let ExemplarCollector { lowest, highest } = other;
         highest
             .into_iter()

@@ -3,7 +3,7 @@ use std::{
     fmt,
 };
 
-use skrifa::{MetadataProvider, raw::collections::int_set::Domain};
+use skrifa::MetadataProvider;
 
 use crate::errors::{InvalidTagError, MismatchedAxesError};
 
@@ -94,13 +94,11 @@ impl Location {
         )
     }
 
-    pub(crate) fn to_rustybuzz(&self) -> Vec<rustybuzz::Variation> {
+    /// Creates a [`harfrust::Variation`] from `&self`.
+    pub(crate) fn to_harfrust(&self) -> Vec<harfrust::Variation> {
         self.user_coords
             .iter()
-            .map(|(tag, coord)| rustybuzz::Variation {
-                tag: rustybuzz::ttf_parser::Tag(tag.to_u32()),
-                value: *coord,
-            })
+            .map(|(&tag, &value)| harfrust::Variation { tag, value })
             .collect()
     }
 

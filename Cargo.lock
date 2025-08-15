@@ -334,7 +334,6 @@ dependencies = [
  "harfrust",
  "itertools",
  "kurbo",
- "log",
  "ordered-float",
  "rayon",
  "skrifa",

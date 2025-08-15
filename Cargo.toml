@@ -12,12 +12,6 @@ log = "0.4.25"
 rayon = "1.10"
 thiserror = "2"
 
-[profile.dev.package.harfrust]
-# Rustybuzz debug-asserts that the provided script is the same as
-# the text's script, *even if* you're using guess_segment_properties.
-# TODO: is this still an issue in harfrst
-debug-assertions = false
-
 [profile.release]
 lto = true
 strip = true

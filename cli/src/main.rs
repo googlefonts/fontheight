@@ -69,26 +69,29 @@ fn _main() -> anyhow::Result<()> {
                 font_path.display(),
             );
 
-            let reports = locations
+            let instances = locations
+                .par_iter()
+                .map(|location| reporter.instance(location))
+                .collect::<Result<Vec<_>, _>>()?;
+
+            let reports = instances
                 .iter()
-                .flat_map(|location| {
+                .flat_map(|instance| {
                     static_lang_word_lists::LOOKUP_TABLE
                         .values()
-                        .zip(iter::repeat(location))
+                        .zip(iter::repeat(instance))
                 })
                 .par_bridge()
-                .map(|(word_list, location)| -> anyhow::Result<_> {
-                    let report = reporter
-                        .par_check_location(
-                            location,
-                            word_list,
-                            Some(args.words_per_list),
-                            args.results,
-                        )?
-                        .to_report(location, word_list);
+                .map(|(word_list, instance)| -> anyhow::Result<_> {
+                    let report = instance.par_check(
+                        word_list,
+                        Some(args.words_per_list),
+                        args.results,
+                    )?;
                     debug!(
-                        "finished checking {} at {location:?}",
-                        word_list.name()
+                        "finished checking {} at {:?}",
+                        word_list.name(),
+                        report.location
                     );
                     Ok(report)
                 })

@@ -215,14 +215,14 @@ Sorted DiffenatorVai based on:
 
 ⚠️ _Not yet available_
 
-The API will be available under the package `libfontheight` and then is imported as `fontheight`.
+The API will be available under the package `libfontheight`.
 
 #### Usage
 
 See the method signatures & data types below, approximately written in Python. `k_words` is equivalent to `--words` in the CLI, and `n_exemplars` is equivalent to `-n/--results`.
 
 ```python
-import fontheight
+import libfontheight as fontheight
 
 # Entrypoints
 

@@ -230,6 +230,7 @@ impl<'a> InstanceReporter<'a> {
 
                     buffer.push_str(word);
                     buffer.guess_segment_properties();
+                    // Default features are still included by default
                     let glyph_buffer = match &shaping_plan {
                         Some(plan) => shaper.shape_with_plan(plan, buffer, &[]),
                         None => shaper.shape(buffer, &[]),
@@ -332,6 +333,7 @@ impl<'a> Iterator for WordExtremesIterator<'a> {
 
             buffer.push_str(word);
             buffer.guess_segment_properties();
+            // Default features are still included by default
             let glyph_buffer = match &self.shaping_plan {
                 Some(plan) => self.shaper.shape_with_plan(plan, buffer, &[]),
                 None => self.shaper.shape(buffer, &[]),
@@ -534,6 +536,7 @@ impl WordListExt for WordList {
                         .unwrap_or(Direction::LeftToRight),
                     Some(script),
                     language.as_ref(),
+                    // Default features are still included by default
                     &[],
                 ))
             },

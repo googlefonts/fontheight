@@ -3,6 +3,7 @@ use std::{fmt::Write, fs, iter, path::PathBuf};
 use anyhow::{Context, anyhow};
 use fontheight::{Exemplars, Report, Reporter, SimpleLocation, WordExtremes};
 use pyo3::{Bound, PyResult, prelude::*, pymodule};
+use rayon::prelude::*;
 
 #[pyclass(name = "Report", frozen, get_all)]
 #[derive(Debug, Clone)]
@@ -70,6 +71,16 @@ impl OwnedExemplars {
         buf.push_str("])");
 
         buf
+    }
+
+    fn is_empty(&self) -> bool {
+        debug_assert_eq!(
+            self.lowest.len(),
+            self.highest.len(),
+            "OwnedExemplars.lowest & OwnedExemplars.highest should have the \
+             same number of members",
+        );
+        self.lowest.is_empty()
     }
 }
 
@@ -141,19 +152,27 @@ pub fn get_min_max_extremes(
 ) -> anyhow::Result<Vec<OwnedReport>> {
     let reporter = Reporter::new(font_bytes)?;
     let locations = reporter.interesting_locations();
-    locations
+    let instances = locations
+        .par_iter()
+        .map(|location| reporter.instance(location))
+        .collect::<Result<Vec<_>, _>>()?;
+
+    instances
         .iter()
-        .flat_map(|location| {
+        .flat_map(|instance| {
             static_lang_word_lists::LOOKUP_TABLE
                 .values()
-                .zip(iter::repeat(location))
+                .zip(iter::repeat(instance))
         })
-        .map(|(word_list, location)| -> anyhow::Result<OwnedReport> {
-            let report = reporter
-                .par_check_location(location, word_list, k_words, n_exemplars)?
-                .to_report(location, word_list)
-                .into();
-            Ok(report)
+        .par_bridge()
+        .map(|(word_list, instance)| -> anyhow::Result<_> {
+            let report = instance.par_check(word_list, k_words, n_exemplars)?;
+            Ok(OwnedReport::from(report))
+        })
+        .filter(|report_res| {
+            report_res
+                .as_ref()
+                .map_or(true, |report| !report.exemplars.is_empty())
         })
         .collect::<Result<Vec<_>, _>>()
 }
@@ -174,8 +193,9 @@ pub fn get_all_word_list_extremes(
     locations.iter().try_fold(
         Vec::new(),
         |mut acc, location| -> anyhow::Result<_> {
-            let report_iter = reporter
-                .check_location(location, word_list)?
+            let instance_reporter = reporter.instance(location)?;
+            let report_iter = instance_reporter
+                .to_word_extremes_iter(word_list)?
                 .map(|extremes| OwnedWordExtremes::from(&extremes));
             acc.extend(report_iter);
             Ok(acc)

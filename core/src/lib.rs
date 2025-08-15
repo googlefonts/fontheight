@@ -30,24 +30,27 @@
 
 use std::{
     collections::{BTreeSet, HashMap},
-    convert::identity,
     str::FromStr,
 };
 
-use exemplars::ExemplarCollector;
 pub use exemplars::{CollectToExemplars, Exemplars};
+use harfrust::{
+    Direction, Language, Script, ShapePlan, Shaper, ShaperData, ShaperInstance,
+    Tag, UnicodeBuffer, script,
+};
 use itertools::Itertools;
 use kurbo::Shape;
 pub use locations::{Location, SimpleLocation};
 use ordered_float::OrderedFloat;
 use pens::BezierPen;
-use rustybuzz::UnicodeBuffer;
-use skrifa::{MetadataProvider, instance::Size, outline::DrawSettings};
+use skrifa::{
+    FontRef, MetadataProvider, instance::Size, outline::DrawSettings,
+};
 pub use static_lang_word_lists::WordList;
 use static_lang_word_lists::WordListIter;
 
 use crate::errors::{
-    FontHeightError, RustybuzzUnknownLanguageError, SkrifaDrawError,
+    FontHeightError, HarfRustUnknownLanguageError, SkrifaDrawError,
     SkrifaReadError,
 };
 
@@ -59,8 +62,8 @@ mod pens;
 /// Font Height's entrypoint. Parses fonts and can check word lists at
 /// specified locations.
 pub struct Reporter<'a> {
-    rusty_face: rustybuzz::Face<'a>,
-    skrifa_font: skrifa::FontRef<'a>,
+    font: FontRef<'a>,
+    shaper_data: ShaperData,
 }
 
 impl<'a> Reporter<'a> {
@@ -68,56 +71,40 @@ impl<'a> Reporter<'a> {
     ///
     /// Fails if the bytes couldn't be parsed.
     pub fn new(font_bytes: &'a [u8]) -> Result<Self, FontHeightError> {
-        let rusty_face = rustybuzz::Face::from_slice(font_bytes, 0)
-            .ok_or(FontHeightError::RustybuzzParse)?;
-
-        let skrifa_font =
-            skrifa::FontRef::new(font_bytes).map_err(SkrifaReadError::from)?;
-
+        let font = FontRef::new(font_bytes).map_err(SkrifaReadError::from)?;
         Ok(Reporter {
-            rusty_face,
-            skrifa_font,
+            shaper_data: ShaperData::new(&font),
+            font,
         })
     }
 
-    /// Access the [`rustybuzz`]-parsed font.
+    /// Access the [`read-fonts`]-parsed font.
     ///
     /// ⚠️ Warning: changes to the return type of this function (i.e. by
-    /// `fontheight` changing [`rustybuzz`] version) are **not** covered by this
-    /// crate's efforts to follow SemVer.
+    /// `fontheight` changing [`skrifa`]/[`harfrust`]/[`read-fonts`] version)
+    /// are **not** covered by this crate's efforts to follow SemVer.
     #[inline]
     #[must_use]
-    pub fn rustybuzz_face(&self) -> &rustybuzz::Face<'_> {
-        &self.rusty_face
-    }
-
-    /// Access the [`skrifa`]-parsed font.
-    ///
-    /// ⚠️ Warning: changes to the return type of this function (i.e. by
-    /// `fontheight` changing [`skrifa`] version) are **not** covered by this
-    /// crate's efforts to follow SemVer.
-    #[inline]
-    #[must_use]
-    pub fn skrifa_fontref(&self) -> &skrifa::FontRef<'_> {
-        &self.skrifa_font
+    pub fn fontref(&self) -> &FontRef<'_> {
+        &self.font
     }
 
     /// Gets all combinations of axis coordinates seen in named instances, axis
     /// extremes, and default locations.
     #[must_use]
     pub fn interesting_locations(&self) -> Vec<Location> {
-        let font = &self.skrifa_font;
         let mut axis_coords =
-            vec![BTreeSet::<OrderedFloat<f32>>::new(); font.axes().len()];
+            vec![BTreeSet::<OrderedFloat<f32>>::new(); self.font.axes().len()];
 
-        font.named_instances()
+        self.font
+            .named_instances()
             .iter()
             .flat_map(|instance| instance.user_coords().enumerate())
             .for_each(|(axis, coord)| {
                 axis_coords[axis].insert(coord.into());
             });
 
-        font.axes().iter().for_each(|axis| {
+        self.font.axes().iter().for_each(|axis| {
             axis_coords[axis.index()].extend(&[
                 axis.default_value().into(),
                 axis.min_value().into(),
@@ -131,7 +118,7 @@ impl<'a> Reporter<'a> {
             .map(|coords| {
                 let inner = coords
                     .into_iter()
-                    .zip(font.axes().iter())
+                    .zip(self.font.axes().iter())
                     .map(|(coord, axis)| (axis.tag(), From::from(*coord)))
                     .collect();
                 Location::from_skrifa(inner)
@@ -146,23 +133,53 @@ impl<'a> Reporter<'a> {
     ///
     /// See [`Location`] if you want to specify locations yourself, or otherwise
     /// you could consider using [`Reporter::interesting_locations`].
-    pub fn check_location(
+    pub fn instance(
         &'a self,
         location: &'a Location,
-        word_list: &'a WordList,
-    ) -> Result<WordExtremesIterator<'a>, FontHeightError> {
+    ) -> Result<InstanceReporter<'a>, FontHeightError> {
         // Creating InstanceExtremes also validates the Location; do this first
-        let instance_extremes =
-            InstanceExtremes::new(&self.skrifa_font, location)?;
+        let instance_extremes = InstanceExtremes::new(&self.font, location)?;
+        let shaper_instance =
+            ShaperInstance::from_variations(&self.font, location.to_harfrust());
 
-        let mut rusty_face = self.rusty_face.clone();
-        rusty_face.set_variations(&location.to_rustybuzz());
-
-        Ok(WordExtremesIterator {
-            rusty_plan: word_list.shaping_plan(&rusty_face)?,
-            rusty_face,
-            word_iter: word_list.iter(),
+        Ok(InstanceReporter {
+            font: &self.font,
+            location,
+            shaper_data: &self.shaper_data,
+            shaper_instance,
             instance_extremes,
+        })
+    }
+}
+
+/// A Font Height [`Reporter`] configured to a specific variable font instance.
+///
+/// Re-use this if you want to check multiple word-lists at this location.
+pub struct InstanceReporter<'a> {
+    font: &'a FontRef<'a>,
+    location: &'a Location,
+    shaper_data: &'a ShaperData,
+    shaper_instance: ShaperInstance,
+    instance_extremes: InstanceExtremes,
+}
+
+impl<'a> InstanceReporter<'a> {
+    /// Create an iterator for [`WordExtremes`] with the given [`WordList`].
+    pub fn to_word_extremes_iter(
+        &self,
+        word_list: &'a WordList,
+    ) -> Result<WordExtremesIterator<'_>, FontHeightError> {
+        let shaper = self
+            .shaper_data
+            .shaper(self.font)
+            .instance(Some(&self.shaper_instance))
+            .build();
+        let shaping_plan = word_list.shaping_plan(&shaper)?;
+        Ok(WordExtremesIterator {
+            shaper,
+            instance_extremes: &self.instance_extremes,
+            shaping_plan,
+            word_iter: word_list.iter(),
             unicode_buffer: Some(UnicodeBuffer::new()),
         })
     }
@@ -175,34 +192,32 @@ impl<'a> Reporter<'a> {
     /// See [`Location`] if you want to specify locations yourself, or otherwise
     /// you could consider using [`Reporter::interesting_locations`].
     #[cfg(feature = "rayon")]
-    pub fn par_check_location(
-        &'a self,
-        location: &'a Location,
+    pub fn par_check(
+        &self,
         word_list: &'a WordList,
         k_words: Option<usize>,
         n_exemplars: usize,
-    ) -> Result<Exemplars<'a>, FontHeightError> {
-        use rayon::prelude::*;
-        use rustybuzz::ShapePlan;
+    ) -> Result<Report<'a>, FontHeightError> {
+        use std::convert::identity;
 
-        struct WorkerState<'a> {
+        use exemplars::ExemplarCollector;
+        use rayon::prelude::*;
+
+        struct WorkerState {
             // UnicodeBuffer is transformed into another type during shaping,
             // and then can only be reverted once we've finished
             // analysing the shaped buffer. The Option allows us to
             // take ownership of it during each iteration for these
             // type changes to happen, while still re-using the buffer
             unicode_buffer: Option<UnicodeBuffer>,
-            shaping_plan: Option<&'a ShapePlan>,
         }
 
-        // Creating InstanceExtremes also validates the Location; do this first
-        let instance_extremes =
-            InstanceExtremes::new(&self.skrifa_font, location)?;
-
-        let mut rusty_face = self.rusty_face.clone();
-        rusty_face.set_variations(&location.to_rustybuzz());
-
-        let plan = word_list.shaping_plan(&rusty_face).unwrap_or_default();
+        let shaper = self
+            .shaper_data
+            .shaper(self.font)
+            .instance(Some(&self.shaper_instance))
+            .build();
+        let shaping_plan = word_list.shaping_plan(&shaper)?;
 
         let collector = word_list
             .par_iter()
@@ -210,7 +225,6 @@ impl<'a> Reporter<'a> {
             .map_init(
                 || WorkerState {
                     unicode_buffer: Some(UnicodeBuffer::new()),
-                    shaping_plan: plan.as_ref(),
                 },
                 |state, word| {
                     // Take buffer; it should always be present
@@ -218,11 +232,9 @@ impl<'a> Reporter<'a> {
 
                     buffer.push_str(word);
                     buffer.guess_segment_properties();
-                    // TODO: this is where you would use the shaping plan
-                    let glyph_buffer = if let Some(plan) = &state.shaping_plan {
-                        rustybuzz::shape_with_plan(&rusty_face, plan, buffer)
-                    } else {
-                        rustybuzz::shape(&rusty_face, &[], buffer)
+                    let glyph_buffer = match &shaping_plan {
+                        Some(plan) => shaper.shape_with_plan(plan, buffer, &[]),
+                        None => shaper.shape(buffer, &[]),
                     };
 
                     let glyphs_missing = glyph_buffer
@@ -242,8 +254,10 @@ impl<'a> Reporter<'a> {
                         .map(|(info, pos)| {
                             // TODO: Remove empty glyphs?
                             let y_offset = pos.y_offset;
-                            let heights =
-                                instance_extremes.get(info.glyph_id).unwrap();
+                            let heights = self
+                                .instance_extremes
+                                .get(info.glyph_id)
+                                .unwrap();
 
                             (
                                 heights.lowest + y_offset as f64,
@@ -283,7 +297,7 @@ impl<'a> Reporter<'a> {
                 },
             );
 
-        Ok(collector.build())
+        Ok(collector.build().to_report(self.location, word_list))
     }
 }
 
@@ -292,9 +306,9 @@ impl<'a> Reporter<'a> {
 ///
 /// Produced by a [`Reporter`].
 pub struct WordExtremesIterator<'a> {
-    rusty_face: rustybuzz::Face<'a>,
-    instance_extremes: InstanceExtremes,
-    rusty_plan: Option<rustybuzz::ShapePlan>,
+    shaper: Shaper<'a>,
+    instance_extremes: &'a InstanceExtremes,
+    shaping_plan: Option<ShapePlan>,
     word_iter: WordListIter<'a>,
     // UnicodeBuffer is transformed into another type during shaping, and then
     // can only be reverted once we've finished analysing the shaped buffer.
@@ -320,10 +334,9 @@ impl<'a> Iterator for WordExtremesIterator<'a> {
 
             buffer.push_str(word);
             buffer.guess_segment_properties();
-            let glyph_buffer = if let Some(plan) = &self.rusty_plan {
-                rustybuzz::shape_with_plan(&self.rusty_face, plan, buffer)
-            } else {
-                rustybuzz::shape(&self.rusty_face, &[], buffer)
+            let glyph_buffer = match &self.shaping_plan {
+                Some(plan) => self.shaper.shape_with_plan(plan, buffer, &[]),
+                None => self.shaper.shape(buffer, &[]),
             };
 
             let glyphs_missing = glyph_buffer
@@ -392,7 +405,7 @@ pub(crate) struct InstanceExtremes(HashMap<u32, VerticalExtremes>);
 impl InstanceExtremes {
     /// Create the cache for the given `font` at a [`Location`].
     pub fn new(
-        font: &skrifa::FontRef,
+        font: &FontRef,
         location: &Location,
     ) -> Result<Self, FontHeightError> {
         location.validate_for(font)?;
@@ -484,36 +497,38 @@ impl<'a> Report<'a> {
 trait WordListExt {
     fn shaping_plan(
         &self,
-        rusty_face: &rustybuzz::Face,
-    ) -> Result<Option<rustybuzz::ShapePlan>, FontHeightError>;
+        shaper: &Shaper,
+    ) -> Result<Option<ShapePlan>, FontHeightError>;
 }
 
 impl WordListExt for WordList {
     fn shaping_plan(
         &self,
-        rusty_face: &rustybuzz::Face,
-    ) -> Result<Option<rustybuzz::ShapePlan>, FontHeightError> {
+        shaper: &Shaper,
+    ) -> Result<Option<ShapePlan>, FontHeightError> {
         let script = self
             .script()
-            .map(str::as_bytes)
-            .map(rustybuzz::ttf_parser::Tag::from_bytes_lossy)
-            .and_then(rustybuzz::Script::from_iso15924_tag);
+            .and_then(|script| Tag::from_str(script).ok())
+            .and_then(Script::from_iso15924_tag);
         let shaping_plan = match script {
             Some(script) => {
+                // TODO: should this be a Result::Err or should it just be a
+                //       log::error that a word list's language is poorly
+                //       configured?
                 let language = self
                     .language()
                     .map(|lang| {
-                        // rustybuzz's own error here is just "invalid language"
-                        // (v0.20.1), so discard it for our own
-                        rustybuzz::Language::from_str(lang).map_err(|_| {
-                            RustybuzzUnknownLanguageError::new(lang)
+                        // harfrust's own error here is just "invalid language"
+                        // (v0.1.1), so discard it for our own
+                        Language::from_str(lang).map_err(|_| {
+                            HarfRustUnknownLanguageError::new(lang)
                         })
                     })
                     .transpose()?;
-                Some(rustybuzz::ShapePlan::new(
-                    rusty_face,
+                Some(ShapePlan::new(
+                    shaper,
                     direction_from_script(script)
-                        .unwrap_or(rustybuzz::Direction::LeftToRight),
+                        .unwrap_or(Direction::LeftToRight),
                     Some(script),
                     language.as_ref(),
                     &[],
@@ -525,89 +540,87 @@ impl WordListExt for WordList {
     }
 }
 
-fn direction_from_script(
-    script: rustybuzz::Script,
-) -> Option<rustybuzz::Direction> {
-    // Copied from Rustybuzz
-    // https://docs.rs/rustybuzz/0.20.1/src/rustybuzz/hb/common.rs.html#72-154
+fn direction_from_script(script: Script) -> Option<Direction> {
+    // Copied from harfrust (internal API)
+    // https://github.com/harfbuzz/harfrust/blob/bf4b7ca20cf95e7183c5f9e1c13a56e9ca6c1174/src/hb/common.rs#L75-L161
 
     match script {
         // Unicode-1.1 additions
-        rustybuzz::script::ARABIC |
-        rustybuzz::script::HEBREW |
+        script::ARABIC |
+        script::HEBREW |
 
         // Unicode-3.0 additions
-        rustybuzz::script::SYRIAC |
-        rustybuzz::script::THAANA |
+        script::SYRIAC |
+        script::THAANA |
 
         // Unicode-4.0 additions
-        rustybuzz::script::CYPRIOT |
+        script::CYPRIOT |
 
         // Unicode-4.1 additions
-        rustybuzz::script::KHAROSHTHI |
+        script::KHAROSHTHI |
 
         // Unicode-5.0 additions
-        rustybuzz::script::PHOENICIAN |
-        rustybuzz::script::NKO |
+        script::PHOENICIAN |
+        script::NKO |
 
         // Unicode-5.1 additions
-        rustybuzz::script::LYDIAN |
+        script::LYDIAN |
 
         // Unicode-5.2 additions
-        rustybuzz::script::AVESTAN |
-        rustybuzz::script::IMPERIAL_ARAMAIC |
-        rustybuzz::script::INSCRIPTIONAL_PAHLAVI |
-        rustybuzz::script::INSCRIPTIONAL_PARTHIAN |
-        rustybuzz::script::OLD_SOUTH_ARABIAN |
-        rustybuzz::script::OLD_TURKIC |
-        rustybuzz::script::SAMARITAN |
+        script::AVESTAN |
+        script::IMPERIAL_ARAMAIC |
+        script::INSCRIPTIONAL_PAHLAVI |
+        script::INSCRIPTIONAL_PARTHIAN |
+        script::OLD_SOUTH_ARABIAN |
+        script::OLD_TURKIC |
+        script::SAMARITAN |
 
         // Unicode-6.0 additions
-        rustybuzz::script::MANDAIC |
+        script::MANDAIC |
 
         // Unicode-6.1 additions
-        rustybuzz::script::MEROITIC_CURSIVE |
-        rustybuzz::script::MEROITIC_HIEROGLYPHS |
+        script::MEROITIC_CURSIVE |
+        script::MEROITIC_HIEROGLYPHS |
 
         // Unicode-7.0 additions
-        rustybuzz::script::MANICHAEAN |
-        rustybuzz::script::MENDE_KIKAKUI |
-        rustybuzz::script::NABATAEAN |
-        rustybuzz::script::OLD_NORTH_ARABIAN |
-        rustybuzz::script::PALMYRENE |
-        rustybuzz::script::PSALTER_PAHLAVI |
+        script::MANICHAEAN |
+        script::MENDE_KIKAKUI |
+        script::NABATAEAN |
+        script::OLD_NORTH_ARABIAN |
+        script::PALMYRENE |
+        script::PSALTER_PAHLAVI |
 
         // Unicode-8.0 additions
-        rustybuzz::script::HATRAN |
+        script::HATRAN |
 
         // Unicode-9.0 additions
-        rustybuzz::script::ADLAM |
+        script::ADLAM |
 
         // Unicode-11.0 additions
-        rustybuzz::script::HANIFI_ROHINGYA |
-        rustybuzz::script::OLD_SOGDIAN |
-        rustybuzz::script::SOGDIAN |
+        script::HANIFI_ROHINGYA |
+        script::OLD_SOGDIAN |
+        script::SOGDIAN |
 
         // Unicode-12.0 additions
-        rustybuzz::script::ELYMAIC |
+        script::ELYMAIC |
 
         // Unicode-13.0 additions
-        rustybuzz::script::CHORASMIAN |
-        rustybuzz::script::YEZIDI |
+        script::CHORASMIAN |
+        script::YEZIDI |
 
         // Unicode-14.0 additions
-        rustybuzz::script::OLD_UYGHUR => {
-            Some(rustybuzz::Direction::RightToLeft)
+        script::OLD_UYGHUR => {
+            Some(Direction::RightToLeft)
         }
 
         // https://github.com/harfbuzz/harfbuzz/issues/1000
-        rustybuzz::script::OLD_HUNGARIAN |
-        rustybuzz::script::OLD_ITALIC |
-        rustybuzz::script::RUNIC |
-        rustybuzz::script::TIFINAGH => {
+        script::OLD_HUNGARIAN |
+        script::OLD_ITALIC |
+        script::RUNIC |
+        script::TIFINAGH => {
             None
         }
 
-        _ => Some(rustybuzz::Direction::LeftToRight),
+        _ => Some(Direction::LeftToRight),
     }
 }

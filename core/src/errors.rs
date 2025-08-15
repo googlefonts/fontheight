@@ -8,12 +8,9 @@ use thiserror::Error;
 #[non_exhaustive]
 #[derive(Debug, Error)]
 pub enum FontHeightError {
-    /// [`rustybuzz`] could not parse the font.
-    #[error("rustybuzz could not parse the font")]
-    RustybuzzParse,
-    /// [`rustybuzz`] didn't recognise the language of the word list you chose.
+    /// [`harfrust`] didn't recognise the language of the word list you chose.
     #[error("rustybuzz did not recognise the language: {0}")]
-    RustybuzzUnknownLanguage(#[from] RustybuzzUnknownLanguageError),
+    HarfRustUnknownLanguage(#[from] HarfRustUnknownLanguageError),
     /// [`skrifa`] could not parse the font.
     #[error("skrifa could not parse the font: {0}")]
     Skrifa(#[from] SkrifaReadError),
@@ -29,16 +26,16 @@ pub enum FontHeightError {
     MismatchedAxes(#[from] MismatchedAxesError),
 }
 
-/// [`rustybuzz`] didn't recognise the language
+/// [`harfrust`] didn't recognise the language
 #[derive(Debug, Error)]
 #[error("invalid language: \"{language}\"")]
-pub struct RustybuzzUnknownLanguageError {
+pub struct HarfRustUnknownLanguageError {
     language: String,
 }
 
-impl RustybuzzUnknownLanguageError {
+impl HarfRustUnknownLanguageError {
     pub(crate) fn new(lang: impl Into<String>) -> Self {
-        RustybuzzUnknownLanguageError {
+        HarfRustUnknownLanguageError {
             language: lang.into(),
         }
     }

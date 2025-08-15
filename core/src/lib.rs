@@ -29,6 +29,7 @@
 //! support.
 
 use std::{
+    borrow::Cow,
     collections::{BTreeSet, HashMap},
     str::FromStr,
 };
@@ -126,7 +127,7 @@ impl<'a> Reporter<'a> {
             .collect()
     }
 
-    /// Create an iterator for [`WordExtremes`] at a given location.
+    /// Create an [`InstanceReporter`] at a given location.
     ///
     /// Fails if the [`Location`] isn't valid for the font (e.g. specifying axes
     /// that don't exist).
@@ -144,11 +145,28 @@ impl<'a> Reporter<'a> {
 
         Ok(InstanceReporter {
             font: &self.font,
-            location,
+            location: Cow::Borrowed(location),
             shaper_data: &self.shaper_data,
             shaper_instance,
             instance_extremes,
         })
+    }
+
+    /// Create an [`InstanceReporter`] at the default location.
+    pub fn default_instance(&'a self) -> InstanceReporter<'a> {
+        let location = Cow::<Location>::default();
+        let instance_extremes =
+            InstanceExtremes::new(&self.font, &location).unwrap();
+        let shaper_instance =
+            ShaperInstance::from_variations(&self.font, location.to_harfrust());
+
+        InstanceReporter {
+            font: &self.font,
+            location,
+            shaper_data: &self.shaper_data,
+            shaper_instance,
+            instance_extremes,
+        }
     }
 }
 
@@ -157,7 +175,7 @@ impl<'a> Reporter<'a> {
 /// Re-use this if you want to check multiple word-lists at this location.
 pub struct InstanceReporter<'a> {
     font: &'a FontRef<'a>,
-    location: &'a Location,
+    location: Cow<'a, Location>,
     shaper_data: &'a ShaperData,
     shaper_instance: ShaperInstance,
     instance_extremes: InstanceExtremes,
@@ -191,7 +209,7 @@ impl<'a> InstanceReporter<'a> {
     /// Can fail if the [`WordList`]'s metadata is invalid.
     #[cfg(feature = "rayon")]
     pub fn par_check(
-        &self,
+        &'a self,
         word_list: &'a WordList,
         k_words: Option<usize>,
         n_exemplars: usize,
@@ -217,7 +235,7 @@ impl<'a> InstanceReporter<'a> {
             .build();
         let shaping_plan = word_list.shaping_plan(&shaper)?;
 
-        let collector = word_list
+        let exemplars = word_list
             .par_iter()
             .take(k_words.unwrap_or(usize::MAX))
             .map_init(
@@ -294,9 +312,14 @@ impl<'a> InstanceReporter<'a> {
                     acc.merge_with(other);
                     acc
                 },
-            );
+            )
+            .build();
 
-        Ok(collector.build().to_report(self.location, word_list))
+        Ok(Report {
+            location: self.location.as_ref(),
+            word_list,
+            exemplars,
+        })
     }
 }
 

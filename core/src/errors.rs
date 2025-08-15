@@ -8,9 +8,6 @@ use thiserror::Error;
 #[non_exhaustive]
 #[derive(Debug, Error)]
 pub enum FontHeightError {
-    /// [`harfrust`] didn't recognise the language of the word list you chose.
-    #[error("rustybuzz did not recognise the language: {0}")]
-    HarfRustUnknownLanguage(#[from] HarfRustUnknownLanguageError),
     /// [`skrifa`] could not parse the font.
     #[error("skrifa could not parse the font: {0}")]
     Skrifa(#[from] SkrifaReadError),
@@ -24,6 +21,46 @@ pub enum FontHeightError {
     /// those in the font.
     #[error(transparent)]
     MismatchedAxes(#[from] MismatchedAxesError),
+    /// Invalid metadata for a word list meant creating a shaping plan for it
+    /// failed.
+    #[error(transparent)]
+    WordListMetadata(#[from] ShapingPlanError),
+}
+
+/// Creating the shaping plan for a [`WordList`](crate::WordList) failed.
+///
+/// A shaping plan is a harfbuzz/[`harfrust`] optimisation where you inform it
+/// ahead-of-time about the text you're going to give it, telling it things like
+/// the direction, script, and language of the text. You can read more about
+/// this [here](https://harfbuzz.github.io/shaping-plans-and-caching.html).
+///
+/// Note: this error will only occur if the [`WordList`](crate::WordList) has
+/// metdata and it's unable to used. [`WordList`](crate::WordList)s without
+/// metadata will not cause this error.
+#[derive(Debug, Error)]
+pub enum ShapingPlanError {
+    /// The script metadata value on the [`WordList`](crate::WordList) was
+    /// invalid
+    #[error(
+        "invalid script in word list metadata for {word_list_name}: {inner}"
+    )]
+    UnknownScriptTag {
+        /// The name of the word list that had invalid metadata
+        word_list_name: String,
+        /// The underlying error
+        inner: InvalidTagError,
+    },
+    /// The language metadata value on the [`WordList`](crate::WordList) was
+    /// invalid
+    #[error(
+        "invalid language in word list metadata for {word_list_name}: {inner}"
+    )]
+    UnknownLanguage {
+        /// The name of the word list that had invalid metadata
+        word_list_name: String,
+        /// The underlying error
+        inner: HarfRustUnknownLanguageError,
+    },
 }
 
 /// [`harfrust`] didn't recognise the language
@@ -61,7 +98,7 @@ pub struct MismatchedAxesError {
     pub(crate) extras: Vec<skrifa::Tag>,
 }
 
-/// The axis tag was invalid (illegal characters, too long)
+/// The axis/script tag was invalid (illegal characters, too long)
 #[derive(Debug, Error)]
 #[error(transparent)]
 pub struct InvalidTagError(#[from] InvalidTag);

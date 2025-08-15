@@ -50,8 +50,8 @@ pub use static_lang_word_lists::WordList;
 use static_lang_word_lists::WordListIter;
 
 use crate::errors::{
-    FontHeightError, HarfRustUnknownLanguageError, SkrifaDrawError,
-    SkrifaReadError,
+    FontHeightError, HarfRustUnknownLanguageError, ShapingPlanError,
+    SkrifaDrawError, SkrifaReadError,
 };
 
 pub mod errors;
@@ -165,10 +165,12 @@ pub struct InstanceReporter<'a> {
 
 impl<'a> InstanceReporter<'a> {
     /// Create an iterator for [`WordExtremes`] with the given [`WordList`].
+    ///
+    /// Can fail if the [`WordList`]'s metadata is invalid.
     pub fn to_word_extremes_iter(
         &self,
         word_list: &'a WordList,
-    ) -> Result<WordExtremesIterator<'_>, FontHeightError> {
+    ) -> Result<WordExtremesIterator<'_>, ShapingPlanError> {
         let shaper = self
             .shaper_data
             .shaper(self.font)
@@ -186,18 +188,14 @@ impl<'a> InstanceReporter<'a> {
 
     /// Create a parallel iterator for [`WordExtremes`] at a given location.
     ///
-    /// Fails if the [`Location`] isn't valid for the font (e.g. specifying axes
-    /// that don't exist).
-    ///
-    /// See [`Location`] if you want to specify locations yourself, or otherwise
-    /// you could consider using [`Reporter::interesting_locations`].
+    /// Can fail if the [`WordList`]'s metadata is invalid.
     #[cfg(feature = "rayon")]
     pub fn par_check(
         &self,
         word_list: &'a WordList,
         k_words: Option<usize>,
         n_exemplars: usize,
-    ) -> Result<Report<'a>, FontHeightError> {
+    ) -> Result<Report<'a>, ShapingPlanError> {
         use std::convert::identity;
 
         use exemplars::ExemplarCollector;
@@ -498,30 +496,35 @@ trait WordListExt {
     fn shaping_plan(
         &self,
         shaper: &Shaper,
-    ) -> Result<Option<ShapePlan>, FontHeightError>;
+    ) -> Result<Option<ShapePlan>, ShapingPlanError>;
 }
 
 impl WordListExt for WordList {
     fn shaping_plan(
         &self,
         shaper: &Shaper,
-    ) -> Result<Option<ShapePlan>, FontHeightError> {
+    ) -> Result<Option<ShapePlan>, ShapingPlanError> {
         let script = self
             .script()
-            .and_then(|script| Tag::from_str(script).ok())
+            .map(Tag::from_str)
+            .transpose()
+            .map_err(|inner| ShapingPlanError::UnknownScriptTag {
+                word_list_name: self.name().to_owned(),
+                inner: inner.into(),
+            })?
             .and_then(Script::from_iso15924_tag);
         let shaping_plan = match script {
             Some(script) => {
-                // TODO: should this be a Result::Err or should it just be a
-                //       log::error that a word list's language is poorly
-                //       configured?
                 let language = self
                     .language()
                     .map(|lang| {
                         // harfrust's own error here is just "invalid language"
                         // (v0.1.1), so discard it for our own
                         Language::from_str(lang).map_err(|_| {
-                            HarfRustUnknownLanguageError::new(lang)
+                            ShapingPlanError::UnknownLanguage {
+                                word_list_name: self.name().to_owned(),
+                                inner: HarfRustUnknownLanguageError::new(lang),
+                            }
                         })
                     })
                     .transpose()?;

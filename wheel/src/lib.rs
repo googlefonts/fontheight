@@ -184,7 +184,7 @@ pub fn get_all_word_list_extremes(
 }
 
 #[pymodule]
-fn libfontheight(module: &Bound<'_, PyModule>) -> PyResult<()> {
+fn pyfontheight(module: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<OwnedReport>()?;
     module.add_class::<OwnedExemplars>()?;
     module.add_class::<OwnedWordExtremes>()?;

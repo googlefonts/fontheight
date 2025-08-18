@@ -36,3 +36,4 @@ broken_intra_doc_links = "forbid"
 [workspace.lints.clippy]
 undocumented_unsafe_blocks = "warn"
 must_use_candidate = "warn"
+missing_const_for_fn = "warn"

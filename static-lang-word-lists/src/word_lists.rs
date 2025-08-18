@@ -117,7 +117,10 @@ impl WordList {
     }
 
     #[must_use]
-    pub(crate) fn new(metadata: WordListMetadata, words: Vec<String>) -> Self {
+    pub(crate) const fn new(
+        metadata: WordListMetadata,
+        words: Vec<String>,
+    ) -> Self {
         WordList { metadata, words }
     }
 
@@ -153,14 +156,14 @@ impl WordList {
     /// Get how many words there are in the word list.
     #[inline]
     #[must_use]
-    pub fn len(&self) -> usize {
+    pub const fn len(&self) -> usize {
         self.words.len()
     }
 
     /// Returns `true` if there are no words in the word list.
     #[inline]
     #[must_use]
-    pub fn is_empty(&self) -> bool {
+    pub const fn is_empty(&self) -> bool {
         self.words.is_empty()
     }
 }

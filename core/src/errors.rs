@@ -1,6 +1,11 @@
 //! The errors produced by Font Height.
 //!
 //! Hopefully you don't have to get too familiar with these 😃
+//!
+//! The top-level catch-all error is [`FontHeightError`], but individual APIs
+//! may return more specific errors (all of which will up-convert to
+//! [`FontHeightError`] one way or another).
+
 use skrifa::{outline::DrawError, raw::types::InvalidTag};
 use thiserror::Error;
 
@@ -21,21 +26,25 @@ pub enum FontHeightError {
     /// those in the font.
     #[error(transparent)]
     MismatchedAxes(#[from] MismatchedAxesError),
-    /// Invalid metadata for a word list meant creating a shaping plan for it
-    /// failed.
+    /// Invalid metadata for a [`WordList`](crate::WordList) meant creating a
+    /// shaping plan for it failed.
     #[error(transparent)]
     WordListMetadata(#[from] ShapingPlanError),
 }
 
 /// Creating the shaping plan for a [`WordList`](crate::WordList) failed.
 ///
-/// A shaping plan is a harfbuzz/[`harfrust`] optimisation where you inform it
+/// # What is a shaping plan?
+///
+/// A shaping plan is a HarfBuzz/[`harfrust`] optimisation where you inform it
 /// ahead-of-time about the text you're going to give it, telling it things like
 /// the direction, script, and language of the text. You can read more about
 /// this [here](https://harfbuzz.github.io/shaping-plans-and-caching.html).
 ///
-/// Note: this error will only occur if the [`WordList`](crate::WordList) has
-/// metdata and it's unable to used. [`WordList`](crate::WordList)s without
+/// # If it's just an optimisation technique, why is this a fatal error for Font Height?
+///
+/// This error will only occur if the [`WordList`](crate::WordList) has
+/// metadata and it's unable to used. [`WordList`](crate::WordList)s without
 /// metadata will not cause this error.
 #[derive(Debug, Error)]
 pub enum ShapingPlanError {
@@ -79,7 +88,7 @@ impl HarfRustUnknownLanguageError {
 }
 
 // New-typed errors to not have 3rd party errors in public API
-/// Skrifa could not parse the font
+/// Skrifa could not parse the font.
 #[derive(Debug, Error)]
 #[error(transparent)]
 pub struct SkrifaReadError(#[from] skrifa::raw::ReadError);
@@ -91,14 +100,14 @@ pub struct SkrifaDrawError(pub(crate) skrifa::GlyphId, pub(crate) DrawError);
 
 /// Returned by [`Location::validate_for`](crate::Location::validate_for),
 /// indicating axes are specified in the [`Location`](crate::Location) that
-/// aren't in the `font`.
+/// aren't in the font being validated against.
 #[derive(Debug, Error)]
 #[error("mismatched axes: present in Location but not font {extras:?}")]
 pub struct MismatchedAxesError {
     pub(crate) extras: Vec<skrifa::Tag>,
 }
 
-/// The axis/script tag was invalid (illegal characters, too long)
+/// The axis/script tag was invalid (it had illegal characters or was too long).
 #[derive(Debug, Error)]
 #[error(transparent)]
 pub struct InvalidTagError(#[from] InvalidTag);

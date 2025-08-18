@@ -7,9 +7,6 @@ use skrifa::MetadataProvider;
 
 use crate::errors::{InvalidTagError, MismatchedAxesError};
 
-/// A mapping of axis names as [`String`]s to values
-pub type SimpleLocation = HashMap<String, f32>;
-
 /// A mapping of axis names to values.
 ///
 /// ```
@@ -32,10 +29,14 @@ impl Location {
     /// Create a new location.
     #[must_use]
     pub fn new() -> Self {
+        // HashMap::new isn't const so even if we desugared this we couldn't
+        // make Location::new const
         Default::default()
     }
 
-    pub(crate) fn from_skrifa(user_coords: HashMap<skrifa::Tag, f32>) -> Self {
+    pub(crate) const fn from_skrifa(
+        user_coords: HashMap<skrifa::Tag, f32>,
+    ) -> Self {
         Self { user_coords }
     }
 
@@ -66,18 +67,20 @@ impl Location {
         Ok(self)
     }
 
-    /// Converts a [`SimpleLocation`] to a Font Height `Location`.
+    /// Converts a [`HashMap`] to a Font Height [`Location`].
     ///
-    /// Fails if any keys of the [`SimpleLocation`] aren't valid axis tags.
-    pub fn from_simple(
-        location: SimpleLocation,
+    /// Fails if any keys aren't valid axis tags.
+    ///
+    /// Note: this is just an alias to the [`TryFrom`] implementation.
+    pub fn try_from_simple(
+        location: HashMap<String, f32>,
     ) -> Result<Self, InvalidTagError> {
         Self::try_from(location)
     }
 
-    /// Creates a [`SimpleLocation`] from `&self`.
+    /// Creates a [`HashMap<String, f32>`](HashMap) from `&self`.
     #[must_use]
-    pub fn to_simple(&self) -> SimpleLocation {
+    pub fn to_simple(&self) -> HashMap<String, f32> {
         self.user_coords
             .iter()
             .map(|(tag, &val)| (tag.to_string(), val))
@@ -107,6 +110,9 @@ impl Location {
     ///
     /// Omitting axes is allowed as most libraries will just use the default
     /// value if one isn't provided for an axis.
+    ///
+    /// Note: if you're just using Font Height, it will perform this validation
+    /// for you as necessary.
     pub fn validate_for(
         &self,
         font: &skrifa::FontRef,
@@ -139,10 +145,10 @@ impl fmt::Debug for Location {
     }
 }
 
-impl TryFrom<SimpleLocation> for Location {
+impl TryFrom<HashMap<String, f32>> for Location {
     type Error = InvalidTagError;
 
-    fn try_from(location: SimpleLocation) -> Result<Self, Self::Error> {
+    fn try_from(location: HashMap<String, f32>) -> Result<Self, Self::Error> {
         let user_coords = location
             .into_iter()
             .map(|(tag, val)| {

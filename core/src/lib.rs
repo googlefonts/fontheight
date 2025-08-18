@@ -41,7 +41,7 @@ use harfrust::{
 };
 use itertools::Itertools;
 use kurbo::Shape;
-pub use locations::{Location, SimpleLocation};
+pub use locations::Location;
 use ordered_float::OrderedFloat;
 use pens::BezierPen;
 use skrifa::{
@@ -79,19 +79,19 @@ impl<'a> Reporter<'a> {
         })
     }
 
-    /// Access the [`read-fonts`]-parsed font.
+    /// Access the `read-fonts`-parsed font.
     ///
     /// ⚠️ Warning: changes to the return type of this function (i.e. by
-    /// `fontheight` changing [`skrifa`]/[`harfrust`]/[`read-fonts`] version)
+    /// `fontheight` changing [`skrifa`]/[`harfrust`]/`read-fonts` version)
     /// are **not** covered by this crate's efforts to follow SemVer.
     #[inline]
     #[must_use]
-    pub fn fontref(&self) -> &FontRef<'_> {
+    pub const fn fontref(&self) -> &FontRef<'_> {
         &self.font
     }
 
     /// Gets all combinations of axis coordinates seen in named instances, axis
-    /// extremes, and default locations.
+    /// extremes, and default location.
     #[must_use]
     pub fn interesting_locations(&self) -> Vec<Location> {
         let mut axis_coords =
@@ -132,8 +132,12 @@ impl<'a> Reporter<'a> {
     /// Fails if the [`Location`] isn't valid for the font (e.g. specifying axes
     /// that don't exist).
     ///
-    /// See [`Location`] if you want to specify locations yourself, or otherwise
-    /// you could consider using [`Reporter::interesting_locations`].
+    /// Consider your use case:
+    /// - checking the default location: use [`Reporter::default_instance`]
+    /// - checking all extremes, naming instances, and the default location: use
+    ///   [`Reporter::interesting_locations`] and create many
+    ///   [`InstanceReporter`]s
+    /// - something else specific: create a [`Location`] yourself
     pub fn instance(
         &'a self,
         location: &'a Location,
@@ -182,6 +186,13 @@ pub struct InstanceReporter<'a> {
 }
 
 impl<'a> InstanceReporter<'a> {
+    /// Get the [`Location`] that this instance reporter is checking.
+    #[inline]
+    #[must_use]
+    pub fn location(&self) -> &Location {
+        self.location.as_ref()
+    }
+
     /// Create an iterator for [`WordExtremes`] with the given [`WordList`].
     ///
     /// Can fail if the [`WordList`]'s metadata is invalid.
@@ -326,7 +337,7 @@ impl<'a> InstanceReporter<'a> {
 /// An iterator of [`WordExtremes`] for one specific font, [`WordList`], and
 /// [`Location`].
 ///
-/// Produced by a [`Reporter`].
+/// Produced by a [`InstanceReporter`].
 pub struct WordExtremesIterator<'a> {
     shaper: Shaper<'a>,
     instance_extremes: &'a InstanceExtremes,
@@ -501,7 +512,7 @@ pub struct Report<'a> {
 }
 
 impl<'a> Report<'a> {
-    /// Create a new report from its fields
+    /// Create a new report from its fields.
     #[inline]
     #[must_use]
     pub const fn new(
@@ -569,7 +580,7 @@ impl WordListExt for WordList {
     }
 }
 
-fn direction_from_script(script: Script) -> Option<Direction> {
+const fn direction_from_script(script: Script) -> Option<Direction> {
     // Copied from harfrust (internal API)
     // https://github.com/harfbuzz/harfrust/blob/bf4b7ca20cf95e7183c5f9e1c13a56e9ca6c1174/src/hb/common.rs#L75-L161
 

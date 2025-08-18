@@ -1,14 +1,14 @@
-use std::{fmt::Write, fs, iter, path::PathBuf};
+use std::{collections::HashMap, fmt::Write, fs, iter, path::PathBuf};
 
 use anyhow::{Context, anyhow};
-use fontheight::{Exemplars, Report, Reporter, SimpleLocation, WordExtremes};
+use fontheight::{Exemplars, Report, Reporter, WordExtremes};
 use pyo3::{Bound, PyResult, prelude::*, pymodule};
 use rayon::prelude::*;
 
 #[pyclass(name = "Report", frozen, get_all)]
 #[derive(Debug, Clone)]
 pub struct OwnedReport {
-    location: SimpleLocation,
+    location: HashMap<String, f32>,
     word_list_name: String,
     exemplars: OwnedExemplars,
 }

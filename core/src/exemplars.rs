@@ -4,8 +4,8 @@ use crate::{Location, Report, WordExtremes, WordList};
 
 /// A collection of the lowest lows and highest highs.
 ///
-/// Note: there may be some overlap between the lowest lows and highest highs,
-/// they're not guaranteed to be mutually exclusive.
+/// Note: the low & high exemplars are not guaranteed to be mutually exclusive,
+/// there can be overlap.
 #[derive(Debug, Clone)]
 pub struct Exemplars<'w> {
     lowest: Vec<WordExtremes<'w>>,
@@ -18,7 +18,7 @@ impl<'a> Exemplars<'a> {
     /// This slice will always be the same length as [`highest`](Self::highest).
     #[inline]
     #[must_use]
-    pub fn lowest(&self) -> &[WordExtremes<'_>] {
+    pub const fn lowest(&self) -> &[WordExtremes<'_>] {
         self.lowest.as_slice()
     }
 
@@ -27,7 +27,7 @@ impl<'a> Exemplars<'a> {
     /// This slice will always be the same length as [`lowest`](Self::lowest).
     #[inline]
     #[must_use]
-    pub fn highest(&self) -> &[WordExtremes<'_>] {
+    pub const fn highest(&self) -> &[WordExtremes<'_>] {
         self.highest.as_slice()
     }
 
@@ -36,7 +36,7 @@ impl<'a> Exemplars<'a> {
     /// Exceedingly unlikely in the real world, unless you passed `0` to `n` of
     /// [`collect_min_max_extremes`](CollectToExemplars::collect_min_max_extremes)
     /// or `n_exemplars` of
-    /// [`Reporter::par_check_location`](crate::Reporter::par_check_location).
+    /// [`InstanceReporter::par_check`](crate::InstanceReporter::par_check).
     #[inline]
     #[must_use]
     pub fn is_empty(&self) -> bool {
@@ -65,7 +65,7 @@ impl<'a> Exemplars<'a> {
     /// used to find the exemplars in the first place.
     #[inline]
     #[must_use]
-    pub fn to_report(
+    pub const fn to_report(
         self,
         location: &'a Location,
         word_list: &'a WordList,
@@ -189,8 +189,8 @@ impl<'w> ExemplarCollector<'w> {
     }
 }
 
-/// A helper trait to collect iterators of [`WordExtremes`] into an
-/// [`Exemplars`] collection.
+/// A helper trait to collect an iterator of [`WordExtremes`] into an
+/// [`Exemplars`].
 pub trait CollectToExemplars<'a>: private::Sealed {
     /// Collect the `n` highest and `n` lowest words observed into an
     /// [`Exemplars`].
@@ -216,5 +216,5 @@ mod private {
 
     pub trait Sealed {}
 
-    impl<'a, I> Sealed for I where I: IntoIterator<Item = WordExtremes<'a>> {}
+    impl<'a, I> Sealed for I where I: CollectToExemplars<'a> {}
 }

@@ -36,7 +36,7 @@ macro_rules! wordlist {
                 // so we must check here
                 let metadata: $crate::word_lists::WordListMetadata =
                     ::toml::from_str($metadata).unwrap_or_else(|err| {
-                        panic!("failed to deserialize metadata: {err}")
+                        ::std::panic!("failed to deserialize metadata: {err}")
                     });
                 let mut brotli_bytes: &[u8] = $bytes;
                 let mut buf =
@@ -46,12 +46,13 @@ macro_rules! wordlist {
                     &mut buf,
                 )
                 .unwrap_or_else(|err| {
-                    panic!("failed to decode {}: {err}", metadata.name)
+                    ::std::panic!("failed to decode {}: {err}", metadata.name)
                 });
-                // SAFETY: UTF-8 validity is checked by the build script
-                let raw_words = unsafe { String::from_utf8_unchecked(buf) };
+                let raw_words =
+                    // SAFETY: UTF-8 validity is checked by the build script
+                    unsafe { ::std::string::String::from_utf8_unchecked(buf) };
                 ::log::debug!("loaded {}", metadata.name);
-                WordList::new(
+                $crate::WordList::new(
                     metadata,
                     $crate::newline_delimited_words(raw_words),
                 )

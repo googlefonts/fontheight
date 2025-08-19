@@ -130,7 +130,7 @@ impl<'a> Reporter<'a> {
     /// Create an [`InstanceReporter`] at a given location.
     ///
     /// Fails if the [`Location`] isn't valid for the font (e.g. specifying axes
-    /// that don't exist).
+    /// that don't exist), or if an error occurs while drawing glyphs.
     ///
     /// Consider your use case:
     /// - checking the default location: use [`Reporter::default_instance`]
@@ -157,20 +157,32 @@ impl<'a> Reporter<'a> {
     }
 
     /// Create an [`InstanceReporter`] at the default location.
-    pub fn default_instance(&'a self) -> InstanceReporter<'a> {
+    ///
+    /// Fails if any glyphs in the font can't be drawn.
+    pub fn default_instance(
+        &'a self,
+    ) -> Result<InstanceReporter<'a>, SkrifaDrawError> {
         let location = Cow::<Location>::default();
-        let instance_extremes =
-            InstanceExtremes::new(&self.font, &location).unwrap();
+        let instance_extremes = InstanceExtremes::new(&self.font, &location)
+            .map_err(|err| {
+                let FontHeightError::Drawing(draw_err) = err else {
+                    unreachable!(
+                        "InstanceExtremes with a known-good location returned \
+                         an error that wasn't a SkrifaDrawError"
+                    );
+                };
+                draw_err
+            })?;
         let shaper_instance =
             ShaperInstance::from_variations(&self.font, location.to_harfrust());
 
-        InstanceReporter {
+        Ok(InstanceReporter {
             font: &self.font,
             location,
             shaper_data: &self.shaper_data,
             shaper_instance,
             instance_extremes,
-        }
+        })
     }
 }
 

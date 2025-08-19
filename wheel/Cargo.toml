@@ -5,8 +5,10 @@ edition = "2024"
 # This is a wheel, it shouldn't be going on crates.io
 publish = false
 
+[package.metadata.maturin]
+name = "fontheight"
+
 [lib]
-name = "libfontheight"
 crate-type = ["cdylib"]
 
 [dependencies]

@@ -1,5 +1,5 @@
 [project]
-name = "pyfontheight"
+name = "fontheight"
 dynamic = [
     "version",
     "readme",

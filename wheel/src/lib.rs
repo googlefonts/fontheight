@@ -1,7 +1,7 @@
 use std::{collections::HashMap, fmt::Write, fs, iter, path::PathBuf};
 
+use ::fontheight::{Exemplars, Report, Reporter, WordExtremes};
 use anyhow::{Context, anyhow};
-use fontheight::{Exemplars, Report, Reporter, WordExtremes};
 use pyo3::{Bound, PyResult, prelude::*, pymodule};
 use rayon::prelude::*;
 
@@ -204,7 +204,7 @@ pub fn get_all_word_list_extremes(
 }
 
 #[pymodule]
-fn pyfontheight(module: &Bound<'_, PyModule>) -> PyResult<()> {
+fn fontheight(module: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<OwnedReport>()?;
     module.add_class::<OwnedExemplars>()?;
     module.add_class::<OwnedWordExtremes>()?;

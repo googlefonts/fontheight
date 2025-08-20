@@ -91,7 +91,10 @@ impl<'a> Reporter<'a> {
     }
 
     /// Gets all combinations of axis coordinates seen in named instances, axis
-    /// extremes, and default location.
+    /// extremes, and the default location.
+    ///
+    /// Note: the number of [`Location`]s this method returns scales
+    /// exponentially with the number of axes.
     #[must_use]
     pub fn interesting_locations(&self) -> Vec<Location> {
         let mut axis_coords =
@@ -186,7 +189,7 @@ impl<'a> Reporter<'a> {
     }
 }
 
-/// A Font Height [`Reporter`] configured to a specific variable font instance.
+/// A Font Height [`Reporter`] configured to a specific font instance.
 ///
 /// Re-use this if you want to check multiple word-lists at this location.
 pub struct InstanceReporter<'a> {
@@ -487,6 +490,8 @@ impl InstanceExtremes {
 }
 
 /// The highest & lowest point on the vertical (y) axis.
+///
+/// Vertical extremes are measured in font units.
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash)]
 pub struct VerticalExtremes {
     lowest: OrderedFloat<f64>,
@@ -494,14 +499,14 @@ pub struct VerticalExtremes {
 }
 
 impl VerticalExtremes {
-    /// The lowest/smaller extreme.
+    /// The lowest/smaller extreme, in font units.
     #[inline]
     #[must_use]
     pub fn lowest(&self) -> f64 {
         *self.lowest
     }
 
-    /// The highest/bigger extreme.
+    /// The highest/bigger extreme, in font units.
     #[inline]
     #[must_use]
     pub fn highest(&self) -> f64 {
@@ -517,7 +522,8 @@ pub struct Report<'a> {
     pub location: &'a Location,
     /// The [`WordList`] that was shaped.
     ///
-    /// Will always be the full word list, even if only part of it was tested.
+    /// This will always be the full word list, even if only part of it was
+    /// tested.
     pub word_list: &'a WordList,
     /// The highest & lowest-reaching words shaped.
     pub exemplars: Exemplars<'a>,

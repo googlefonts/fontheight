@@ -19,7 +19,7 @@ pub enum FontHeightError {
     /// An axis tag you provided was invalid.
     #[error("invalid tag: {0}")]
     InvalidTag(InvalidTagError),
-    /// We couldn't shape the text.
+    /// Extracting outlines from the font failed.
     #[error(transparent)]
     Drawing(#[from] SkrifaDrawError),
     /// The axes your [`Location`](crate::Location) specified didn't match
@@ -44,7 +44,7 @@ pub enum FontHeightError {
 /// # If it's just an optimisation technique, why is this a fatal error for Font Height?
 ///
 /// This error will only occur if the [`WordList`](crate::WordList) has
-/// metadata and it's unable to used. [`WordList`](crate::WordList)s without
+/// metadata and it's unable to be used. [`WordList`](crate::WordList)s without
 /// metadata will not cause this error.
 #[derive(Debug, Error)]
 pub enum ShapingPlanError {
@@ -93,7 +93,7 @@ impl HarfRustUnknownLanguageError {
 #[error(transparent)]
 pub struct SkrifaReadError(#[from] skrifa::raw::ReadError);
 
-/// [`skrifa`] failed to draw a glyph.
+/// [`skrifa`] failed to extract outlines for a glyph.
 #[derive(Debug, Error)]
 #[error("could not draw glyph {0}: {1}")]
 pub struct SkrifaDrawError(pub(crate) skrifa::GlyphId, pub(crate) DrawError);
@@ -107,7 +107,8 @@ pub struct MismatchedAxesError {
     pub(crate) extras: Vec<skrifa::Tag>,
 }
 
-/// The axis/script tag was invalid (it had illegal characters or was too long).
+/// The axis/script tag was invalid (it had illegal characters or wasn't four
+/// characters).
 #[derive(Debug, Error)]
 #[error(transparent)]
 pub struct InvalidTagError(#[from] InvalidTag);

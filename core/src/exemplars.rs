@@ -33,10 +33,11 @@ impl<'a> Exemplars<'a> {
 
     /// Returns `true` if there are no exemplars.
     ///
-    /// Exceedingly unlikely in the real world, unless you passed `0` to `n` of
+    /// Unlikely in the real world, unless you passed `0` to `n` of
     /// [`collect_min_max_extremes`](CollectToExemplars::collect_min_max_extremes)
     /// or `n_exemplars` of
-    /// [`InstanceReporter::par_check`](crate::InstanceReporter::par_check).
+    /// [`InstanceReporter::par_check`](crate::InstanceReporter::par_check), or
+    /// your font couldn't shape anything in the [`WordList`].
     #[inline]
     #[must_use]
     pub fn is_empty(&self) -> bool {

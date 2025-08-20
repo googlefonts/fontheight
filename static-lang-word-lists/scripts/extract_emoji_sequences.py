@@ -9,11 +9,11 @@ to get the newest working draft data.
 
 This generates three lists:
 
-- diffenator_emoji_all: All entries of emoji-test.txt plus all entries of
+- ucd_emoji_all: All entries of emoji-test.txt plus all entries of
   emoji-variation-sequences.txt
-- diffenator_emoji_color: All entries of emoji-test.txt plus all color (VS16)
-  variants of emoji-variation-sequences.txt
-- diffenator_emoji_textual: All entries of emoji-test.txt without explicit VS16
+- ucd_emoji_color: All entries of emoji-test.txt plus all color (VS16) variants
+  of emoji-variation-sequences.txt
+- ucd_emoji_textual: All entries of emoji-test.txt without explicit VS16
   character plus all textual (VS15) variants of emoji-variation-sequences.txt
 """
 
@@ -71,21 +71,21 @@ for line in emoji_variation_sequences.read_text().splitlines():
 new_subgroups()
 
 Path("data/diffenator/Emoji_All.toml").write_text("""\
-name = "diffenator_emoji_all"
+name = "ucd_emoji_all"
 script = "Zyyy"
 """)
 emoji_all = "\n".join(" ".join(subgroup) for subgroup in sequences_all)
 Path("data/diffenator/Emoji_All.txt").write_text(emoji_all)
 
 Path("data/diffenator/Emoji_Color.toml").write_text("""\
-name = "diffenator_emoji_color"
+name = "ucd_emoji_color"
 script = "Zyyy"
 """)
 emoji_color = "\n".join(" ".join(subgroup) for subgroup in sequences_color)
 Path("data/diffenator/Emoji_Color.txt").write_text(emoji_color)
 
 Path("data/diffenator/Emoji_Textual.toml").write_text("""\
-name = "diffenator_emoji_textual"
+name = "ucd_emoji_textual"
 script = "Zyyy"
 """)
 emoji_textual = "\n".join(" ".join(subgroup) for subgroup in sequences_textual)

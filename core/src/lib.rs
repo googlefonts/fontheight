@@ -220,11 +220,11 @@ impl<'a> InstanceReporter<'a> {
             .shaper(self.font)
             .instance(Some(&self.shaper_instance))
             .build();
-        let shaping_plan = word_list.shaping_plan(&shaper)?;
+        let shaping_meta = ShapingMeta::new_from(word_list, &shaper)?;
         Ok(WordExtremesIterator {
             shaper,
             instance_extremes: &self.instance_extremes,
-            shaping_plan,
+            shaping_meta,
             word_iter: word_list.iter(),
             unicode_buffer: Some(UnicodeBuffer::new()),
         })
@@ -259,7 +259,7 @@ impl<'a> InstanceReporter<'a> {
             .shaper(self.font)
             .instance(Some(&self.shaper_instance))
             .build();
-        let shaping_plan = word_list.shaping_plan(&shaper)?;
+        let shaping_meta = ShapingMeta::new_from(word_list, &shaper)?;
 
         let exemplars = word_list
             .par_iter()
@@ -271,13 +271,26 @@ impl<'a> InstanceReporter<'a> {
                 |state, word| {
                     // Take buffer; it should always be present
                     let mut buffer = state.unicode_buffer.take().unwrap();
-
                     buffer.push_str(word);
-                    buffer.guess_segment_properties();
+
                     // Default features are still included by default
-                    let glyph_buffer = match &shaping_plan {
-                        Some(plan) => shaper.shape_with_plan(plan, buffer, &[]),
-                        None => shaper.shape(buffer, &[]),
+                    let glyph_buffer = match &shaping_meta {
+                        Some(meta) => {
+                            buffer.set_script(meta.script);
+                            if let Some(lang) = meta.language.clone() {
+                                buffer.set_language(lang);
+                            }
+                            buffer.set_direction(meta.direction);
+                            shaper.shape_with_plan(
+                                &meta.shaping_plan,
+                                buffer,
+                                &[],
+                            )
+                        },
+                        None => {
+                            buffer.guess_segment_properties();
+                            shaper.shape(buffer, &[])
+                        },
                     };
 
                     let glyphs_missing = glyph_buffer
@@ -356,7 +369,7 @@ impl<'a> InstanceReporter<'a> {
 pub struct WordExtremesIterator<'a> {
     shaper: Shaper<'a>,
     instance_extremes: &'a InstanceExtremes,
-    shaping_plan: Option<ShapePlan>,
+    shaping_meta: Option<ShapingMeta>,
     word_iter: WordListIter<'a>,
     // UnicodeBuffer is transformed into another type during shaping, and then
     // can only be reverted once we've finished analysing the shaped buffer.
@@ -379,13 +392,22 @@ impl<'a> Iterator for WordExtremesIterator<'a> {
         let (word, glyph_buffer) = self.word_iter.find_map(|word| {
             // Take buffer; it should always be present
             let mut buffer = self.unicode_buffer.take().unwrap();
-
             buffer.push_str(word);
-            buffer.guess_segment_properties();
+
             // Default features are still included by default
-            let glyph_buffer = match &self.shaping_plan {
-                Some(plan) => self.shaper.shape_with_plan(plan, buffer, &[]),
-                None => self.shaper.shape(buffer, &[]),
+            let glyph_buffer = match &self.shaping_meta {
+                Some(meta) => {
+                    buffer.set_script(meta.script);
+                    if let Some(lang) = meta.language.clone() {
+                        buffer.set_language(lang);
+                    }
+                    buffer.set_direction(meta.direction);
+                    self.shaper.shape_with_plan(&meta.shaping_plan, buffer, &[])
+                },
+                None => {
+                    buffer.guess_segment_properties();
+                    self.shaper.shape(buffer, &[])
+                },
             };
 
             let glyphs_missing = glyph_buffer
@@ -546,55 +568,64 @@ impl<'a> Report<'a> {
     }
 }
 
-trait WordListExt {
-    fn shaping_plan(
-        &self,
-        shaper: &Shaper,
-    ) -> Result<Option<ShapePlan>, ShapingPlanError>;
+struct ShapingMeta {
+    shaping_plan: ShapePlan,
+    script: Script,
+    direction: Direction,
+    language: Option<Language>,
 }
 
-impl WordListExt for WordList {
-    fn shaping_plan(
-        &self,
+impl ShapingMeta {
+    fn new_from(
+        word_list: &WordList,
         shaper: &Shaper,
-    ) -> Result<Option<ShapePlan>, ShapingPlanError> {
-        let script = self
-            .script()
-            .map(Tag::from_str)
-            .transpose()
-            .map_err(|inner| ShapingPlanError::UnknownScriptTag {
-                word_list_name: self.name().to_owned(),
-                inner: inner.into(),
-            })?
-            .and_then(Script::from_iso15924_tag);
-        let shaping_plan = match script {
-            Some(script) => {
-                let language = self
-                    .language()
-                    .map(|lang| {
-                        // harfrust's own error here is just "invalid language"
-                        // (v0.1.1), so discard it for our own
-                        Language::from_str(lang).map_err(|_| {
-                            ShapingPlanError::UnknownLanguage {
-                                word_list_name: self.name().to_owned(),
-                                inner: HarfRustUnknownLanguageError::new(lang),
-                            }
-                        })
-                    })
-                    .transpose()?;
-                Some(ShapePlan::new(
-                    shaper,
-                    direction_from_script(script)
-                        .unwrap_or(Direction::LeftToRight),
-                    Some(script),
-                    language.as_ref(),
-                    // Default features are still included by default
-                    &[],
-                ))
-            },
-            None => None,
+    ) -> Result<Option<Self>, ShapingPlanError> {
+        // If we didn't get a script, we're not going to make a shaping plan,
+        // give up
+        let Some(script) = word_list.script() else {
+            return Ok(None);
         };
-        Ok(shaping_plan)
+        let script_tag = script.parse::<Tag>().map_err(|inner| {
+            ShapingPlanError::UnknownScriptTag {
+                word_list_name: word_list.name().to_owned(),
+                inner: inner.into(),
+            }
+        })?;
+        // Unwrap is safe here as script_tag is never null as [0, 0, 0, 0] isn't
+        // a valid Rust string
+        let script = Script::from_iso15924_tag(script_tag).unwrap();
+
+        let language = word_list
+            .language()
+            .map(|lang| {
+                // harfrust's own error here is just "invalid language"
+                // (v0.1.1), so discard it for our own
+                Language::from_str(lang).map_err(|_| {
+                    ShapingPlanError::UnknownLanguage {
+                        word_list_name: word_list.name().to_owned(),
+                        inner: HarfRustUnknownLanguageError::new(lang),
+                    }
+                })
+            })
+            .transpose()?;
+        let direction =
+            direction_from_script(script).unwrap_or(Direction::LeftToRight);
+
+        let shaping_plan = ShapePlan::new(
+            shaper,
+            direction,
+            Some(script),
+            language.as_ref(),
+            // Default features are still included by default
+            &[],
+        );
+
+        Ok(Some(Self {
+            shaping_plan,
+            script,
+            direction,
+            language,
+        }))
     }
 }
 

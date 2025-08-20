@@ -19,9 +19,9 @@ For the latter, `fontheight` evaluates the extents of a corpus of shaped text ac
 ## Usage & installation
 
 Fontheight comes in three flavours:
-1. A commandline tool (`fontheight`)
-2. A Rust library (also called `fontheight`)
-3. A basic Python API (`fontheight-wheel`)
+1. A commandline tool
+2. A Rust library
+3. A basic Python API
 
 ### `fontheight` as a commandline tool
 
@@ -37,7 +37,7 @@ From GitHub:
 STATIC_LANG_WORD_LISTS_LOCAL=1 cargo install --locked --git https://github.com/googlefonts/fontheight fontheight-cli
 ```
 
-From crates.io (note: the build script for `static-lang-word-lists` requires network access):
+From crates.io (note: the build script for `static-lang-word-lists` requires network access, see [its README](static-lang-word-lists/README.md) for why):
 ```shell
 cargo install --locked fontheight-cli
 ```

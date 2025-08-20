@@ -2,7 +2,7 @@ use skrifa::outline::OutlinePen;
 
 // Taken from https://github.com/googlefonts/fontations/blob/57715f39/skrifa/src/outline/mod.rs#L1159-L1184 (same license)
 #[derive(Debug, Default)]
-pub struct BezierPen {
+pub(crate) struct BezierPen {
     pub(crate) path: kurbo::BezPath,
 }
 

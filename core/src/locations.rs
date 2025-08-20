@@ -7,7 +7,7 @@ use skrifa::MetadataProvider;
 
 use crate::errors::{InvalidTagError, MismatchedAxesError};
 
-/// A mapping of axis names to values.
+/// A mapping of axis tags to values.
 ///
 /// ```
 /// # use fontheight::Location;

@@ -1,5 +1,7 @@
 # `static-lang-word-lists`
 
+A collection of word lists for various scripts, compressed at build time, baked into the binary, and decompressed lazily at run time.
+
 ## Motivation
 
 Include word lists in the binary, don't take up more space than necessary, be publishable on crates.io (10 MiB size limit)

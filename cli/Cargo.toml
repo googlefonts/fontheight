@@ -1,5 +1,6 @@
 [package]
 name = "fontheight-cli"
+description = "Find out the vertical extents your font reaches on shaped words"
 version = "0.1.0"
 edition = "2024"
 authors = [

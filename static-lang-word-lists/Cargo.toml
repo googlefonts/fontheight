@@ -1,5 +1,6 @@
 [package]
 name = "static-lang-word-lists"
+description = "Runtime decompressed statically-included word lists"
 version = "0.1.0"
 edition = "2024"
 authors = ["Dalton Maag <sd@daltonmaag.com>"]

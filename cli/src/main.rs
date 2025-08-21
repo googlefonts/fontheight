@@ -8,7 +8,7 @@ use anyhow::{Context, bail};
 use clap::Parser;
 use env_logger::Env;
 use fontheight::Reporter;
-use log::{LevelFilter, debug, error, info};
+use log::{LevelFilter, debug, error, info, warn};
 use rayon::prelude::*;
 
 use crate::fmt::{FormatReport, OutputFormat};
@@ -41,10 +41,10 @@ struct Args {
     #[arg(short = 'n', long, default_value_t = 5)]
     results: usize,
 
-    /// The number of words from each list to test
+    /// The number of words from each list to test [default: all words]
     // TODO: an --all flag
-    #[arg(short = 'k', long = "words", default_value_t = 25)]
-    words_per_list: usize,
+    #[arg(short = 'k', long = "words")]
+    words_per_list: Option<usize>,
 }
 
 fn _main() -> anyhow::Result<()> {
@@ -74,6 +74,15 @@ fn _main() -> anyhow::Result<()> {
                 .map(|location| reporter.instance(location))
                 .collect::<Result<Vec<_>, _>>()?;
 
+            if instances.len() >= 100 && args.words_per_list.is_none() {
+                warn!(
+                    "Testing {} instances with all words is probably going to \
+                     take a while. Consider passing -k/--words to limit the \
+                     number of words being checked",
+                    instances.len()
+                );
+            }
+
             let reports = instances
                 .iter()
                 .flat_map(|instance| {
@@ -85,7 +94,7 @@ fn _main() -> anyhow::Result<()> {
                 .map(|(word_list, instance)| -> anyhow::Result<_> {
                     let report = instance.par_check(
                         word_list,
-                        Some(args.words_per_list),
+                        args.words_per_list,
                         args.results,
                     )?;
                     debug!(

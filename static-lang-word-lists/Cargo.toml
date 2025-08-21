@@ -8,6 +8,13 @@ readme = "README.md"
 repository = "https://github.com/googlefonts/fontheight"
 categories = ["text-processing", "internationalization", "data-structures"]
 keywords = ["word-list", "words"]
+exclude = [
+    "data",
+    "raw",
+    "scripts",
+    "egg.py",
+    "fonts",
+]
 
 [dependencies]
 brotli-decompressor = "5"

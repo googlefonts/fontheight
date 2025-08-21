@@ -9,12 +9,14 @@ readme = "README.md"
 repository = "https://github.com/googlefonts/fontheight"
 categories = ["text-processing", "internationalization", "data-structures"]
 keywords = ["word-list", "words"]
-exclude = [
-    "data",
-    "raw",
-    "scripts",
-    "egg.py",
-    "fonts",
+include = [
+    "README.md",
+    "Cargo.toml",
+    "src",
+    "build.rs",
+    "chicken.rs",
+    # Used in docs
+    "data/diffenator/Latin.toml",
 ]
 
 [dependencies]

@@ -4,8 +4,9 @@ mod fmt;
 
 use std::{fs, iter, path::PathBuf, process::ExitCode, time::Instant};
 
-use anyhow::{Context, bail};
+use anyhow::Context;
 use clap::Parser;
+use clap_verbosity_flag::Verbosity;
 use env_logger::Env;
 use fontheight::Reporter;
 use log::{LevelFilter, debug, error, info, warn};
@@ -14,14 +15,6 @@ use rayon::prelude::*;
 use crate::fmt::{FormatReport, OutputFormat};
 
 fn main() -> ExitCode {
-    env_logger::builder()
-        .filter_level(if cfg!(debug_assertions) {
-            LevelFilter::Debug
-        } else {
-            LevelFilter::Warn
-        })
-        .parse_env(Env::new().filter("FONTHEIGHT_LOG"))
-        .init();
     match _main() {
         Ok(()) => ExitCode::SUCCESS,
         Err(why) => {
@@ -30,6 +23,12 @@ fn main() -> ExitCode {
         },
     }
 }
+
+// Default to debug logs on debug builds, warnings otherwise
+#[cfg(debug_assertions)]
+type FontheightVerbosity = Verbosity<clap_verbosity_flag::DebugLevel>;
+#[cfg(not(debug_assertions))]
+type FontheightVerbosity = Verbosity<clap_verbosity_flag::WarnLevel>;
 
 #[derive(Debug, Parser)]
 #[command(version, about)]
@@ -46,11 +45,23 @@ struct Args {
     // TODO: an --all flag
     #[arg(short = 'k', long = "words")]
     words_per_list: Option<usize>,
+
+    #[command(flatten)]
+    verbosity: FontheightVerbosity,
 }
 
 fn _main() -> anyhow::Result<()> {
     let args = Args::parse();
     debug_assert!(!args.font_path.is_empty());
+
+    env_logger::builder()
+        .filter_level(if cfg!(debug_assertions) {
+            LevelFilter::Debug
+        } else {
+            LevelFilter::Warn
+        })
+        .parse_env(Env::new().filter("FONTHEIGHT_LOG"))
+        .init();
 
     args.font_path
         .iter()

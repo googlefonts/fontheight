@@ -8,7 +8,7 @@ Include word lists in the binary, don't take up more space than necessary, be pu
 
 ## Usage
 
-⚠️ _Not yet available_ On crates.io as `static-lang-word-lists`
+On crates.io as `static-lang-word-lists`
 
 For documentation, please refer to docs.rs
 

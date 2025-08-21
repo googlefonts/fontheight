@@ -35,6 +35,7 @@ fn main() -> ExitCode {
 #[command(version, about)]
 struct Args {
     /// The TTF(s) to analyze
+    #[arg(required = true)]
     font_path: Vec<PathBuf>,
 
     /// The number of words to log
@@ -49,10 +50,7 @@ struct Args {
 
 fn _main() -> anyhow::Result<()> {
     let args = Args::parse();
-
-    if args.font_path.is_empty() {
-        bail!("must provide one or more FONT_PATHs");
-    }
+    debug_assert!(!args.font_path.is_empty());
 
     args.font_path
         .iter()

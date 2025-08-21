@@ -3,7 +3,7 @@
 """
 Generates Rust code to give struct names and file paths for the data/ directory,
 which the build script won't necessarily have access to at compile time, as the
-data/ directory isn't included in the publish crate.
+data/ directory isn't included in the published crate.
 
 Is this code to generate code to help generate code? Yes.
 """
@@ -29,7 +29,7 @@ def path_to_upper_camel_case(path: Path) -> str:
 
 
 tuples = []
-for text_file in sorted(DATA_DIR_DIFFENATOR.rglob("*.txt")):
+for text_file in sorted(DATA_DIR.rglob("*.txt")):
     text_file = text_file.relative_to(DATA_DIR)
     metadata_file = text_file.with_suffix(".toml")
     try:

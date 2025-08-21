@@ -12,9 +12,6 @@ static WORD_LISTS: &[(&str, &str, &str)] = &[
     (r"diffenator_common", r"diffenator/Common.toml", r"diffenator/Common.txt"),
     (r"diffenator_cyrillic", r"diffenator/Cyrillic.toml", r"diffenator/Cyrillic.txt"),
     (r"diffenator_devanagari", r"diffenator/Devanagari.toml", r"diffenator/Devanagari.txt"),
-    (r"ucd_emoji_all", r"diffenator/Emoji_All.toml", r"diffenator/Emoji_All.txt"),
-    (r"ucd_emoji_color", r"diffenator/Emoji_Color.toml", r"diffenator/Emoji_Color.txt"),
-    (r"ucd_emoji_textual", r"diffenator/Emoji_Textual.toml", r"diffenator/Emoji_Textual.txt"),
     (r"diffenator_ethiopic", r"diffenator/Ethiopic.toml", r"diffenator/Ethiopic.txt"),
     (r"diffenator_georgian", r"diffenator/Georgian.toml", r"diffenator/Georgian.txt"),
     (r"diffenator_greek", r"diffenator/Greek.toml", r"diffenator/Greek.txt"),
@@ -43,4 +40,7 @@ static WORD_LISTS: &[(&str, &str, &str)] = &[
     (r"diffenator_tibetan", r"diffenator/Tibetan.toml", r"diffenator/Tibetan.txt"),
     (r"diffenator_tifinagh", r"diffenator/Tifinagh.toml", r"diffenator/Tifinagh.txt"),
     (r"diffenator_vai", r"diffenator/Vai.toml", r"diffenator/Vai.txt"),
+    (r"ucd_emoji_all", r"ucd/Emoji_All.toml", r"ucd/Emoji_All.txt"),
+    (r"ucd_emoji_color", r"ucd/Emoji_Color.toml", r"ucd/Emoji_Color.txt"),
+    (r"ucd_emoji_textual", r"ucd/Emoji_Textual.toml", r"ucd/Emoji_Textual.txt"),
 ];

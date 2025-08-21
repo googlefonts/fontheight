@@ -35,7 +35,7 @@ def new_subgroups():
 
 # 1. Use the official test file to extract all official sequences to be
 #    supported.
-for line in Path("data/third_party/ucd/emoji-test.txt").read_text().splitlines():
+for line in Path("raw/ucd/emoji-test.txt").read_text(encoding="utf-8").splitlines():
     line = line.strip()
     if line.startswith("# subgroup"):
         new_subgroups()
@@ -53,8 +53,8 @@ new_subgroups()
 
 # 2. Use the official variation sequences file to extract all explicit textual
 #    or color representation sequences to be supported.
-emoji_variation_sequences = Path("data/third_party/ucd/emoji-variation-sequences.txt")
-for line in emoji_variation_sequences.read_text().splitlines():
+emoji_variation_sequences = Path("raw/ucd/emoji-variation-sequences.txt")
+for line in emoji_variation_sequences.read_text(encoding="utf-8").splitlines():
     line = line.strip()
     if not line or line.startswith("#"):
         continue
@@ -70,23 +70,23 @@ for line in emoji_variation_sequences.read_text().splitlines():
         sequences_textual[-1].append(codepoints_string)
 new_subgroups()
 
-Path("data/diffenator/Emoji_All.toml").write_text("""\
+Path("data/ucd/Emoji_All.toml").write_text("""\
 name = "ucd_emoji_all"
 script = "Zyyy"
 """)
 emoji_all = "\n".join(" ".join(subgroup) for subgroup in sequences_all)
-Path("data/diffenator/Emoji_All.txt").write_text(emoji_all)
+Path("data/ucd/Emoji_All.txt").write_text(emoji_all, encoding="utf-8")
 
-Path("data/diffenator/Emoji_Color.toml").write_text("""\
+Path("data/ucd/Emoji_Color.toml").write_text("""\
 name = "ucd_emoji_color"
 script = "Zyyy"
 """)
 emoji_color = "\n".join(" ".join(subgroup) for subgroup in sequences_color)
-Path("data/diffenator/Emoji_Color.txt").write_text(emoji_color)
+Path("data/ucd/Emoji_Color.txt").write_text(emoji_color, encoding="utf-8")
 
-Path("data/diffenator/Emoji_Textual.toml").write_text("""\
+Path("data/ucd/Emoji_Textual.toml").write_text("""\
 name = "ucd_emoji_textual"
 script = "Zyyy"
 """)
 emoji_textual = "\n".join(" ".join(subgroup) for subgroup in sequences_textual)
-Path("data/diffenator/Emoji_Textual.txt").write_text(emoji_textual)
+Path("data/ucd/Emoji_Textual.txt").write_text(emoji_textual, encoding="utf-8")

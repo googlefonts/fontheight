@@ -42,7 +42,7 @@ use harfrust::{
 use itertools::Itertools;
 use kurbo::Shape;
 pub use locations::Location;
-use ordered_float::OrderedFloat;
+use ordered_float::{Float, OrderedFloat};
 use pens::BezierPen;
 use skrifa::{
     FontRef, MetadataProvider, instance::Size, outline::DrawSettings,
@@ -315,21 +315,14 @@ impl<'a> InstanceReporter<'a> {
                                 .get(info.glyph_id)
                                 .unwrap();
 
-                            (
-                                heights.lowest + y_offset as f64,
-                                heights.highest + y_offset as f64,
-                            )
+                            VerticalExtremes {
+                                lowest: heights.lowest + y_offset as f64,
+                                highest: heights.highest + y_offset as f64,
+                            }
                         })
                         .fold(
                             VerticalExtremes::default(),
-                            |extremes, (low, high)| {
-                                let VerticalExtremes { highest, lowest } =
-                                    extremes;
-                                VerticalExtremes {
-                                    highest: highest.max(high),
-                                    lowest: lowest.min(low),
-                                }
-                            },
+                            VerticalExtremes::max,
                         );
 
                     // Return buffer
@@ -436,18 +429,12 @@ impl<'a> Iterator for WordExtremesIterator<'a> {
                 let heights =
                     self.instance_extremes.get(info.glyph_id).unwrap();
 
-                (
-                    heights.lowest + y_offset as f64,
-                    heights.highest + y_offset as f64,
-                )
-            })
-            .fold(VerticalExtremes::default(), |extremes, (low, high)| {
-                let VerticalExtremes { highest, lowest } = extremes;
                 VerticalExtremes {
-                    highest: highest.max(high),
-                    lowest: lowest.min(low),
+                    lowest: heights.lowest + y_offset as f64,
+                    highest: heights.highest + y_offset as f64,
                 }
-            });
+            })
+            .fold(VerticalExtremes::default(), VerticalExtremes::max);
 
         // Return buffer
         self.unicode_buffer = Some(glyph_buffer.clear());
@@ -521,6 +508,20 @@ pub struct VerticalExtremes {
 }
 
 impl VerticalExtremes {
+    /// Create a new `VerticalExtremes` from the two provided values.
+    ///
+    /// Panics if either value is `NaN`.
+    #[inline]
+    #[must_use]
+    pub fn new(lowest: f64, highest: f64) -> Self {
+        assert_ne!(lowest, f64::NAN);
+        assert_ne!(highest, f64::NAN);
+        Self {
+            lowest: OrderedFloat(lowest),
+            highest: OrderedFloat(highest),
+        }
+    }
+
     /// The lowest/smaller extreme, in font units.
     #[inline]
     #[must_use]
@@ -533,6 +534,17 @@ impl VerticalExtremes {
     #[must_use]
     pub fn highest(&self) -> f64 {
         *self.highest
+    }
+
+    /// Combine two `VerticalExtremes`, taking the higher `highest` value, and
+    /// lower `lowest` value.
+    #[inline]
+    #[must_use]
+    pub fn max(self, other: Self) -> Self {
+        Self {
+            lowest: Float::min(self.lowest, other.lowest),
+            highest: Float::max(self.highest, other.highest),
+        }
     }
 }
 

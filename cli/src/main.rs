@@ -9,7 +9,7 @@ use clap::Parser;
 use clap_verbosity_flag::Verbosity;
 use env_logger::Env;
 use fontheight::Reporter;
-use log::{LevelFilter, debug, error, info, warn};
+use log::{debug, error, info, warn};
 use rayon::prelude::*;
 
 use crate::fmt::{FormatReport, OutputFormat};
@@ -55,11 +55,7 @@ fn _main() -> anyhow::Result<()> {
     debug_assert!(!args.font_path.is_empty());
 
     env_logger::builder()
-        .filter_level(if cfg!(debug_assertions) {
-            LevelFilter::Debug
-        } else {
-            LevelFilter::Warn
-        })
+        .filter_level(args.verbosity.into())
         .parse_env(Env::new().filter("FONTHEIGHT_LOG"))
         .init();
 

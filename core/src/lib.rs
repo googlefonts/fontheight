@@ -455,6 +455,48 @@ pub struct WordExtremes<'w> {
     pub extremes: VerticalExtremes,
 }
 
+impl WordExtremes<'_> {
+    /// The lowest/smaller extreme, in font units.
+    ///
+    /// Sugar for [`VerticalExtremes::lowest`].
+    #[inline]
+    #[must_use]
+    pub fn lowest(&self) -> f64 {
+        self.extremes.lowest()
+    }
+
+    /// The highest/bigger extreme, in font units.
+    ///
+    /// Sugar for [`VerticalExtremes::highest`].
+    #[inline]
+    #[must_use]
+    pub fn highest(&self) -> f64 {
+        self.extremes.highest()
+    }
+
+    /// Get the `WordExtremes` that reaches the lowest.
+    #[inline]
+    #[must_use]
+    pub fn lower(self, other: Self) -> Self {
+        if self.extremes.lowest <= other.extremes.lowest {
+            self
+        } else {
+            other
+        }
+    }
+
+    /// Get the `WordExtremes` that reaches the highest.
+    #[inline]
+    #[must_use]
+    pub fn higher(self, other: Self) -> Self {
+        if self.extremes.highest >= other.extremes.highest {
+            self
+        } else {
+            other
+        }
+    }
+}
+
 /// A cache of the vertical bounds for all the glyphs in a font at a certain
 /// location.
 #[derive(Debug)]

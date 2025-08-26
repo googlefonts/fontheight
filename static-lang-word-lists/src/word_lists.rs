@@ -3,16 +3,24 @@ use std::{
     ops::{Deref, Index},
     path::{Path, PathBuf},
     slice,
+    sync::LazyLock,
 };
 
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
+// TODO: this can be Box<str>
+pub(crate) type Word = String;
+pub(crate) type WordSource = Box<[Word]>;
+
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub(crate) struct WordListMetadata {
+    // TODO: this can be Box<str>
     pub(crate) name: String,
+    // TODO: this can be Box<str>
     script: Option<String>,
+    // TODO: this can be Box<str>
     language: Option<String>,
 }
 
@@ -42,8 +50,8 @@ impl WordListMetadata {
 /// A list of words, with optional additional metadata.
 #[derive(Debug)]
 pub struct WordList {
-    words: Vec<String>,
-    metadata: WordListMetadata,
+    words: EagerOrLazy<WordSource>,
+    metadata: EagerOrLazy<WordListMetadata>,
 }
 
 impl WordList {
@@ -62,7 +70,7 @@ impl WordList {
         metadata_path: impl AsRef<Path>,
     ) -> Result<Self, WordListError> {
         let mut word_list = WordList::load_without_metadata(path)?;
-        word_list.metadata = WordListMetadata::load(metadata_path)?;
+        word_list.metadata = WordListMetadata::load(metadata_path)?.into();
         Ok(word_list)
     }
 
@@ -93,12 +101,13 @@ impl WordList {
             .replace("/", "_");
 
         Ok(WordList {
-            metadata: WordListMetadata::new_from_name(name),
+            metadata: WordListMetadata::new_from_name(name).into(),
             words: file_content
                 .split_whitespace()
                 .filter(|word| !word.is_empty())
                 .map(String::from)
-                .collect(),
+                .collect::<Vec<_>>()
+                .into(),
         })
     }
 
@@ -111,17 +120,20 @@ impl WordList {
         words: impl IntoIterator<Item = impl Into<String>>,
     ) -> Self {
         WordList {
-            metadata: WordListMetadata::new_from_name(name.into()),
-            words: words.into_iter().map(Into::into).collect(),
+            metadata: WordListMetadata::new_from_name(name.into()).into(),
+            words: words.into_iter().map(Into::into).collect::<Vec<_>>().into(),
         }
     }
 
     #[must_use]
-    pub(crate) const fn new(
-        metadata: WordListMetadata,
-        words: Vec<String>,
+    pub(crate) const fn new_lazy(
+        metadata: LazyLock<WordListMetadata>,
+        words: LazyLock<WordSource>,
     ) -> Self {
-        WordList { metadata, words }
+        WordList {
+            metadata: EagerOrLazy::Lazy(metadata),
+            words: EagerOrLazy::Lazy(words),
+        }
     }
 
     /// Get the name of the word list.
@@ -156,14 +168,14 @@ impl WordList {
     /// Get how many words there are in the word list.
     #[inline]
     #[must_use]
-    pub const fn len(&self) -> usize {
+    pub fn len(&self) -> usize {
         self.words.len()
     }
 
     /// Returns `true` if there are no words in the word list.
     #[inline]
     #[must_use]
-    pub const fn is_empty(&self) -> bool {
+    pub fn is_empty(&self) -> bool {
         self.words.is_empty()
     }
 }
@@ -173,6 +185,35 @@ impl Index<usize> for WordList {
 
     fn index(&self, index: usize) -> &Self::Output {
         self.words.index(index).deref()
+    }
+}
+
+#[derive(Debug)]
+enum EagerOrLazy<T> {
+    Eager(T),
+    Lazy(LazyLock<T>),
+}
+
+impl<T> From<T> for EagerOrLazy<T> {
+    fn from(value: T) -> Self {
+        EagerOrLazy::Eager(value)
+    }
+}
+
+impl<T> Deref for EagerOrLazy<T> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        match self {
+            EagerOrLazy::Eager(e) => e,
+            EagerOrLazy::Lazy(l) => l,
+        }
+    }
+}
+
+impl From<Vec<String>> for EagerOrLazy<WordSource> {
+    fn from(value: Vec<String>) -> Self {
+        Self::Eager(value.into_boxed_slice())
     }
 }
 

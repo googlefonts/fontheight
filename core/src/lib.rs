@@ -551,12 +551,16 @@ pub struct VerticalExtremes {
 impl VerticalExtremes {
     /// Create a new `VerticalExtremes` from the two provided values.
     ///
-    /// Panics if either value is `NaN`.
+    /// Panics if either value is `NaN`, or if `lowest > highest`.
     #[inline]
     #[must_use]
     pub fn new(lowest: f64, highest: f64) -> Self {
-        assert_ne!(lowest, f64::NAN);
-        assert_ne!(highest, f64::NAN);
+        assert_ne!(lowest, f64::NAN, "lowest was NaN");
+        assert_ne!(highest, f64::NAN, "highest was NaN");
+        assert!(
+            lowest <= highest,
+            "lowest value was greater than highest value"
+        );
         Self {
             lowest: OrderedFloat(lowest),
             highest: OrderedFloat(highest),

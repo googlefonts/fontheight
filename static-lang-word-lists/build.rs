@@ -42,9 +42,9 @@ fn main() {
 
     writeln!(
         &mut map_file,
-        r#"#[doc = "A lookup map for the crate-provided [`WordList`]s. Maps [`WordList`] names to the corresponding static [`LazyWordList`]."]
-        pub static LOOKUP_TABLE: ::phf::Map<&'static str, &'static
-         ::std::sync::LazyLock<crate::WordList>> = ::phf::phf_map! {{"#
+        r#"#[doc = "A lookup map for the crate-provided [`WordList`]s. Maps their names to the corresponding static [`WordList`]."]
+        pub static LOOKUP_TABLE: ::phf::Map<&'static str, &'static crate::WordList> =
+            ::phf::phf_map! {{"#
     )
     .unwrap_or_else(|err| panic!("failed to write to map_codeden.rs: {err}"));
     let map_file = Mutex::new(map_file);

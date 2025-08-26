@@ -2,23 +2,20 @@
 //       implementation
 #![doc = include_str!("../README.md")]
 
-use std::sync::LazyLock;
-
 mod word_lists;
 
 #[cfg(feature = "rayon")]
 pub use word_lists::rayon::ParWordListIter;
 pub use word_lists::{WordList, WordListError, WordListIter};
 
-/// A lazy-loaded [`WordList`].
-pub type LazyWordList = LazyLock<WordList>;
+use crate::word_lists::{Word, WordSource};
 
-fn newline_delimited_words(input: impl AsRef<str>) -> Vec<String> {
+fn newline_delimited_words(input: impl AsRef<str>) -> WordSource {
     input
         .as_ref()
         .split_whitespace()
         .filter(|word| !word.is_empty())
-        .map(String::from) // FIXME: could be Box<str>
+        .map(Word::from)
         .collect()
 }
 
@@ -30,14 +27,20 @@ macro_rules! wordlist {
         ///
         /// Compiled into the binary compressed with Brotli, decompressed at
         /// runtime.
-        pub static $ident: $crate::LazyWordList =
+        pub static $ident: $crate::WordList = $crate::WordList::new_lazy(
+            // Note: validity of TOML file was not validated during build,
+            // so we must check here
             ::std::sync::LazyLock::new(|| {
-                // Note: validity of TOML file was not validated during build,
-                // so we must check here
-                let metadata: $crate::word_lists::WordListMetadata =
-                    ::toml::from_str($metadata).unwrap_or_else(|err| {
-                        ::std::panic!("failed to deserialize metadata: {err}")
-                    });
+                let ret = ::toml::from_str($metadata).unwrap_or_else(|err| {
+                    ::std::panic!("failed to deserialize metadata: {err}");
+                });
+                ::log::debug!(
+                    "loaded metadata for {}",
+                    ::std::stringify!($ident),
+                );
+                ret
+            }),
+            ::std::sync::LazyLock::new(|| {
                 let mut brotli_bytes: &[u8] = $bytes;
                 let mut buf =
                     ::std::vec::Vec::with_capacity(brotli_bytes.len());
@@ -46,17 +49,18 @@ macro_rules! wordlist {
                     &mut buf,
                 )
                 .unwrap_or_else(|err| {
-                    ::std::panic!("failed to decode {}: {err}", metadata.name)
+                    ::std::panic!(
+                        "failed to decode {}: {err}",
+                        ::std::stringify!($ident),
+                    );
                 });
                 let raw_words =
                     // SAFETY: UTF-8 validity is checked by the build script
                     unsafe { ::std::string::String::from_utf8_unchecked(buf) };
-                ::log::debug!("loaded {}", metadata.name);
-                $crate::WordList::new(
-                    metadata,
-                    $crate::newline_delimited_words(raw_words),
-                )
-            });
+                ::log::debug!("loaded words for {}", ::std::stringify!($ident));
+                $crate::newline_delimited_words(raw_words)
+            }),
+        );
     };
 }
 

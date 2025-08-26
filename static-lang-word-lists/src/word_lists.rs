@@ -125,6 +125,7 @@ impl WordList {
         }
     }
 
+    // Used by wordlist! {}
     #[must_use]
     pub(crate) const fn new_lazy(
         metadata: LazyLock<WordListMetadata>,
@@ -134,6 +135,15 @@ impl WordList {
             metadata: EagerOrLazy::Lazy(metadata),
             words: EagerOrLazy::Lazy(words),
         }
+    }
+
+    // Used by build script when building for docs.rs
+    #[cfg(docsrs)]
+    pub(crate) const fn stub() -> Self {
+        Self::new_lazy(
+            LazyLock::new(|| unreachable!()),
+            LazyLock::new(|| unreachable!()),
+        )
     }
 
     /// Get the name of the word list.

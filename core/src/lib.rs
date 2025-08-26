@@ -562,7 +562,6 @@ impl VerticalExtremes {
     pub fn new(lowest: f64, highest: f64) -> Self {
         let lowest = NotNan::new(lowest).expect("lowest was NaN");
         let highest = NotNan::new(highest).expect("highest was NaN");
-        assert_ne!(highest, f64::NAN, "highest was NaN");
         assert!(
             lowest <= highest,
             "lowest value was greater than highest value"

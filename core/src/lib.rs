@@ -30,6 +30,7 @@
 
 use std::{
     borrow::Cow,
+    cmp,
     collections::{BTreeSet, HashMap},
     str::FromStr,
 };
@@ -42,7 +43,7 @@ use harfrust::{
 use itertools::Itertools;
 use kurbo::Shape;
 pub use locations::Location;
-use ordered_float::{Float, OrderedFloat};
+use ordered_float::{NotNan, OrderedFloat};
 use pens::BezierPen;
 use skrifa::{
     FontRef, MetadataProvider, instance::Size, outline::DrawSettings,
@@ -97,6 +98,8 @@ impl<'a> Reporter<'a> {
     /// exponentially with the number of axes.
     #[must_use]
     pub fn interesting_locations(&self) -> Vec<Location> {
+        // Note: this could probably be a NotNan<f32>, but then all the .into
+        // calls become exceedingly painful
         let mut axis_coords =
             vec![BTreeSet::<OrderedFloat<f32>>::new(); self.font.axes().len()];
 
@@ -309,15 +312,16 @@ impl<'a> InstanceReporter<'a> {
                         .zip(glyph_buffer.glyph_positions())
                         .map(|(info, pos)| {
                             // TODO: Remove empty glyphs?
-                            let y_offset = pos.y_offset;
+                            let y_offset = NotNan::new(pos.y_offset as f64)
+                                .expect("NaN y offset");
                             let heights = self
                                 .instance_extremes
                                 .get(info.glyph_id)
                                 .unwrap();
 
                             VerticalExtremes {
-                                lowest: heights.lowest + y_offset as f64,
-                                highest: heights.highest + y_offset as f64,
+                                lowest: heights.lowest + y_offset,
+                                highest: heights.highest + y_offset,
                             }
                         })
                         .reduce(VerticalExtremes::max)
@@ -423,13 +427,14 @@ impl<'a> Iterator for WordExtremesIterator<'a> {
             .zip(glyph_buffer.glyph_positions())
             .map(|(info, pos)| {
                 // TODO: Remove empty glyphs?
-                let y_offset = pos.y_offset;
+                let y_offset =
+                    NotNan::new(pos.y_offset as f64).expect("NaN y offset");
                 let heights =
                     self.instance_extremes.get(info.glyph_id).unwrap();
 
                 VerticalExtremes {
-                    lowest: heights.lowest + y_offset as f64,
-                    highest: heights.highest + y_offset as f64,
+                    lowest: heights.lowest + y_offset,
+                    highest: heights.highest + y_offset,
                 }
             })
             .reduce(VerticalExtremes::max)
@@ -525,8 +530,8 @@ impl InstanceExtremes {
 
                 let kurbo::Rect { y0, y1, .. } = bez_pen.path.bounding_box();
                 Ok((u32::from(id), VerticalExtremes {
-                    lowest: y0.into(),
-                    highest: y1.into(),
+                    lowest: NotNan::new(y0).expect("bounding box with NaN y0"),
+                    highest: NotNan::new(y1).expect("bounding box with NaN y1"),
                 }))
             })
             .collect::<Result<HashMap<_, _>, _>>()?;
@@ -544,8 +549,8 @@ impl InstanceExtremes {
 /// Vertical extremes are measured in font units.
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash)]
 pub struct VerticalExtremes {
-    lowest: OrderedFloat<f64>,
-    highest: OrderedFloat<f64>,
+    lowest: NotNan<f64>,
+    highest: NotNan<f64>,
 }
 
 impl VerticalExtremes {
@@ -555,16 +560,14 @@ impl VerticalExtremes {
     #[inline]
     #[must_use]
     pub fn new(lowest: f64, highest: f64) -> Self {
-        assert_ne!(lowest, f64::NAN, "lowest was NaN");
+        let lowest = NotNan::new(lowest).expect("lowest was NaN");
+        let highest = NotNan::new(highest).expect("highest was NaN");
         assert_ne!(highest, f64::NAN, "highest was NaN");
         assert!(
             lowest <= highest,
             "lowest value was greater than highest value"
         );
-        Self {
-            lowest: OrderedFloat(lowest),
-            highest: OrderedFloat(highest),
-        }
+        Self { lowest, highest }
     }
 
     /// The lowest/smaller extreme, in font units.
@@ -587,8 +590,8 @@ impl VerticalExtremes {
     #[must_use]
     pub fn max(self, other: Self) -> Self {
         Self {
-            lowest: Float::min(self.lowest, other.lowest),
-            highest: Float::max(self.highest, other.highest),
+            lowest: cmp::min(self.lowest, other.lowest),
+            highest: cmp::max(self.highest, other.highest),
         }
     }
 }

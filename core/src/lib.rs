@@ -324,7 +324,7 @@ impl<'a> InstanceReporter<'a> {
                                 highest: heights.highest + y_offset,
                             }
                         })
-                        .reduce(VerticalExtremes::max)
+                        .reduce(VerticalExtremes::merge)
                         .unwrap_or_default();
 
                     // Return buffer
@@ -437,7 +437,7 @@ impl<'a> Iterator for WordExtremesIterator<'a> {
                     highest: heights.highest + y_offset,
                 }
             })
-            .reduce(VerticalExtremes::max)
+            .reduce(VerticalExtremes::merge)
             .unwrap_or_default();
 
         // Return buffer
@@ -588,7 +588,7 @@ impl VerticalExtremes {
     /// lower `lowest` value.
     #[inline]
     #[must_use]
-    pub fn max(self, other: Self) -> Self {
+    pub fn merge(self, other: Self) -> Self {
         Self {
             lowest: cmp::min(self.lowest, other.lowest),
             highest: cmp::max(self.highest, other.highest),

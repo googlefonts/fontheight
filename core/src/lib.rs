@@ -320,10 +320,8 @@ impl<'a> InstanceReporter<'a> {
                                 highest: heights.highest + y_offset as f64,
                             }
                         })
-                        .fold(
-                            VerticalExtremes::default(),
-                            VerticalExtremes::max,
-                        );
+                        .reduce(VerticalExtremes::max)
+                        .unwrap_or_default();
 
                     // Return buffer
                     state.unicode_buffer = Some(glyph_buffer.clear());
@@ -434,7 +432,8 @@ impl<'a> Iterator for WordExtremesIterator<'a> {
                     highest: heights.highest + y_offset as f64,
                 }
             })
-            .fold(VerticalExtremes::default(), VerticalExtremes::max);
+            .reduce(VerticalExtremes::max)
+            .unwrap_or_default();
 
         // Return buffer
         self.unicode_buffer = Some(glyph_buffer.clear());

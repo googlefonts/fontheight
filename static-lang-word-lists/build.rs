@@ -22,6 +22,10 @@ use zip::ZipArchive;
 // and relative paths. See egg.py for how this code is generated
 include!("chicken.rs");
 
+static IS_DOCS_RS: bool = option_env!("DOCS_RS").is_some();
+static LOCAL_BUILD: bool =
+    !IS_DOCS_RS && option_env!("STATIC_LANG_WORD_LISTS_LOCAL").is_some();
+
 fn main() {
     println!("cargo::rerun-if-changed=chicken.rs");
     println!("cargo::rerun-if-changed=build.rs");
@@ -32,19 +36,18 @@ fn main() {
     let map_path = out_dir_path("map_codegen.rs");
     let mut map_file = open_path(&map_path);
 
-    let wordlist_source_dir =
-        if option_env!("STATIC_LANG_WORD_LISTS_LOCAL").is_none() {
-            download_repo_word_lists()
-        } else {
-            println!("cargo::warning=building from local files");
-            PathBuf::from("data")
-        };
+    let wordlist_source_dir = if !LOCAL_BUILD {
+        download_repo_word_lists()
+    } else {
+        println!("cargo::warning=building from local files");
+        PathBuf::from("data")
+    };
 
     writeln!(
         &mut map_file,
-        r#"#[doc = "A lookup map for the crate-provided [`WordList`]s. Maps [`WordList`] names to the corresponding static [`LazyWordList`]."]
-        pub static LOOKUP_TABLE: ::phf::Map<&'static str, &'static
-         ::std::sync::LazyLock<crate::WordList>> = ::phf::phf_map! {{"#
+        r#"#[doc = "A lookup map for the crate-provided [`WordList`]s. Maps their names to the corresponding static [`WordList`]."]
+        pub static LOOKUP_TABLE: ::phf::Map<&'static str, &'static crate::WordList> =
+            ::phf::phf_map! {{"#
     )
     .unwrap_or_else(|err| panic!("failed to write to map_codeden.rs: {err}"));
     let map_file = Mutex::new(map_file);
@@ -58,6 +61,31 @@ fn main() {
             .iter()
             .copied()
             .for_each(|(name, metadata_file, path)| {
+                if IS_DOCS_RS {
+                    let ident = name.to_shouty_snake_case();
+                    let mut codegen_file = codegen_file.lock().unwrap();
+                    writeln!(
+                        &mut codegen_file,
+                        "/// The {ident} word list.
+                        ///
+                        /// Compiled into the binary compressed with Brotli, \
+                         decompressed at
+                        /// runtime.
+                        pub static {ident}: crate::WordList = \
+                         crate::WordList::stub();",
+                    )
+                    .unwrap_or_else(|err| {
+                        panic!(
+                            "failed to write to word_list_codegen.rs: {err}"
+                        );
+                    });
+                    let mut map_file = map_file.lock().unwrap();
+                    writeln!(&mut map_file, r#"    "{name}" => &{ident},"#)
+                        .unwrap_or_else(|err| {
+                            panic!("failed to write to map_codeden.rs: {err}")
+                        });
+                    return;
+                }
                 s.spawn(move || {
                     let metadata_content = String::from_utf8(get_a_file(
                         metadata_file,
@@ -66,6 +94,10 @@ fn main() {
                     .expect("metadata file was not UTF-8");
                     let ident = name.to_shouty_snake_case();
                     let bytes = get_a_file(path, wordlist_source_dir);
+                    // Validate the bytes are UTF-8 now so we don't need to at
+                    // runtime
+                    str::from_utf8(&bytes)
+                        .expect("word list should be valid UTF-8");
                     let br_path = compress(&bytes, path);
 
                     let mut codegen_file = codegen_file.lock().unwrap();

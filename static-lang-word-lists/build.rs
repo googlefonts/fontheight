@@ -94,6 +94,10 @@ fn main() {
                     .expect("metadata file was not UTF-8");
                     let ident = name.to_shouty_snake_case();
                     let bytes = get_a_file(path, wordlist_source_dir);
+                    // Validate the bytes are UTF-8 now so we don't need to at
+                    // runtime
+                    str::from_utf8(&bytes)
+                        .expect("word list should be valid UTF-8");
                     let br_path = compress(&bytes, path);
 
                     let mut codegen_file = codegen_file.lock().unwrap();

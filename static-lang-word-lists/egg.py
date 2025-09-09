@@ -47,6 +47,7 @@ for text_file in sorted(DATA_DIR.rglob("*.txt")):
 
 # Sort lines by txt path
 GENERATED_FILE.write_text(
-    RUST_TEMPLATE.format(tuples="\n".join(sorted(tuples, key=lambda tup: tup[2])))
+    RUST_TEMPLATE.format(tuples="\n".join(sorted(tuples, key=lambda tup: tup[2]))),
+    encoding="utf-8",
 )
 print("Wrote chicken.rs")

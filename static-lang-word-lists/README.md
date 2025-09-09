@@ -34,3 +34,5 @@ To build using local files, set the `STATIC_LANG_WORD_LISTS_LOCAL` environment v
 Diffenator wordlists are from [diffenator2](https://github.com/googlefonts/diffenator2)
 
 Emoji wordlists are from [unicode.org](https://home.unicode.org/)
+
+AOSP word lists are from the [aosp-test-texts](https://github.com/googlefonts/aosp-test-texts), using the files produced by `scripts/extract_words.py`

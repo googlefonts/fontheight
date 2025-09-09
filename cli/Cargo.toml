@@ -22,7 +22,7 @@ clap = { version = "4.5", features = ["derive"] }
 fontheight = { version = "0.1.0", path = "../core" }
 log = { workspace = true }
 rayon = { workspace = true }
-static-lang-word-lists = { version = "0.1.0", path = "../static-lang-word-lists" }
+static-lang-word-lists = { version = "0.2.0", path = "../static-lang-word-lists" }
 
 [dependencies.env_logger]
 version = "0.11.6"

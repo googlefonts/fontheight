@@ -1,7 +1,7 @@
 [package]
 name = "static-lang-word-lists"
 description = "Runtime decompressed statically-included word lists"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 authors = ["Dalton Maag <sd@daltonmaag.com>"]
 license = "Apache-2.0"
@@ -22,7 +22,7 @@ include = [
 [dependencies]
 brotli-decompressor = "5"
 log = { workspace = true }
-phf = { version = "0.12.1", features = ["macros"] }
+phf = { version = "0.13.1", features = ["macros"] }
 rayon = { workspace = true, optional = true }
 thiserror = { workspace = true }
 serde = { version = "1.0", features = ["derive"] }

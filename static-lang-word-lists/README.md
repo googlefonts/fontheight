@@ -31,8 +31,8 @@ To build using local files, set the `STATIC_LANG_WORD_LISTS_LOCAL` environment v
 
 ## Credits
 
-Diffenator wordlists are from [diffenator2](https://github.com/googlefonts/diffenator2)
+Diffenator wordlists are from [diffenator2](https://github.com/googlefonts/diffenator2). [Apache-2.0](https://github.com/googlefonts/diffenator2/blob/69a873d79811e957aa5824e04d4859717f206c47/LICENSE.txt) licensed.
 
-Emoji wordlists are from [unicode.org](https://home.unicode.org/)
+Emoji wordlists are from [unicode.org](https://home.unicode.org/). [Unicode](https://www.unicode.org/license.txt) licensed.
 
-AOSP word lists are from the [aosp-test-texts](https://github.com/googlefonts/aosp-test-texts), using the files produced by `scripts/extract_words.py`
+AOSP word lists are from the [aosp-test-texts](https://github.com/googlefonts/aosp-test-texts), using the files produced by `scripts/extract_words.py`. [Apache-2.0](https://github.com/googlefonts/aosp-test-texts/blob/c8134e8ae2be52feb842df5cb5fa03d29e3df06f/LICENSE) licensed.

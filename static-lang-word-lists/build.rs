@@ -37,9 +37,12 @@ fn main() {
     let mut map_file = open_path(&map_path);
 
     let wordlist_source_dir = match (LOCAL_BUILD, IS_DOCS_RS) {
+        // By default, download the word lists
         (false, false) => download_repo_word_lists(),
-        // Unused in this case
+        // On docs.rs we have no network access, so we stub everything.
+        // wordlist_source_dir isn't accessed
         (_, true) => Default::default(),
+        // For local development, you can opt to build from local files
         (true, _) => {
             println!("cargo::warning=building from local files");
             PathBuf::from("data")

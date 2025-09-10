@@ -24,7 +24,7 @@ include!("chicken.rs");
 
 static IS_DOCS_RS: bool = option_env!("DOCS_RS").is_some();
 static LOCAL_BUILD: bool =
-    !IS_DOCS_RS && option_env!("STATIC_LANG_WORD_LISTS_LOCAL").is_some();
+    option_env!("STATIC_LANG_WORD_LISTS_LOCAL").is_some();
 
 fn main() {
     println!("cargo::rerun-if-changed=chicken.rs");
@@ -36,11 +36,14 @@ fn main() {
     let map_path = out_dir_path("map_codegen.rs");
     let mut map_file = open_path(&map_path);
 
-    let wordlist_source_dir = if !LOCAL_BUILD {
-        download_repo_word_lists()
-    } else {
-        println!("cargo::warning=building from local files");
-        PathBuf::from("data")
+    let wordlist_source_dir = match (LOCAL_BUILD, IS_DOCS_RS) {
+        (false, false) => download_repo_word_lists(),
+        // Unused in this case
+        (_, true) => Default::default(),
+        (true, _) => {
+            println!("cargo::warning=building from local files");
+            PathBuf::from("data")
+        },
     };
 
     writeln!(

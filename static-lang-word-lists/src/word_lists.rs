@@ -137,8 +137,8 @@ impl WordList {
         }
     }
 
-    // Used by build script when building for docs.rs
-    #[cfg(docsrs)]
+    // Used by build script when building on docs.rs
+    #[allow(dead_code)]
     pub(crate) const fn stub() -> Self {
         Self::new_lazy(
             LazyLock::new(|| unreachable!()),

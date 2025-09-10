@@ -33,4 +33,4 @@
 
 Initial release!
 
-[`static-lang-word-lists`]: ../core/CHANGELOG.md
+[`static-lang-word-lists`]: ../static-lang-word-lists/CHANGELOG.md

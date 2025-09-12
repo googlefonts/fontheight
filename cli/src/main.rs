@@ -9,7 +9,7 @@ use clap::Parser;
 use clap_verbosity_flag::Verbosity;
 use env_logger::Env;
 use fontheight::Reporter;
-use log::{debug, error, info, warn};
+use log::{error, info, warn};
 use rayon::prelude::*;
 
 use crate::fmt::{FormatReport, OutputFormat};
@@ -24,11 +24,11 @@ fn main() -> ExitCode {
     }
 }
 
-// Default to debug logs on debug builds, warnings otherwise
+// Default to debug logs on debug builds, info otherwise
 #[cfg(debug_assertions)]
 type FontheightVerbosity = Verbosity<clap_verbosity_flag::DebugLevel>;
 #[cfg(not(debug_assertions))]
-type FontheightVerbosity = Verbosity<clap_verbosity_flag::WarnLevel>;
+type FontheightVerbosity = Verbosity<clap_verbosity_flag::InfoLevel>;
 
 #[derive(Debug, Parser)]
 #[command(version, about)]
@@ -102,7 +102,7 @@ fn _main() -> anyhow::Result<()> {
                         args.words_per_list,
                         args.results,
                     )?;
-                    debug!(
+                    info!(
                         "finished checking {} at {:?}",
                         word_list.name(),
                         report.location

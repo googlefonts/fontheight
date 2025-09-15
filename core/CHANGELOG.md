@@ -1,5 +1,9 @@
 # `fontheight` library crate changelog
 
+## v0.1.6 - 2025/09/15
+
+- Upgrade [`skrifa`] & [`harfrust`]
+
 ## v0.1.5 - 2025/09/10
 
 ### Internals
@@ -34,3 +38,5 @@
 Initial release!
 
 [`static-lang-word-lists`]: ../static-lang-word-lists/CHANGELOG.md
+[`skrifa`]: https://lib.rs/crates/skrifa
+[`harfrust`]: https://lib.rs/crates/harfrust

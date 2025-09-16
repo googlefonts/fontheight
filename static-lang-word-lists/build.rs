@@ -229,6 +229,12 @@ fn compress(bytes: &[u8], relative_path: &str) -> PathBuf {
     let mut cursor = Cursor::new(bytes);
     brotli::BrotliCompress(&mut cursor, &mut br_file, &BrotliEncoderParams {
         mode: BrotliEncoderMode::BROTLI_MODE_TEXT,
+        quality: if env::var("PROFILE").as_deref() == Ok("debug") {
+            8
+        } else {
+            11
+        },
+        size_hint: bytes.len(),
         ..Default::default()
     })
     .unwrap_or_else(|err| panic!("failed to compress {relative_path}: {err}"));

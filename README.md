@@ -18,10 +18,9 @@ For the latter, `fontheight` evaluates the extents of a corpus of shaped text ac
 
 ## Usage & installation
 
-Fontheight comes in three flavours:
+Fontheight comes in two flavours:
 1. A commandline tool
 2. A Rust library
-3. A basic Python API
 
 ### `fontheight` as a commandline tool
 
@@ -31,15 +30,14 @@ Currently, both installation methods involve compiling `fontheight` from its sou
 If you're new to Rust, check out https://www.rust-lang.org/tools/install for instructions on getting it installed and configured.
 You only need a stable compiler for Font Height's crates.
 
-From GitHub:
-
-```shell
-STATIC_LANG_WORD_LISTS_LOCAL=1 cargo install --locked --git https://github.com/googlefonts/fontheight fontheight-cli
-```
-
 From crates.io (note: the build script for `static-lang-word-lists` requires network access, see [its README](static-lang-word-lists/README.md) for why):
 ```shell
 cargo install --locked fontheight-cli
+```
+
+From GitHub:
+```shell
+STATIC_LANG_WORD_LISTS_LOCAL=1 cargo install --locked --git https://github.com/googlefonts/fontheight fontheight-cli
 ```
 
 Note: after installing, the command you run is `fontheight` (not `fontheight-cli`).
@@ -47,20 +45,21 @@ Note: after installing, the command you run is `fontheight` (not `fontheight-cli
 #### Usage
 
 ```
-Usage: fontheight [OPTIONS] [FONT_PATH]...
+Usage: fontheight [OPTIONS] <FONT_PATH>...
 
 Arguments:
-  [FONT_PATH]...  The TTF(s) to analyze
+  <FONT_PATH>...  The TTF(s) to analyze
 
 Options:
   -n, --results <RESULTS>       The number of words to log [default: 5]
-  -k, --words <WORDS_PER_LIST>  The number of words from each list to test [default: 25]
+  -k, --words <WORDS_PER_LIST>  The number of words from each list to test [default: all words]
+  -v, --verbose...              Increase logging verbosity
+  -q, --quiet...                Decrease logging verbosity
   -h, --help                    Print help
   -V, --version                 Print version
 ```
 
-Most of the word list shipped with `fontheight` are sorted by greatest vertical extremes to try and help reduce the number of words which need to be checked to produce a useful report.
-However, not all word lists have been sorted at this time, and so for greater reliability you may wish to use a greater value for `--words`, or use ⚠️ _Not yet available_ `--all`.
+Most of the word list shipped with `fontheight` are sorted by greatest vertical extremes to try and help reduce the number of words which need to be checked to produce a useful report, should you not wish to test the full word lists (which may be time consuming).
 
 <details>
 <summary>Unsorted word lists</summary>
@@ -210,45 +209,6 @@ Sorted DiffenatorVai based on:
 - NotoSansVai-Regular.ttf
 
 </details>
-
-### `fontheight`'s Python API
-
-⚠️ _Not yet available_
-
-The API will be available under the package `fontheight`.
-
-#### Usage
-
-See the method signatures & data types below, approximately written in Python. `k_words` is equivalent to `--words` in the CLI, and `n_exemplars` is equivalent to `-n/--results`.
-
-```python
-import fontheight
-
-# Entrypoints
-
-fontheight.get_min_max_extremes_from(path: os.pathLike, k_words: int, n_exemplars: int) -> list[fontheight.Report]
-
-fontheight.get_min_max_extremes(font_bytes: bytes, k_words: int, n_exemplars: int) -> list[fontheight.Report]
-
-# Returned data types
-
-@dataclass(frozen=True)
-class fontheight.Report:
-    location: dict[str, float]
-    word_list_name: str
-    exemplars: fontheight.Exemplars
-
-@dataclass(frozen=True)
-class fontheight.Exemplars:
-    lowest: list[fontheight.WordExtremes]  # sorted, lowest lows first
-    highest: list[fontheight.WordExtremes]  # sorted, highest highs first
-
-@dataclass(frozen=True)
-class fontheight.WordExtremes:
-    word: str
-    lowest: float
-    highest: float
-```
 
 ### `fontheight`'s Rust crate
 

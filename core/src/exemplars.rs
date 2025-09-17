@@ -224,3 +224,49 @@ mod private {
 
     impl<'a, I> Sealed for I where I: CollectToExemplars<'a> {}
 }
+
+#[cfg(test)]
+mod unit_tests {
+    use ordered_float::NotNan;
+
+    use super::*;
+    use crate::VerticalExtremes;
+
+    fn word_extremes(
+        word: &str,
+        lowest: f64,
+        highest: f64,
+    ) -> WordExtremes<'_> {
+        WordExtremes {
+            word,
+            extremes: VerticalExtremes {
+                highest: NotNan::new(highest).expect("highest was NaN"),
+                lowest: NotNan::new(lowest).expect("lowest was NaN"),
+            },
+        }
+    }
+
+    #[test]
+    fn by_lowest_sorting() {
+        let a = word_extremes("a", 10., 10.);
+        let y = word_extremes("y", 1., 10.);
+        // Normal case
+        assert_eq!(ByLowest(a).cmp(&ByLowest(y)), Ordering::Greater);
+
+        let b = word_extremes("b", 10., 20.);
+        // Tie break on string order
+        assert_eq!(ByLowest(a).cmp(&ByLowest(b)), Ordering::Less);
+    }
+
+    #[test]
+    fn by_highest_sorting() {
+        let a = word_extremes("a", 10., 10.);
+        let y = word_extremes("y", 1., 10.);
+        // Normal case
+        assert_eq!(ByHighest(a).cmp(&ByHighest(y)), Ordering::Less);
+
+        let c = word_extremes("c", 10., 10.);
+        // Tie break on string orer
+        assert_eq!(ByHighest(a).cmp(&ByHighest(c)), Ordering::Less);
+    }
+}

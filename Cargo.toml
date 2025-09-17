@@ -4,7 +4,6 @@ members = [
     "cli",
     "core",
     "static-lang-word-lists",
-    "wheel",
 ]
 
 [workspace.dependencies]

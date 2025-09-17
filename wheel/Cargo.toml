@@ -15,7 +15,7 @@ crate-type = ["cdylib"]
 anyhow = "1"
 fontheight = { version = "0.1.0", path = "../core" }
 rayon = { workspace = true }
-static-lang-word-lists = { version = "0.2.0", path = "../static-lang-word-lists" }
+static-lang-word-lists = { version = "0.3.0", path = "../static-lang-word-lists" }
 
 [dependencies.pyo3]
 version = "0.24.1"

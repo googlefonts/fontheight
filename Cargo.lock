@@ -350,7 +350,7 @@ dependencies = [
 
 [[package]]
 name = "fontheight"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
  "harfrust",
  "itertools",
@@ -850,7 +850,7 @@ checksum = "67b1b7a3b5fe4f1376887184045fcf45c69e92af734b7aaddc05fb777b6fbd03"
 
 [[package]]
 name = "static-lang-word-lists"
-version = "0.2.2"
+version = "0.3.0"
 dependencies = [
  "brotli",
  "brotli-decompressor",

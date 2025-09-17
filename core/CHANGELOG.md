@@ -1,5 +1,9 @@
 # `fontheight` library crate changelog
 
+## v0.1.7 - 2025/09/17
+
+- Allow upgrading [`static-lang-word-lists`] to v0.3.0 (the breaking change is not breaking for fontheight, so both versions can be supported)
+
 ## v0.1.6 - 2025/09/15
 
 - Upgrade [`skrifa`] & [`harfrust`]

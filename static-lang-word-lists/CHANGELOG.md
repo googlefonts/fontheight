@@ -1,5 +1,15 @@
 # `static-lang-word-lists` changelog
 
+## v0.3.0 - 2025/09/17
+
+**Breaking change**: renamed AOSP word lists
+
+### Changes
+
+- Improved quality of AOSP word lists (filter word lists by script, done [here](https://github.com/googlefonts/aosp-test-texts/pull/10))
+- Added script metadata to AOSP word lists
+- Improved name of AOSP word lists (including script)
+
 ## v0.2.2 - 2025/09/10
 
 ### Fixes

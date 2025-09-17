@@ -93,7 +93,11 @@ struct ByHighest<'w>(WordExtremes<'w>);
 
 impl Ord for ByLowest<'_> {
     fn cmp(&self, other: &Self) -> Ordering {
-        self.0.extremes.lowest.cmp(&other.0.extremes.lowest)
+        self.0
+            .extremes
+            .lowest
+            .cmp(&other.0.extremes.lowest)
+            .then_with(|| self.0.word.cmp(&other.0.word))
     }
 }
 
@@ -104,6 +108,7 @@ impl Ord for ByHighest<'_> {
             .highest
             .cmp(&other.0.extremes.highest)
             .reverse()
+            .then_with(|| self.0.word.cmp(&other.0.word))
     }
 }
 

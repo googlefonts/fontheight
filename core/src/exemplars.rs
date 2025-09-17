@@ -97,7 +97,7 @@ impl Ord for ByLowest<'_> {
             .extremes
             .lowest
             .cmp(&other.0.extremes.lowest)
-            .then_with(|| self.0.word.cmp(&other.0.word))
+            .then_with(|| self.0.word.cmp(other.0.word))
     }
 }
 
@@ -108,7 +108,7 @@ impl Ord for ByHighest<'_> {
             .highest
             .cmp(&other.0.extremes.highest)
             .reverse()
-            .then_with(|| self.0.word.cmp(&other.0.word))
+            .then_with(|| self.0.word.cmp(other.0.word))
     }
 }
 

@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.11"
+# ///
 
 """
 Generates Rust code to give struct names and file paths for the data/ directory,

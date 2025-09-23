@@ -1,5 +1,11 @@
 # `static-lang-word-lists` changelog
 
+## v0.3.1 - 2025/09/23
+
+### Fixes
+
+- Fix crate compile error on GitHub Actions when being used as a dependency
+
 ## v0.3.0 - 2025/09/17
 
 **Breaking change**: renamed AOSP word lists

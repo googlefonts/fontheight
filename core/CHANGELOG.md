@@ -1,5 +1,11 @@
 # `fontheight` library crate changelog
 
+## Unreleased
+
+### Changes
+
+- Sort exemplars lexicographically if their vertical extents match (improves determinism)
+
 ## v0.1.7 - 2025/09/17
 
 - Allow upgrading [`static-lang-word-lists`] to v0.3.0 (the breaking change is not breaking for fontheight, so both versions can be supported)

@@ -148,7 +148,11 @@ fn get_a_file(path: &str, data_dir: &Path) -> Vec<u8> {
 }
 
 fn download_repo_word_lists() -> PathBuf {
-    let git_ref = option_env!("GITHUB_HEAD_REF")
+    let is_fontheight =
+        option_env!("GITHUB_REPOSITORY") == Some("googlefonts/fontheight");
+    let git_ref = is_fontheight
+        .then_some(option_env!("GITHUB_HEAD_REF"))
+        .flatten()
         .filter(|val| !val.is_empty())
         .unwrap_or("main");
     let url =

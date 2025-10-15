@@ -1,18 +1,15 @@
 #![allow(missing_docs)]
 
-use std::error::Error;
-
+use anyhow::anyhow;
 use pico_args::Arguments;
 
-mod slwl_build;
+mod egg;
 
-type Result<T = (), E = Box<dyn Error>> = std::result::Result<T, E>;
-
-fn main() -> Result {
+fn main() -> anyhow::Result<()> {
     let mut args = Arguments::from_env();
 
-    match args.subcommand()?.ok_or("missing task")?.as_str() {
-        "slwl-build" => slwl_build::main(args),
-        unknown => Err(format!("unknown task: {unknown}").into()),
+    match args.subcommand()?.ok_or(anyhow!("missing task"))?.as_str() {
+        "egg" => egg::main(args),
+        unknown => Err(anyhow!("unknown task: {unknown}")),
     }
 }

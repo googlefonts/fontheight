@@ -4,6 +4,6 @@ For a primer on the Cargo xtask pattern: see [this repo](https://github.com/matk
 
 TL;DR `cargo xtask <task_name>`.
 
-## `slwl-build`: generates `static-lang-word-lists`' build script
+## `egg`: generates `static-lang-word-lists/chicken.rs`
 
 TODO

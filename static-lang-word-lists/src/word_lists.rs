@@ -1,4 +1,5 @@
 use std::{
+    borrow::Cow,
     fs, io,
     ops::{Deref, Index},
     path::{Path, PathBuf},
@@ -6,22 +7,21 @@ use std::{
     sync::LazyLock,
 };
 
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use thiserror::Error;
 
 // TODO: this can be Box<str>
 pub(crate) type Word = String;
 pub(crate) type WordSource = Box<[Word]>;
 
-#[derive(Debug, Serialize, Deserialize)]
+// FIXME: has to be public/hidden for slwl-build xtask
+#[doc(hidden)]
+#[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub(crate) struct WordListMetadata {
-    // TODO: this can be Box<str>
-    pub(crate) name: String,
-    // TODO: this can be Box<str>
-    script: Option<String>,
-    // TODO: this can be Box<str>
-    language: Option<String>,
+pub struct WordListMetadata {
+    pub name: Cow<'static, str>,
+    pub script: Option<Cow<'static, str>>,
+    pub language: Option<Cow<'static, str>>,
 }
 
 impl WordListMetadata {
@@ -40,7 +40,7 @@ impl WordListMetadata {
 
     fn new_from_name(name: impl Into<String>) -> Self {
         WordListMetadata {
-            name: name.into(),
+            name: Cow::Owned(name.into()),
             script: None,
             language: None,
         }
@@ -51,6 +51,7 @@ impl WordListMetadata {
 #[derive(Debug)]
 pub struct WordList {
     words: EagerOrLazy<WordSource>,
+    // TODO: can we get rid of the wrapper now?
     metadata: EagerOrLazy<WordListMetadata>,
 }
 
@@ -128,11 +129,11 @@ impl WordList {
     // Used by wordlist! {}
     #[must_use]
     pub(crate) const fn new_lazy(
-        metadata: LazyLock<WordListMetadata>,
+        metadata: WordListMetadata,
         words: LazyLock<WordSource>,
     ) -> Self {
         WordList {
-            metadata: EagerOrLazy::Lazy(metadata),
+            metadata: EagerOrLazy::Eager(metadata),
             words: EagerOrLazy::Lazy(words),
         }
     }
@@ -140,10 +141,10 @@ impl WordList {
     // Used by build script when building on docs.rs
     #[allow(dead_code)]
     pub(crate) const fn stub() -> Self {
-        Self::new_lazy(
-            LazyLock::new(|| unreachable!()),
-            LazyLock::new(|| unreachable!()),
-        )
+        WordList {
+            metadata: EagerOrLazy::Lazy(LazyLock::new(|| unreachable!())),
+            words: EagerOrLazy::Lazy(LazyLock::new(|| unreachable!())),
+        }
     }
 
     /// Get the name of the word list.

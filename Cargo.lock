@@ -1046,6 +1046,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f3edebf492c8125044983378ecb5766203ad3b4c2f7a922bd7dd207f6d443e95"
 
 [[package]]
+name = "xtask"
+version = "0.1.0"
+
+[[package]]
 name = "zip"
 version = "4.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"

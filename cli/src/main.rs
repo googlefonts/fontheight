@@ -87,7 +87,7 @@ fn _main() -> anyhow::Result<()> {
                 );
             }
 
-            let reports = instances
+            let mut reports = instances
                 .iter()
                 .flat_map(|instance| {
                     static_lang_word_lists::LOOKUP_TABLE
@@ -114,6 +114,10 @@ fn _main() -> anyhow::Result<()> {
                         .map_or(true, |report| !report.exemplars.is_empty())
                 })
                 .collect::<Result<Vec<_>, _>>()?;
+            reports.par_sort_by_key(|report| {
+                // TODO: factor in location as well
+                report.word_list.name()
+            });
 
             let took = start.elapsed();
             println!("{}:", font_path.display());

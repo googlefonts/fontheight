@@ -6,7 +6,7 @@ mod word_lists;
 
 #[cfg(feature = "rayon")]
 pub use word_lists::rayon::ParWordListIter;
-pub use word_lists::{WordList, WordListError, WordListIter};
+pub use word_lists::{WordList, WordListError, WordListIter, WordListMetadata};
 
 use crate::word_lists::{Word, WordSource};
 
@@ -20,26 +20,21 @@ fn newline_delimited_words(input: impl AsRef<str>) -> WordSource {
 }
 
 macro_rules! wordlist {
-    (ident: $ident:ident, metadata: $metadata:expr, bytes: $bytes:expr $(,)?) => {
+    (
+        ident: $ident:ident,
+        metadata: $metadata:expr,
+        bytes: $bytes:expr,
+        features_attr: #[$cfg:meta] $(,)?
+    ) => {
         /// The
         #[doc = ::std::stringify!($ident)]
         /// word list.
         ///
         /// Compiled into the binary compressed with Brotli, decompressed at
         /// runtime.
+        #[$cfg]
         pub static $ident: $crate::WordList = $crate::WordList::new_lazy(
-            // Note: validity of TOML file was not validated during build,
-            // so we must check here
-            ::std::sync::LazyLock::new(|| {
-                let ret = ::toml::from_str($metadata).unwrap_or_else(|err| {
-                    ::std::panic!("failed to deserialize metadata: {err}");
-                });
-                ::log::debug!(
-                    "loaded metadata for {}",
-                    ::std::stringify!($ident),
-                );
-                ret
-            }),
+            $metadata,
             ::std::sync::LazyLock::new(|| {
                 let mut brotli_bytes: &[u8] = $bytes;
                 let mut buf =

@@ -9,7 +9,23 @@ repository = "https://github.com/googlefonts/fontheight"
 publish = false
 
 [dependencies]
+anyhow = "1.0.100"
+heck = "0.5.0"
 pico-args = "0.5.0"
+prettyplease = "0.2.37"
+proc-macro2 = { version = "1.0.101", default-features = false }
+quote = { version = "1", default-features = false }
+static-lang-word-lists = { path = "../static-lang-word-lists" }
+syn = "2"
+walkdir = "2.5"
+
+[dependencies.toml]
+version = "0.9.8"
+default-features = false
+features = [
+    "parse",
+    "serde",
+]
 
 [lints]
 workspace = true

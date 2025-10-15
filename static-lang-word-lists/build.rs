@@ -15,7 +15,6 @@ use std::{
 use brotli::enc::{
     BrotliEncoderParams, backward_references::BrotliEncoderMode,
 };
-use heck::ToShoutySnakeCase;
 use zip::ZipArchive;
 
 // Provides WORD_LISTS: &[(&str, &str, &str)] for word list name, metadata name,
@@ -63,12 +62,15 @@ fn main() {
         let wordlist_source_dir = wordlist_source_dir.as_path();
         let codegen_file = &word_list_file;
         let map_file = &map_file;
-        WORD_LISTS
-            .iter()
-            .copied()
-            .for_each(|(name, metadata_file, path)| {
+        WORD_LISTS.iter().copied().for_each(
+            |WordListDecl {
+                 name,
+                 ident,
+                 rel_path,
+                 metadata_decl,
+                 features_attr,
+             }| {
                 if IS_DOCS_RS {
-                    let ident = name.to_shouty_snake_case();
                     let mut codegen_file = codegen_file.lock().unwrap();
                     writeln!(
                         &mut codegen_file,
@@ -77,6 +79,7 @@ fn main() {
                         /// Compiled into the binary compressed with Brotli, \
                          decompressed at
                         /// runtime.
+                        {features_attr}
                         pub static {ident}: crate::WordList = \
                          crate::WordList::stub();",
                     )
@@ -93,27 +96,22 @@ fn main() {
                     return;
                 }
                 s.spawn(move || {
-                    let metadata_content = String::from_utf8(get_a_file(
-                        metadata_file,
-                        wordlist_source_dir,
-                    ))
-                    .expect("metadata file was not UTF-8");
-                    let ident = name.to_shouty_snake_case();
-                    let bytes = get_a_file(path, wordlist_source_dir);
+                    let bytes = get_a_file(rel_path, wordlist_source_dir);
                     // Validate the bytes are UTF-8 now so we don't need to at
                     // runtime
                     str::from_utf8(&bytes)
                         .expect("word list should be valid UTF-8");
-                    let br_path = compress(&bytes, path);
+                    let br_path = compress(&bytes, rel_path);
 
                     let mut codegen_file = codegen_file.lock().unwrap();
                     writeln!(
                         &mut codegen_file,
-                        r##"wordlist! {{
+                        r#"wordlist! {{
                             ident: {ident},
-                            metadata: r#"{metadata_content}"#,
+                            metadata: {metadata_decl},
                             bytes: include_bytes!(r"{}"),
-                        }}"##,
+                            features_attr: {features_attr},
+                        }}"#,
                         br_path.display(),
                     )
                     .unwrap_or_else(|err| {
@@ -123,12 +121,17 @@ fn main() {
                     });
 
                     let mut map_file = map_file.lock().unwrap();
+                    writeln!(&mut map_file, "    {features_attr}")
+                        .unwrap_or_else(|err| {
+                            panic!("failed to write to map_codeden.rs: {err}")
+                        });
                     writeln!(&mut map_file, r#"    "{name}" => &{ident},"#)
                         .unwrap_or_else(|err| {
                             panic!("failed to write to map_codeden.rs: {err}")
                         });
                 });
-            });
+            },
+        );
     });
 
     let mut map_file = map_file.into_inner().unwrap();

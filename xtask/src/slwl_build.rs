@@ -1,16 +1,20 @@
-use std::{fs::OpenOptions, io::Write, path::Path};
+use std::{convert::Infallible, fs::OpenOptions, io::Write, path::PathBuf};
 
 use pico_args::Arguments;
 
 use crate::Result;
 
-pub fn main(_args: Arguments) -> Result {
-    let slwl_build_script_path =
-        Path::new("../static-lang-word-lists/build.rs");
+pub fn main(mut args: Arguments) -> Result {
+    let slwl_build_script_path = args
+        .opt_value_from_os_str(["-o", "--output"], |arg| {
+            Ok::<_, Infallible>(PathBuf::from(arg))
+        })
+        .unwrap()
+        .unwrap_or(PathBuf::from("../static-lang-word-lists/build.rs"));
     let mut slwl_build = OpenOptions::new()
         .write(true)
         .truncate(true)
-        .open(slwl_build_script_path)?;
+        .open(&slwl_build_script_path)?;
 
     slwl_build.write_all(r###"#![allow(missing_docs)]
 
@@ -283,5 +287,6 @@ fn open_path(path: &Path) -> File {
 }
 "###.as_bytes())?;
 
+    println!("wrote to {}", slwl_build_script_path.display());
     Ok(())
 }

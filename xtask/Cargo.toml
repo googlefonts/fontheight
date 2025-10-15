@@ -9,6 +9,7 @@ repository = "https://github.com/googlefonts/fontheight"
 publish = false
 
 [dependencies]
+pico-args = "0.5.0"
 
 [lints]
 workspace = true

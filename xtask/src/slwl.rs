@@ -1,10 +1,6 @@
 use std::{
-    collections::BTreeSet,
-    env,
-    fmt::Write as _,
-    fs::OpenOptions,
-    io::Write as _,
-    path::{Path, PathBuf},
+    collections::BTreeSet, fmt::Write as _, fs::OpenOptions, io::Write as _,
+    path::Path,
 };
 
 use anyhow::Context;
@@ -13,15 +9,10 @@ use pico_args::Arguments;
 use quote::{format_ident, quote};
 use static_lang_word_lists::WordListMetadata;
 
-use crate::{format_tokens, load_all_metadata};
+use crate::{format_tokens, load_all_metadata, workspace_root};
 
 pub fn main(_args: Arguments) -> anyhow::Result<()> {
-    let workspace_root = env::var_os("CARGO_MANIFEST_DIR")
-        .map(PathBuf::from)
-        .expect("xtask run without Cargo")
-        .parent()
-        .unwrap()
-        .to_owned();
+    let workspace_root = workspace_root();
     let slwl_declarations_path =
         workspace_root.join("static-lang-word-lists/src/declarations.rs");
     let mut slwl_declarations = OpenOptions::new()

@@ -60,4 +60,4 @@ macro_rules! wordlist {
 }
 
 include!(concat!(env!("OUT_DIR"), "/word_list_codegen.rs"));
-include!(concat!(env!("OUT_DIR"), "/map_codegen.rs"));
+// include!(concat!(env!("OUT_DIR"), "/map_codegen.rs"));

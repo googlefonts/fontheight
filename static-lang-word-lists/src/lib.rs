@@ -57,6 +57,9 @@ macro_rules! wordlist {
     };
 }
 
-// Has to be below macro definition to be able to use it
+// Module declaration has to be below macro definition to be able to use it.
+// rustfmt::skip applies to the contents of the module, because rustfmt
+// traverses modules, not files
+#[rustfmt::skip]
 mod declarations;
 pub use declarations::*;

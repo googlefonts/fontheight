@@ -4,9 +4,10 @@
 
 mod word_lists;
 
+pub(crate) use word_lists::WordListMetadata;
 #[cfg(feature = "rayon")]
 pub use word_lists::rayon::ParWordListIter;
-pub use word_lists::{WordList, WordListError, WordListIter, WordListMetadata};
+pub use word_lists::{WordList, WordListError, WordListIter};
 
 use crate::word_lists::{Word, WordSource};
 
@@ -19,7 +20,7 @@ fn newline_delimited_words(input: impl AsRef<str>) -> WordSource {
         .collect()
 }
 
-macro_rules! wordlist {
+macro_rules! word_list {
     (
         ident: $ident:ident,
         metadata: $metadata:expr,

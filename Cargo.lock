@@ -1108,7 +1108,7 @@ dependencies = [
  "prettyplease",
  "proc-macro2",
  "quote",
- "static-lang-word-lists",
+ "serde",
  "syn",
  "toml",
  "walkdir",

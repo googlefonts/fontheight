@@ -59,5 +59,6 @@ macro_rules! wordlist {
     };
 }
 
-include!(concat!(env!("OUT_DIR"), "/word_list_codegen.rs"));
-// include!(concat!(env!("OUT_DIR"), "/map_codegen.rs"));
+// Has to be below macro definition to be able to use it
+mod declarations;
+pub use declarations::*;

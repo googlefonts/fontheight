@@ -65,20 +65,22 @@ pub fn main(_args: Arguments) -> anyhow::Result<()> {
             },
             None => quote! { None },
         };
-        let features = get_features_for_word_list(&word_list_path, metadata);
-        all_features.extend(features.clone());
-        let features = quote! { #[cfg(any(#( feature = #features, )* ))]};
+        let feature_list =
+            get_features_for_word_list(&word_list_path, metadata);
+        all_features.extend(feature_list.clone());
+        let feature_gate = quote! { #[cfg(any(#( feature = #feature_list, )* ))]};
 
-        chicken_entries.push(quote! { #features #path });
+        chicken_entries.push(quote! { #feature_gate #path });
 
         lookup_table_entries.push(quote! {
-            #features
+            #feature_gate
             #name => #ident,
         });
 
-        // TODO: docs.rs handling
         word_list_entries.push(quote! {
             #[rustfmt::skip]
+            // Not docsrs and a relevant feature
+            #[cfg(all(not(docsrs), any(#( feature = #feature_list, )* )))]
             wordlist! {
                 ident: #ident,
                 metadata: crate::WordListMetadata {
@@ -89,8 +91,13 @@ pub fn main(_args: Arguments) -> anyhow::Result<()> {
                 bytes: ::std::include_bytes!(
                     ::std::concat!(::std::env!("OUT_DIR"), '/', #path, ".br")
                 ),
-                features_attr: #features,
             }
+            // Is docs.rs + relevant feature
+            #[cfg(all(docsrs, any(#( feature = #feature_list, )* )))]
+            #[doc = "The "]
+            #[doc = ::std::stringify!(#ident)]
+            #[doc = "word list.\n\nCompiled into the binary compressed with Brotli, decompressed at runtime."]
+            pub static #ident: crate::WordList = crate::WordList::stub();
         });
     });
 

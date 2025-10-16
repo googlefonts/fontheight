@@ -23,8 +23,7 @@ macro_rules! wordlist {
     (
         ident: $ident:ident,
         metadata: $metadata:expr,
-        bytes: $bytes:expr,
-        features_attr: #[$cfg:meta] $(,)?
+        bytes: $bytes:expr $(,)?
     ) => {
         /// The
         #[doc = ::std::stringify!($ident)]
@@ -32,7 +31,6 @@ macro_rules! wordlist {
         ///
         /// Compiled into the binary compressed with Brotli, decompressed at
         /// runtime.
-        #[$cfg]
         pub static $ident: $crate::WordList = $crate::WordList::new_lazy(
             $metadata,
             ::std::sync::LazyLock::new(|| {

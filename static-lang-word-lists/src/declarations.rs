@@ -1172,4 +1172,3 @@ wordlist! {
     "ucd/Emoji_Textual.txt", ".br")), features_attr : #[cfg(any(feature = "ucd", feature
     = "script-zyyy",))],
 }
-

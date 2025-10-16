@@ -6,9 +6,8 @@ use std::{
     fs,
     fs::{File, OpenOptions},
     io,
-    io::{Cursor, Write},
+    io::Cursor,
     path::{Component, Path, PathBuf},
-    sync::Mutex,
     thread,
 };
 
@@ -17,8 +16,8 @@ use brotli::enc::{
 };
 use zip::ZipArchive;
 
-// Provides WORD_LISTS: &[(&str, &str, &str)] for word list name, metadata name,
-// and relative paths. See egg.py for how this code is generated
+// TODO: update this comment once the dust settles
+// Provides WORD_LISTS: &[&str] for word list relative path
 include!("chicken.rs");
 
 static IS_DOCS_RS: bool = option_env!("DOCS_RS").is_some();
@@ -30,10 +29,9 @@ fn main() {
     println!("cargo::rerun-if-changed=build.rs");
     println!("cargo::rerun-if-env-changed=STATIC_LANG_WORD_LISTS_LOCAL");
 
-    let word_list_path = out_dir_path("word_list_codegen.rs");
-    let word_list_file = Mutex::new(open_path(&word_list_path));
-    let map_path = out_dir_path("map_codegen.rs");
-    let mut map_file = open_path(&map_path);
+    if IS_DOCS_RS {
+        return;
+    }
 
     let wordlist_source_dir = match (LOCAL_BUILD, IS_DOCS_RS) {
         // By default, download the word lists
@@ -48,95 +46,19 @@ fn main() {
         },
     };
 
-    writeln!(
-        &mut map_file,
-        r#"#[doc = "A lookup map for the crate-provided [`WordList`]s. Maps their names to the corresponding static [`WordList`]."]
-        pub static LOOKUP_TABLE: ::phf::Map<&'static str, &'static crate::WordList> =
-            ::phf::phf_map! {{"#
-    )
-    .unwrap_or_else(|err| panic!("failed to write to map_codeden.rs: {err}"));
-    let map_file = Mutex::new(map_file);
-
     thread::scope(|s| {
         // Bind references to names so they can be copied to each spawned thread
         let wordlist_source_dir = wordlist_source_dir.as_path();
-        let codegen_file = &word_list_file;
-        let map_file = &map_file;
-        WORD_LISTS.iter().copied().for_each(
-            |WordListDecl {
-                 name,
-                 ident,
-                 rel_path,
-                 metadata_decl,
-                 features_attr,
-             }| {
-                if IS_DOCS_RS {
-                    let mut codegen_file = codegen_file.lock().unwrap();
-                    writeln!(
-                        &mut codegen_file,
-                        "/// The {ident} word list.
-                        ///
-                        /// Compiled into the binary compressed with Brotli, \
-                         decompressed at
-                        /// runtime.
-                        {features_attr}
-                        pub static {ident}: crate::WordList = \
-                         crate::WordList::stub();",
-                    )
-                    .unwrap_or_else(|err| {
-                        panic!(
-                            "failed to write to word_list_codegen.rs: {err}"
-                        );
-                    });
-                    let mut map_file = map_file.lock().unwrap();
-                    writeln!(&mut map_file, r#"    "{name}" => &{ident},"#)
-                        .unwrap_or_else(|err| {
-                            panic!("failed to write to map_codeden.rs: {err}")
-                        });
-                    return;
-                }
-                s.spawn(move || {
-                    let bytes = get_a_file(rel_path, wordlist_source_dir);
-                    // Validate the bytes are UTF-8 now so we don't need to at
-                    // runtime
-                    str::from_utf8(&bytes)
-                        .expect("word list should be valid UTF-8");
-                    let br_path = compress(&bytes, rel_path);
-
-                    let mut codegen_file = codegen_file.lock().unwrap();
-                    writeln!(
-                        &mut codegen_file,
-                        r#"wordlist! {{
-                            ident: {ident},
-                            metadata: {metadata_decl},
-                            bytes: include_bytes!(r"{}"),
-                            features_attr: {features_attr},
-                        }}"#,
-                        br_path.display(),
-                    )
-                    .unwrap_or_else(|err| {
-                        panic!(
-                            "failed to write to word_list_codegen.rs: {err}"
-                        );
-                    });
-
-                    let mut map_file = map_file.lock().unwrap();
-                    writeln!(&mut map_file, "    {features_attr}")
-                        .unwrap_or_else(|err| {
-                            panic!("failed to write to map_codeden.rs: {err}")
-                        });
-                    writeln!(&mut map_file, r#"    "{name}" => &{ident},"#)
-                        .unwrap_or_else(|err| {
-                            panic!("failed to write to map_codeden.rs: {err}")
-                        });
-                });
-            },
-        );
-    });
-
-    let mut map_file = map_file.into_inner().unwrap();
-    writeln!(&mut map_file, "}};").unwrap_or_else(|err| {
-        panic!("failed to write to map_codeden.rs: {err}")
+        WORD_LISTS.iter().copied().for_each(|rel_path| {
+            s.spawn(move || {
+                let bytes = get_a_file(rel_path, wordlist_source_dir);
+                // Validate the bytes are UTF-8 now so we don't need to at
+                // runtime
+                str::from_utf8(&bytes)
+                    .expect("word list should be valid UTF-8");
+                compress(&bytes, rel_path);
+            });
+        });
     });
 }
 

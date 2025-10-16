@@ -10,21 +10,44 @@ use std::{
 use serde::Deserialize;
 use thiserror::Error;
 
+use crate::newline_delimited_words;
+
 // TODO: this can be Box<str>
 pub(crate) type Word = String;
 pub(crate) type WordSource = Box<[Word]>;
 
-// FIXME: has to be public/hidden for slwl-build xtask
-#[doc(hidden)]
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct WordListMetadata {
-    pub name: Cow<'static, str>,
-    pub script: Option<Cow<'static, str>>,
-    pub language: Option<Cow<'static, str>>,
+pub(crate) struct WordListMetadata {
+    name: Cow<'static, str>,
+    script: Option<Cow<'static, str>>,
+    language: Option<Cow<'static, str>>,
 }
 
 impl WordListMetadata {
+    // Used by word_list!
+    #[must_use]
+    pub(crate) const fn new(
+        name: &'static str,
+        script: Option<&'static str>,
+        language: Option<&'static str>,
+    ) -> Self {
+        // Can't use Option::map in const context
+        let script = match script {
+            Some(script) => Some(Cow::Borrowed(script)),
+            None => None,
+        };
+        let language = match language {
+            Some(language) => Some(Cow::Borrowed(language)),
+            None => None,
+        };
+        WordListMetadata {
+            name: Cow::Borrowed(name),
+            script,
+            language,
+        }
+    }
+
     #[allow(clippy::result_large_err)]
     fn load(metadata_path: impl AsRef<Path>) -> Result<Self, WordListError> {
         let path = metadata_path.as_ref();
@@ -51,8 +74,7 @@ impl WordListMetadata {
 #[derive(Debug)]
 pub struct WordList {
     words: EagerOrLazy<WordSource>,
-    // TODO: can we get rid of the wrapper now?
-    metadata: EagerOrLazy<WordListMetadata>,
+    metadata: WordListMetadata,
 }
 
 impl WordList {
@@ -71,7 +93,7 @@ impl WordList {
         metadata_path: impl AsRef<Path>,
     ) -> Result<Self, WordListError> {
         let mut word_list = WordList::load_without_metadata(path)?;
-        word_list.metadata = WordListMetadata::load(metadata_path)?.into();
+        word_list.metadata = WordListMetadata::load(metadata_path)?;
         Ok(word_list)
     }
 
@@ -102,13 +124,8 @@ impl WordList {
             .replace("/", "_");
 
         Ok(WordList {
-            metadata: WordListMetadata::new_from_name(name).into(),
-            words: file_content
-                .split_whitespace()
-                .filter(|word| !word.is_empty())
-                .map(String::from)
-                .collect::<Vec<_>>()
-                .into(),
+            metadata: WordListMetadata::new_from_name(name),
+            words: newline_delimited_words(file_content).into(),
         })
     }
 
@@ -121,7 +138,7 @@ impl WordList {
         words: impl IntoIterator<Item = impl Into<String>>,
     ) -> Self {
         WordList {
-            metadata: WordListMetadata::new_from_name(name.into()).into(),
+            metadata: WordListMetadata::new_from_name(name.into()),
             words: words.into_iter().map(Into::into).collect::<Vec<_>>().into(),
         }
     }
@@ -133,16 +150,20 @@ impl WordList {
         words: LazyLock<WordSource>,
     ) -> Self {
         WordList {
-            metadata: EagerOrLazy::Eager(metadata),
             words: EagerOrLazy::Lazy(words),
+            metadata,
         }
     }
 
-    // Used by build script when building on docs.rs
+    // Used by wordlist! when building on docs.rs
     #[allow(dead_code)]
     pub(crate) const fn stub() -> Self {
         WordList {
-            metadata: EagerOrLazy::Lazy(LazyLock::new(|| unreachable!())),
+            metadata: WordListMetadata {
+                name: Cow::Borrowed("stub"),
+                script: None,
+                language: None,
+            },
             words: EagerOrLazy::Lazy(LazyLock::new(|| unreachable!())),
         }
     }

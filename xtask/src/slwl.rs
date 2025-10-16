@@ -7,9 +7,10 @@ use anyhow::Context;
 use heck::ToShoutySnakeCase;
 use pico_args::Arguments;
 use quote::{format_ident, quote};
-use static_lang_word_lists::WordListMetadata;
 
-use crate::{format_tokens, load_all_metadata, workspace_root};
+use crate::{
+    WordListMetadata, format_tokens, load_all_metadata, workspace_root,
+};
 
 pub fn main(_args: Arguments) -> anyhow::Result<()> {
     let workspace_root = workspace_root();
@@ -54,15 +55,11 @@ pub fn main(_args: Arguments) -> anyhow::Result<()> {
             .expect("word list with non UTF-8 relative path")
             .replace("\\", "/");
         let script = match script {
-            Some(script) => {
-                quote! { Some(std::borrow::Cow::Borrowed(#script)) }
-            },
+            Some(script) => quote! { Some(#script) },
             None => quote! { None },
         };
         let language = match language {
-            Some(language) => {
-                quote! { Some(std::borrow::Cow::Borrowed(#language)) }
-            },
+            Some(language) => quote! { Some(#language) },
             None => quote! { None },
         };
         let feature_list =
@@ -80,13 +77,9 @@ pub fn main(_args: Arguments) -> anyhow::Result<()> {
         word_list_entries.push(quote! {
             // Not docsrs and a relevant feature
             #[cfg(all(not(docsrs), any(#( feature = #feature_list, )* )))]
-            wordlist! {
+            word_list! {
                 ident: #ident,
-                metadata: crate::WordListMetadata {
-                    name: ::std::borrow::Cow::Borrowed(#name),
-                    script: #script,
-                    language: #language,
-                },
+                metadata: crate::WordListMetadata::new(#name, #script, #language),
                 bytes: ::std::include_bytes!(
                     ::std::concat!(::std::env!("OUT_DIR"), '/', #path, ".br")
                 ),

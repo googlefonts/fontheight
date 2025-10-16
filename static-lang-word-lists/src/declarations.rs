@@ -2,11 +2,9 @@
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-af"))
 )]
-wordlist! {
-    ident : AOSP_AFRIKAANS_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_afrikaans_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("af")), }, bytes :
+word_list! {
+    ident : AOSP_AFRIKAANS_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_afrikaans_latin", Some("Latn"), Some("af")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/af_Latn.txt",
     ".br")),
 }
@@ -20,11 +18,9 @@ pub static AOSP_AFRIKAANS_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-ethi", feature = "lang-am"))
 )]
-wordlist! {
-    ident : AOSP_AMHARIC_ETHIOPIC, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_amharic_ethiopic"), script :
-    Some(std::borrow::Cow::Borrowed("Ethi")), language :
-    Some(std::borrow::Cow::Borrowed("am")), }, bytes :
+word_list! {
+    ident : AOSP_AMHARIC_ETHIOPIC, metadata : crate
+    ::WordListMetadata::new("aosp_amharic_ethiopic", Some("Ethi"), Some("am")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/am_Ethi.txt",
     ".br")),
 }
@@ -38,11 +34,9 @@ pub static AOSP_AMHARIC_ETHIOPIC: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-arab", feature = "lang-ar"))
 )]
-wordlist! {
-    ident : AOSP_ARABIC, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_arabic"), script :
-    Some(std::borrow::Cow::Borrowed("Arab")), language :
-    Some(std::borrow::Cow::Borrowed("ar")), }, bytes :
+word_list! {
+    ident : AOSP_ARABIC, metadata : crate ::WordListMetadata::new("aosp_arabic",
+    Some("Arab"), Some("ar")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/ar_Arab.txt",
     ".br")),
 }
@@ -56,11 +50,9 @@ pub static AOSP_ARABIC: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-beng", feature = "lang-as"))
 )]
-wordlist! {
-    ident : AOSP_ASSAMESE_BENGALI, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_assamese_bengali"), script :
-    Some(std::borrow::Cow::Borrowed("Beng")), language :
-    Some(std::borrow::Cow::Borrowed("as")), }, bytes :
+word_list! {
+    ident : AOSP_ASSAMESE_BENGALI, metadata : crate
+    ::WordListMetadata::new("aosp_assamese_bengali", Some("Beng"), Some("as")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/as_Beng.txt",
     ".br")),
 }
@@ -74,11 +66,9 @@ pub static AOSP_ASSAMESE_BENGALI: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-az"))
 )]
-wordlist! {
-    ident : AOSP_AZERBAIJANI_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_azerbaijani_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("az")), }, bytes :
+word_list! {
+    ident : AOSP_AZERBAIJANI_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_azerbaijani_latin", Some("Latn"), Some("az")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/az_Latn.txt",
     ".br")),
 }
@@ -92,13 +82,11 @@ pub static AOSP_AZERBAIJANI_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-cyrl", feature = "lang-be"))
 )]
-wordlist! {
-    ident : AOSP_BELARUSIAN_CYRILLIC, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_belarusian_cyrillic"), script :
-    Some(std::borrow::Cow::Borrowed("Cyrl")), language :
-    Some(std::borrow::Cow::Borrowed("be")), }, bytes :
-    ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/be_Cyrl.txt",
-    ".br")),
+word_list! {
+    ident : AOSP_BELARUSIAN_CYRILLIC, metadata : crate
+    ::WordListMetadata::new("aosp_belarusian_cyrillic", Some("Cyrl"), Some("be")), bytes
+    : ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
+    "aosp/be_Cyrl.txt", ".br")),
 }
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-cyrl", feature = "lang-be")))]
 ///The
@@ -110,11 +98,9 @@ pub static AOSP_BELARUSIAN_CYRILLIC: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-be"))
 )]
-wordlist! {
-    ident : AOSP_BELARUSIAN_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_belarusian_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("be")), }, bytes :
+word_list! {
+    ident : AOSP_BELARUSIAN_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_belarusian_latin", Some("Latn"), Some("be")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/be_Latn.txt",
     ".br")),
 }
@@ -128,11 +114,9 @@ pub static AOSP_BELARUSIAN_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-cyrl", feature = "lang-bg"))
 )]
-wordlist! {
-    ident : AOSP_BULGARIAN_CYRILLIC, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_bulgarian_cyrillic"), script :
-    Some(std::borrow::Cow::Borrowed("Cyrl")), language :
-    Some(std::borrow::Cow::Borrowed("bg")), }, bytes :
+word_list! {
+    ident : AOSP_BULGARIAN_CYRILLIC, metadata : crate
+    ::WordListMetadata::new("aosp_bulgarian_cyrillic", Some("Cyrl"), Some("bg")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/bg_Cyrl.txt",
     ".br")),
 }
@@ -146,11 +130,9 @@ pub static AOSP_BULGARIAN_CYRILLIC: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-beng", feature = "lang-bn"))
 )]
-wordlist! {
-    ident : AOSP_BENGALI, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_bengali"), script :
-    Some(std::borrow::Cow::Borrowed("Beng")), language :
-    Some(std::borrow::Cow::Borrowed("bn")), }, bytes :
+word_list! {
+    ident : AOSP_BENGALI, metadata : crate ::WordListMetadata::new("aosp_bengali",
+    Some("Beng"), Some("bn")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/bn_Beng.txt",
     ".br")),
 }
@@ -164,11 +146,9 @@ pub static AOSP_BENGALI: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-bs"))
 )]
-wordlist! {
-    ident : AOSP_BOSNIAN_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_bosnian_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("bs")), }, bytes :
+word_list! {
+    ident : AOSP_BOSNIAN_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_bosnian_latin", Some("Latn"), Some("bs")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/bs_Latn.txt",
     ".br")),
 }
@@ -182,11 +162,9 @@ pub static AOSP_BOSNIAN_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-ca"))
 )]
-wordlist! {
-    ident : AOSP_CATALAN_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_catalan_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("ca")), }, bytes :
+word_list! {
+    ident : AOSP_CATALAN_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_catalan_latin", Some("Latn"), Some("ca")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/ca_Latn.txt",
     ".br")),
 }
@@ -200,11 +178,9 @@ pub static AOSP_CATALAN_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-cs"))
 )]
-wordlist! {
-    ident : AOSP_CZECH_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_czech_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("cs")), }, bytes :
+word_list! {
+    ident : AOSP_CZECH_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_czech_latin", Some("Latn"), Some("cs")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/cs_Latn.txt",
     ".br")),
 }
@@ -218,11 +194,9 @@ pub static AOSP_CZECH_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-da"))
 )]
-wordlist! {
-    ident : AOSP_DANISH_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_danish_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("da")), }, bytes :
+word_list! {
+    ident : AOSP_DANISH_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_danish_latin", Some("Latn"), Some("da")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/da_Latn.txt",
     ".br")),
 }
@@ -236,11 +210,9 @@ pub static AOSP_DANISH_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-de"))
 )]
-wordlist! {
-    ident : AOSP_GERMAN_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_german_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("de")), }, bytes :
+word_list! {
+    ident : AOSP_GERMAN_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_german_latin", Some("Latn"), Some("de")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/de_Latn.txt",
     ".br")),
 }
@@ -254,11 +226,9 @@ pub static AOSP_GERMAN_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-grek", feature = "lang-el"))
 )]
-wordlist! {
-    ident : AOSP_MODERN_GREEK, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_modern_greek"), script :
-    Some(std::borrow::Cow::Borrowed("Grek")), language :
-    Some(std::borrow::Cow::Borrowed("el")), }, bytes :
+word_list! {
+    ident : AOSP_MODERN_GREEK, metadata : crate
+    ::WordListMetadata::new("aosp_modern_greek", Some("Grek"), Some("el")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/el_Grek.txt",
     ".br")),
 }
@@ -272,11 +242,9 @@ pub static AOSP_MODERN_GREEK: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-en"))
 )]
-wordlist! {
-    ident : AOSP_ENGLISH_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_english_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("en")), }, bytes :
+word_list! {
+    ident : AOSP_ENGLISH_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_english_latin", Some("Latn"), Some("en")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/en_Latn.txt",
     ".br")),
 }
@@ -290,11 +258,9 @@ pub static AOSP_ENGLISH_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-es"))
 )]
-wordlist! {
-    ident : AOSP_SPANISH_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_spanish_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("es")), }, bytes :
+word_list! {
+    ident : AOSP_SPANISH_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_spanish_latin", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/es_Latn.txt",
     ".br")),
 }
@@ -308,11 +274,9 @@ pub static AOSP_SPANISH_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-et"))
 )]
-wordlist! {
-    ident : AOSP_ESTONIAN_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_estonian_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("et")), }, bytes :
+word_list! {
+    ident : AOSP_ESTONIAN_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_estonian_latin", Some("Latn"), Some("et")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/et_Latn.txt",
     ".br")),
 }
@@ -326,11 +290,9 @@ pub static AOSP_ESTONIAN_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-eu"))
 )]
-wordlist! {
-    ident : AOSP_BASQUE_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_basque_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("eu")), }, bytes :
+word_list! {
+    ident : AOSP_BASQUE_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_basque_latin", Some("Latn"), Some("eu")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/eu_Latn.txt",
     ".br")),
 }
@@ -344,11 +306,9 @@ pub static AOSP_BASQUE_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-arab", feature = "lang-fa"))
 )]
-wordlist! {
-    ident : AOSP_PERSIAN_ARABIC, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_persian_arabic"), script :
-    Some(std::borrow::Cow::Borrowed("Arab")), language :
-    Some(std::borrow::Cow::Borrowed("fa")), }, bytes :
+word_list! {
+    ident : AOSP_PERSIAN_ARABIC, metadata : crate
+    ::WordListMetadata::new("aosp_persian_arabic", Some("Arab"), Some("fa")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/fa_Arab.txt",
     ".br")),
 }
@@ -362,11 +322,9 @@ pub static AOSP_PERSIAN_ARABIC: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-fi"))
 )]
-wordlist! {
-    ident : AOSP_FINNISH_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_finnish_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("fi")), }, bytes :
+word_list! {
+    ident : AOSP_FINNISH_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_finnish_latin", Some("Latn"), Some("fi")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/fi_Latn.txt",
     ".br")),
 }
@@ -380,11 +338,9 @@ pub static AOSP_FINNISH_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-fr"))
 )]
-wordlist! {
-    ident : AOSP_FRENCH_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_french_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("fr")), }, bytes :
+word_list! {
+    ident : AOSP_FRENCH_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_french_latin", Some("Latn"), Some("fr")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/fr_Latn.txt",
     ".br")),
 }
@@ -398,11 +354,9 @@ pub static AOSP_FRENCH_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-gl"))
 )]
-wordlist! {
-    ident : AOSP_GALICIAN_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_galician_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("gl")), }, bytes :
+word_list! {
+    ident : AOSP_GALICIAN_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_galician_latin", Some("Latn"), Some("gl")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/gl_Latn.txt",
     ".br")),
 }
@@ -416,11 +370,9 @@ pub static AOSP_GALICIAN_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-gujr", feature = "lang-gu"))
 )]
-wordlist! {
-    ident : AOSP_GUJARATI, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_gujarati"), script :
-    Some(std::borrow::Cow::Borrowed("Gujr")), language :
-    Some(std::borrow::Cow::Borrowed("gu")), }, bytes :
+word_list! {
+    ident : AOSP_GUJARATI, metadata : crate ::WordListMetadata::new("aosp_gujarati",
+    Some("Gujr"), Some("gu")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/gu_Gujr.txt",
     ".br")),
 }
@@ -434,11 +386,9 @@ pub static AOSP_GUJARATI: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-deva", feature = "lang-hi"))
 )]
-wordlist! {
-    ident : AOSP_HINDI_DEVANAGARI, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_hindi_devanagari"), script :
-    Some(std::borrow::Cow::Borrowed("Deva")), language :
-    Some(std::borrow::Cow::Borrowed("hi")), }, bytes :
+word_list! {
+    ident : AOSP_HINDI_DEVANAGARI, metadata : crate
+    ::WordListMetadata::new("aosp_hindi_devanagari", Some("Deva"), Some("hi")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/hi_Deva.txt",
     ".br")),
 }
@@ -452,11 +402,9 @@ pub static AOSP_HINDI_DEVANAGARI: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-hi"))
 )]
-wordlist! {
-    ident : AOSP_HINDI_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_hindi_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("hi")), }, bytes :
+word_list! {
+    ident : AOSP_HINDI_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_hindi_latin", Some("Latn"), Some("hi")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/hi_Latn.txt",
     ".br")),
 }
@@ -470,11 +418,9 @@ pub static AOSP_HINDI_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-hr"))
 )]
-wordlist! {
-    ident : AOSP_CROATIAN_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_croatian_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("hr")), }, bytes :
+word_list! {
+    ident : AOSP_CROATIAN_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_croatian_latin", Some("Latn"), Some("hr")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/hr_Latn.txt",
     ".br")),
 }
@@ -488,11 +434,9 @@ pub static AOSP_CROATIAN_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-hu"))
 )]
-wordlist! {
-    ident : AOSP_HUNGARIAN_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_hungarian_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("hu")), }, bytes :
+word_list! {
+    ident : AOSP_HUNGARIAN_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_hungarian_latin", Some("Latn"), Some("hu")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/hu_Latn.txt",
     ".br")),
 }
@@ -506,11 +450,9 @@ pub static AOSP_HUNGARIAN_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-armn", feature = "lang-hy"))
 )]
-wordlist! {
-    ident : AOSP_ARMENIAN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_armenian"), script :
-    Some(std::borrow::Cow::Borrowed("Armn")), language :
-    Some(std::borrow::Cow::Borrowed("hy")), }, bytes :
+word_list! {
+    ident : AOSP_ARMENIAN, metadata : crate ::WordListMetadata::new("aosp_armenian",
+    Some("Armn"), Some("hy")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/hy_Armn.txt",
     ".br")),
 }
@@ -524,11 +466,9 @@ pub static AOSP_ARMENIAN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-is"))
 )]
-wordlist! {
-    ident : AOSP_ICELANDIC_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_icelandic_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("is")), }, bytes :
+word_list! {
+    ident : AOSP_ICELANDIC_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_icelandic_latin", Some("Latn"), Some("is")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/is_Latn.txt",
     ".br")),
 }
@@ -542,11 +482,9 @@ pub static AOSP_ICELANDIC_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-it"))
 )]
-wordlist! {
-    ident : AOSP_ITALIAN_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_italian_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("it")), }, bytes :
+word_list! {
+    ident : AOSP_ITALIAN_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_italian_latin", Some("Latn"), Some("it")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/it_Latn.txt",
     ".br")),
 }
@@ -560,11 +498,9 @@ pub static AOSP_ITALIAN_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-hira", feature = "lang-ja"))
 )]
-wordlist! {
-    ident : AOSP_JAPANESE_HIRAGANA, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_japanese_hiragana"), script :
-    Some(std::borrow::Cow::Borrowed("Hira")), language :
-    Some(std::borrow::Cow::Borrowed("ja")), }, bytes :
+word_list! {
+    ident : AOSP_JAPANESE_HIRAGANA, metadata : crate
+    ::WordListMetadata::new("aosp_japanese_hiragana", Some("Hira"), Some("ja")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/ja_Hira.txt",
     ".br")),
 }
@@ -578,11 +514,9 @@ pub static AOSP_JAPANESE_HIRAGANA: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-kana", feature = "lang-ja"))
 )]
-wordlist! {
-    ident : AOSP_JAPANESE_KATAKANA, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_japanese_katakana"), script :
-    Some(std::borrow::Cow::Borrowed("Kana")), language :
-    Some(std::borrow::Cow::Borrowed("ja")), }, bytes :
+word_list! {
+    ident : AOSP_JAPANESE_KATAKANA, metadata : crate
+    ::WordListMetadata::new("aosp_japanese_katakana", Some("Kana"), Some("ja")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/ja_Kana.txt",
     ".br")),
 }
@@ -596,11 +530,9 @@ pub static AOSP_JAPANESE_KATAKANA: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-geor", feature = "lang-ka"))
 )]
-wordlist! {
-    ident : AOSP_GEORGIAN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_georgian"), script :
-    Some(std::borrow::Cow::Borrowed("Geor")), language :
-    Some(std::borrow::Cow::Borrowed("ka")), }, bytes :
+word_list! {
+    ident : AOSP_GEORGIAN, metadata : crate ::WordListMetadata::new("aosp_georgian",
+    Some("Geor"), Some("ka")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/ka_Geor.txt",
     ".br")),
 }
@@ -614,11 +546,9 @@ pub static AOSP_GEORGIAN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-cyrl", feature = "lang-kk"))
 )]
-wordlist! {
-    ident : AOSP_KAZAKH_CYRILLIC, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_kazakh_cyrillic"), script :
-    Some(std::borrow::Cow::Borrowed("Cyrl")), language :
-    Some(std::borrow::Cow::Borrowed("kk")), }, bytes :
+word_list! {
+    ident : AOSP_KAZAKH_CYRILLIC, metadata : crate
+    ::WordListMetadata::new("aosp_kazakh_cyrillic", Some("Cyrl"), Some("kk")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/kk_Cyrl.txt",
     ".br")),
 }
@@ -632,11 +562,9 @@ pub static AOSP_KAZAKH_CYRILLIC: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-kk"))
 )]
-wordlist! {
-    ident : AOSP_KAZAKH_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_kazakh_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("kk")), }, bytes :
+word_list! {
+    ident : AOSP_KAZAKH_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_kazakh_latin", Some("Latn"), Some("kk")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/kk_Latn.txt",
     ".br")),
 }
@@ -650,11 +578,9 @@ pub static AOSP_KAZAKH_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-khmr", feature = "lang-km"))
 )]
-wordlist! {
-    ident : AOSP_CENTRAL_KHMER, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_central_khmer"), script :
-    Some(std::borrow::Cow::Borrowed("Khmr")), language :
-    Some(std::borrow::Cow::Borrowed("km")), }, bytes :
+word_list! {
+    ident : AOSP_CENTRAL_KHMER, metadata : crate
+    ::WordListMetadata::new("aosp_central_khmer", Some("Khmr"), Some("km")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/km_Khmr.txt",
     ".br")),
 }
@@ -668,11 +594,9 @@ pub static AOSP_CENTRAL_KHMER: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-knda", feature = "lang-kn"))
 )]
-wordlist! {
-    ident : AOSP_KANNADA, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_kannada"), script :
-    Some(std::borrow::Cow::Borrowed("Knda")), language :
-    Some(std::borrow::Cow::Borrowed("kn")), }, bytes :
+word_list! {
+    ident : AOSP_KANNADA, metadata : crate ::WordListMetadata::new("aosp_kannada",
+    Some("Knda"), Some("kn")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/kn_Knda.txt",
     ".br")),
 }
@@ -686,11 +610,9 @@ pub static AOSP_KANNADA: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-hang", feature = "lang-ko"))
 )]
-wordlist! {
-    ident : AOSP_KOREAN_HANGUL, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_korean_hangul"), script :
-    Some(std::borrow::Cow::Borrowed("Hang")), language :
-    Some(std::borrow::Cow::Borrowed("ko")), }, bytes :
+word_list! {
+    ident : AOSP_KOREAN_HANGUL, metadata : crate
+    ::WordListMetadata::new("aosp_korean_hangul", Some("Hang"), Some("ko")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/ko_Hang.txt",
     ".br")),
 }
@@ -704,11 +626,9 @@ pub static AOSP_KOREAN_HANGUL: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-cyrl", feature = "lang-ky"))
 )]
-wordlist! {
-    ident : AOSP_KIRGHIZ_CYRILLIC, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_kirghiz_cyrillic"), script :
-    Some(std::borrow::Cow::Borrowed("Cyrl")), language :
-    Some(std::borrow::Cow::Borrowed("ky")), }, bytes :
+word_list! {
+    ident : AOSP_KIRGHIZ_CYRILLIC, metadata : crate
+    ::WordListMetadata::new("aosp_kirghiz_cyrillic", Some("Cyrl"), Some("ky")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/ky_Cyrl.txt",
     ".br")),
 }
@@ -722,11 +642,9 @@ pub static AOSP_KIRGHIZ_CYRILLIC: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-ky"))
 )]
-wordlist! {
-    ident : AOSP_KIRGHIZ_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_kirghiz_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("ky")), }, bytes :
+word_list! {
+    ident : AOSP_KIRGHIZ_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_kirghiz_latin", Some("Latn"), Some("ky")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/ky_Latn.txt",
     ".br")),
 }
@@ -740,13 +658,10 @@ pub static AOSP_KIRGHIZ_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-laoo", feature = "lang-lo"))
 )]
-wordlist! {
-    ident : AOSP_LAO, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_lao"), script :
-    Some(std::borrow::Cow::Borrowed("Laoo")), language :
-    Some(std::borrow::Cow::Borrowed("lo")), }, bytes :
-    ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/lo_Laoo.txt",
-    ".br")),
+word_list! {
+    ident : AOSP_LAO, metadata : crate ::WordListMetadata::new("aosp_lao", Some("Laoo"),
+    Some("lo")), bytes : ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"),
+    '/', "aosp/lo_Laoo.txt", ".br")),
 }
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-laoo", feature = "lang-lo")))]
 ///The
@@ -758,11 +673,9 @@ pub static AOSP_LAO: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-lt"))
 )]
-wordlist! {
-    ident : AOSP_LITHUANIAN_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_lithuanian_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("lt")), }, bytes :
+word_list! {
+    ident : AOSP_LITHUANIAN_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_lithuanian_latin", Some("Latn"), Some("lt")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/lt_Latn.txt",
     ".br")),
 }
@@ -776,11 +689,9 @@ pub static AOSP_LITHUANIAN_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-lv"))
 )]
-wordlist! {
-    ident : AOSP_LATVIAN_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_latvian_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("lv")), }, bytes :
+word_list! {
+    ident : AOSP_LATVIAN_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_latvian_latin", Some("Latn"), Some("lv")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/lv_Latn.txt",
     ".br")),
 }
@@ -794,13 +705,11 @@ pub static AOSP_LATVIAN_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-cyrl", feature = "lang-mk"))
 )]
-wordlist! {
-    ident : AOSP_MACEDONIAN_CYRILLIC, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_macedonian_cyrillic"), script :
-    Some(std::borrow::Cow::Borrowed("Cyrl")), language :
-    Some(std::borrow::Cow::Borrowed("mk")), }, bytes :
-    ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/mk_Cyrl.txt",
-    ".br")),
+word_list! {
+    ident : AOSP_MACEDONIAN_CYRILLIC, metadata : crate
+    ::WordListMetadata::new("aosp_macedonian_cyrillic", Some("Cyrl"), Some("mk")), bytes
+    : ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
+    "aosp/mk_Cyrl.txt", ".br")),
 }
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-cyrl", feature = "lang-mk")))]
 ///The
@@ -812,11 +721,9 @@ pub static AOSP_MACEDONIAN_CYRILLIC: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-mlym", feature = "lang-ml"))
 )]
-wordlist! {
-    ident : AOSP_MALAYALAM, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_malayalam"), script :
-    Some(std::borrow::Cow::Borrowed("Mlym")), language :
-    Some(std::borrow::Cow::Borrowed("ml")), }, bytes :
+word_list! {
+    ident : AOSP_MALAYALAM, metadata : crate ::WordListMetadata::new("aosp_malayalam",
+    Some("Mlym"), Some("ml")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/ml_Mlym.txt",
     ".br")),
 }
@@ -830,11 +737,9 @@ pub static AOSP_MALAYALAM: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-cyrl", feature = "lang-mn"))
 )]
-wordlist! {
-    ident : AOSP_MONGOLIAN_CYRILLIC, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_mongolian_cyrillic"), script :
-    Some(std::borrow::Cow::Borrowed("Cyrl")), language :
-    Some(std::borrow::Cow::Borrowed("mn")), }, bytes :
+word_list! {
+    ident : AOSP_MONGOLIAN_CYRILLIC, metadata : crate
+    ::WordListMetadata::new("aosp_mongolian_cyrillic", Some("Cyrl"), Some("mn")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/mn_Cyrl.txt",
     ".br")),
 }
@@ -848,11 +753,9 @@ pub static AOSP_MONGOLIAN_CYRILLIC: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-deva", feature = "lang-mr"))
 )]
-wordlist! {
-    ident : AOSP_MARATHI_DEVANAGARI, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_marathi_devanagari"), script :
-    Some(std::borrow::Cow::Borrowed("Deva")), language :
-    Some(std::borrow::Cow::Borrowed("mr")), }, bytes :
+word_list! {
+    ident : AOSP_MARATHI_DEVANAGARI, metadata : crate
+    ::WordListMetadata::new("aosp_marathi_devanagari", Some("Deva"), Some("mr")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/mr_Deva.txt",
     ".br")),
 }
@@ -864,12 +767,10 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_MARATHI_DEVANAGARI: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "aosp", feature = "lang-ms")))]
-wordlist! {
-    ident : AOSP_MALAY, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_malay"), script : None, language :
-    Some(std::borrow::Cow::Borrowed("ms")), }, bytes :
-    ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/ms.txt",
-    ".br")),
+word_list! {
+    ident : AOSP_MALAY, metadata : crate ::WordListMetadata::new("aosp_malay", None,
+    Some("ms")), bytes : ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"),
+    '/', "aosp/ms.txt", ".br")),
 }
 #[cfg(all(docsrs, any(feature = "aosp", feature = "lang-ms")))]
 ///The
@@ -881,11 +782,9 @@ pub static AOSP_MALAY: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-mymr", feature = "lang-my"))
 )]
-wordlist! {
-    ident : AOSP_BURMESE_MYANMAR, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_burmese_myanmar"), script :
-    Some(std::borrow::Cow::Borrowed("Mymr")), language :
-    Some(std::borrow::Cow::Borrowed("my")), }, bytes :
+word_list! {
+    ident : AOSP_BURMESE_MYANMAR, metadata : crate
+    ::WordListMetadata::new("aosp_burmese_myanmar", Some("Mymr"), Some("my")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/my_Mymr.txt",
     ".br")),
 }
@@ -899,13 +798,11 @@ pub static AOSP_BURMESE_MYANMAR: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-nb"))
 )]
-wordlist! {
-    ident : AOSP_NORWEGIAN_BOKMÅL_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_norwegian_bokmål_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("nb")), }, bytes :
-    ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/nb_Latn.txt",
-    ".br")),
+word_list! {
+    ident : AOSP_NORWEGIAN_BOKMÅL_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_norwegian_bokmål_latin", Some("Latn"), Some("nb")),
+    bytes : ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
+    "aosp/nb_Latn.txt", ".br")),
 }
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-nb")))]
 ///The
@@ -917,11 +814,9 @@ pub static AOSP_NORWEGIAN_BOKMÅL_LATIN: crate::WordList = crate::WordList::stub
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-deva", feature = "lang-ne"))
 )]
-wordlist! {
-    ident : AOSP_NEPALI_DEVANAGARI, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_nepali_devanagari"), script :
-    Some(std::borrow::Cow::Borrowed("Deva")), language :
-    Some(std::borrow::Cow::Borrowed("ne")), }, bytes :
+word_list! {
+    ident : AOSP_NEPALI_DEVANAGARI, metadata : crate
+    ::WordListMetadata::new("aosp_nepali_devanagari", Some("Deva"), Some("ne")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/ne_Deva.txt",
     ".br")),
 }
@@ -935,11 +830,9 @@ pub static AOSP_NEPALI_DEVANAGARI: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-nl"))
 )]
-wordlist! {
-    ident : AOSP_DUTCH_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_dutch_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("nl")), }, bytes :
+word_list! {
+    ident : AOSP_DUTCH_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_dutch_latin", Some("Latn"), Some("nl")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/nl_Latn.txt",
     ".br")),
 }
@@ -953,11 +846,9 @@ pub static AOSP_DUTCH_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-orya", feature = "lang-or"))
 )]
-wordlist! {
-    ident : AOSP_ORIYA, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_oriya"), script :
-    Some(std::borrow::Cow::Borrowed("Orya")), language :
-    Some(std::borrow::Cow::Borrowed("or")), }, bytes :
+word_list! {
+    ident : AOSP_ORIYA, metadata : crate ::WordListMetadata::new("aosp_oriya",
+    Some("Orya"), Some("or")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/or_Orya.txt",
     ".br")),
 }
@@ -971,11 +862,9 @@ pub static AOSP_ORIYA: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-guru", feature = "lang-pa"))
 )]
-wordlist! {
-    ident : AOSP_PANJABI_GURMUKHI, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_panjabi_gurmukhi"), script :
-    Some(std::borrow::Cow::Borrowed("Guru")), language :
-    Some(std::borrow::Cow::Borrowed("pa")), }, bytes :
+word_list! {
+    ident : AOSP_PANJABI_GURMUKHI, metadata : crate
+    ::WordListMetadata::new("aosp_panjabi_gurmukhi", Some("Guru"), Some("pa")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/pa_Guru.txt",
     ".br")),
 }
@@ -989,11 +878,9 @@ pub static AOSP_PANJABI_GURMUKHI: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-pl"))
 )]
-wordlist! {
-    ident : AOSP_POLISH_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_polish_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("pl")), }, bytes :
+word_list! {
+    ident : AOSP_POLISH_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_polish_latin", Some("Latn"), Some("pl")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/pl_Latn.txt",
     ".br")),
 }
@@ -1007,11 +894,9 @@ pub static AOSP_POLISH_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-pt"))
 )]
-wordlist! {
-    ident : AOSP_PORTUGUESE_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_portuguese_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("pt")), }, bytes :
+word_list! {
+    ident : AOSP_PORTUGUESE_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_portuguese_latin", Some("Latn"), Some("pt")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/pt_Latn.txt",
     ".br")),
 }
@@ -1025,11 +910,9 @@ pub static AOSP_PORTUGUESE_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-rm"))
 )]
-wordlist! {
-    ident : AOSP_ROMANSH_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_romansh_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("rm")), }, bytes :
+word_list! {
+    ident : AOSP_ROMANSH_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_romansh_latin", Some("Latn"), Some("rm")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/rm_Latn.txt",
     ".br")),
 }
@@ -1043,11 +926,9 @@ pub static AOSP_ROMANSH_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-ro"))
 )]
-wordlist! {
-    ident : AOSP_ROMANIAN_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_romanian_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("ro")), }, bytes :
+word_list! {
+    ident : AOSP_ROMANIAN_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_romanian_latin", Some("Latn"), Some("ro")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/ro_Latn.txt",
     ".br")),
 }
@@ -1061,11 +942,9 @@ pub static AOSP_ROMANIAN_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-cyrl", feature = "lang-ru"))
 )]
-wordlist! {
-    ident : AOSP_RUSSIAN_CYRILLIC, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_russian_cyrillic"), script :
-    Some(std::borrow::Cow::Borrowed("Cyrl")), language :
-    Some(std::borrow::Cow::Borrowed("ru")), }, bytes :
+word_list! {
+    ident : AOSP_RUSSIAN_CYRILLIC, metadata : crate
+    ::WordListMetadata::new("aosp_russian_cyrillic", Some("Cyrl"), Some("ru")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/ru_Cyrl.txt",
     ".br")),
 }
@@ -1079,11 +958,9 @@ pub static AOSP_RUSSIAN_CYRILLIC: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-sinh", feature = "lang-si"))
 )]
-wordlist! {
-    ident : AOSP_SINHALA, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_sinhala"), script :
-    Some(std::borrow::Cow::Borrowed("Sinh")), language :
-    Some(std::borrow::Cow::Borrowed("si")), }, bytes :
+word_list! {
+    ident : AOSP_SINHALA, metadata : crate ::WordListMetadata::new("aosp_sinhala",
+    Some("Sinh"), Some("si")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/si_Sinh.txt",
     ".br")),
 }
@@ -1097,11 +974,9 @@ pub static AOSP_SINHALA: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-sk"))
 )]
-wordlist! {
-    ident : AOSP_SLOVAK_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_slovak_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("sk")), }, bytes :
+word_list! {
+    ident : AOSP_SLOVAK_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_slovak_latin", Some("Latn"), Some("sk")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/sk_Latn.txt",
     ".br")),
 }
@@ -1115,11 +990,9 @@ pub static AOSP_SLOVAK_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-sl"))
 )]
-wordlist! {
-    ident : AOSP_SLOVENIAN_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_slovenian_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("sl")), }, bytes :
+word_list! {
+    ident : AOSP_SLOVENIAN_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_slovenian_latin", Some("Latn"), Some("sl")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/sl_Latn.txt",
     ".br")),
 }
@@ -1133,11 +1006,9 @@ pub static AOSP_SLOVENIAN_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-sq"))
 )]
-wordlist! {
-    ident : AOSP_ALBANIAN_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_albanian_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("sq")), }, bytes :
+word_list! {
+    ident : AOSP_ALBANIAN_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_albanian_latin", Some("Latn"), Some("sq")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/sq_Latn.txt",
     ".br")),
 }
@@ -1151,11 +1022,9 @@ pub static AOSP_ALBANIAN_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-cyrl", feature = "lang-sr"))
 )]
-wordlist! {
-    ident : AOSP_SERBIAN_CYRILLIC, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_serbian_cyrillic"), script :
-    Some(std::borrow::Cow::Borrowed("Cyrl")), language :
-    Some(std::borrow::Cow::Borrowed("sr")), }, bytes :
+word_list! {
+    ident : AOSP_SERBIAN_CYRILLIC, metadata : crate
+    ::WordListMetadata::new("aosp_serbian_cyrillic", Some("Cyrl"), Some("sr")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/sr_Cyrl.txt",
     ".br")),
 }
@@ -1169,11 +1038,9 @@ pub static AOSP_SERBIAN_CYRILLIC: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-sr"))
 )]
-wordlist! {
-    ident : AOSP_SERBIAN_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_serbian_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("sr")), }, bytes :
+word_list! {
+    ident : AOSP_SERBIAN_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_serbian_latin", Some("Latn"), Some("sr")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/sr_Latn.txt",
     ".br")),
 }
@@ -1187,11 +1054,9 @@ pub static AOSP_SERBIAN_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-sv"))
 )]
-wordlist! {
-    ident : AOSP_SWEDISH_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_swedish_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("sv")), }, bytes :
+word_list! {
+    ident : AOSP_SWEDISH_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_swedish_latin", Some("Latn"), Some("sv")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/sv_Latn.txt",
     ".br")),
 }
@@ -1205,11 +1070,9 @@ pub static AOSP_SWEDISH_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-sw"))
 )]
-wordlist! {
-    ident : AOSP_SWAHILI_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_swahili_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("sw")), }, bytes :
+word_list! {
+    ident : AOSP_SWAHILI_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_swahili_latin", Some("Latn"), Some("sw")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/sw_Latn.txt",
     ".br")),
 }
@@ -1223,11 +1086,9 @@ pub static AOSP_SWAHILI_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-taml", feature = "lang-ta"))
 )]
-wordlist! {
-    ident : AOSP_TAMIL, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_tamil"), script :
-    Some(std::borrow::Cow::Borrowed("Taml")), language :
-    Some(std::borrow::Cow::Borrowed("ta")), }, bytes :
+word_list! {
+    ident : AOSP_TAMIL, metadata : crate ::WordListMetadata::new("aosp_tamil",
+    Some("Taml"), Some("ta")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/ta_Taml.txt",
     ".br")),
 }
@@ -1241,11 +1102,9 @@ pub static AOSP_TAMIL: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-telu", feature = "lang-te"))
 )]
-wordlist! {
-    ident : AOSP_TELUGU, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_telugu"), script :
-    Some(std::borrow::Cow::Borrowed("Telu")), language :
-    Some(std::borrow::Cow::Borrowed("te")), }, bytes :
+word_list! {
+    ident : AOSP_TELUGU, metadata : crate ::WordListMetadata::new("aosp_telugu",
+    Some("Telu"), Some("te")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/te_Telu.txt",
     ".br")),
 }
@@ -1259,11 +1118,9 @@ pub static AOSP_TELUGU: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-thai", feature = "lang-th"))
 )]
-wordlist! {
-    ident : AOSP_THAI, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_thai"), script :
-    Some(std::borrow::Cow::Borrowed("Thai")), language :
-    Some(std::borrow::Cow::Borrowed("th")), }, bytes :
+word_list! {
+    ident : AOSP_THAI, metadata : crate ::WordListMetadata::new("aosp_thai",
+    Some("Thai"), Some("th")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/th_Thai.txt",
     ".br")),
 }
@@ -1275,12 +1132,10 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_THAI: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "aosp", feature = "lang-tl")))]
-wordlist! {
-    ident : AOSP_TAGALOG, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_tagalog"), script : None, language :
-    Some(std::borrow::Cow::Borrowed("tl")), }, bytes :
-    ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/tl.txt",
-    ".br")),
+word_list! {
+    ident : AOSP_TAGALOG, metadata : crate ::WordListMetadata::new("aosp_tagalog", None,
+    Some("tl")), bytes : ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"),
+    '/', "aosp/tl.txt", ".br")),
 }
 #[cfg(all(docsrs, any(feature = "aosp", feature = "lang-tl")))]
 ///The
@@ -1292,11 +1147,9 @@ pub static AOSP_TAGALOG: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-tr"))
 )]
-wordlist! {
-    ident : AOSP_TURKISH_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_turkish_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("tr")), }, bytes :
+word_list! {
+    ident : AOSP_TURKISH_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_turkish_latin", Some("Latn"), Some("tr")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/tr_Latn.txt",
     ".br")),
 }
@@ -1310,11 +1163,9 @@ pub static AOSP_TURKISH_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-cyrl", feature = "lang-uk"))
 )]
-wordlist! {
-    ident : AOSP_UKRAINIAN_CYRILLIC, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_ukrainian_cyrillic"), script :
-    Some(std::borrow::Cow::Borrowed("Cyrl")), language :
-    Some(std::borrow::Cow::Borrowed("uk")), }, bytes :
+word_list! {
+    ident : AOSP_UKRAINIAN_CYRILLIC, metadata : crate
+    ::WordListMetadata::new("aosp_ukrainian_cyrillic", Some("Cyrl"), Some("uk")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/uk_Cyrl.txt",
     ".br")),
 }
@@ -1328,11 +1179,9 @@ pub static AOSP_UKRAINIAN_CYRILLIC: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-arab", feature = "lang-ur"))
 )]
-wordlist! {
-    ident : AOSP_URDU_ARABIC, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_urdu_arabic"), script :
-    Some(std::borrow::Cow::Borrowed("Arab")), language :
-    Some(std::borrow::Cow::Borrowed("ur")), }, bytes :
+word_list! {
+    ident : AOSP_URDU_ARABIC, metadata : crate
+    ::WordListMetadata::new("aosp_urdu_arabic", Some("Arab"), Some("ur")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/ur_Arab.txt",
     ".br")),
 }
@@ -1346,11 +1195,9 @@ pub static AOSP_URDU_ARABIC: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-uz"))
 )]
-wordlist! {
-    ident : AOSP_UZBEK_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_uzbek_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("uz")), }, bytes :
+word_list! {
+    ident : AOSP_UZBEK_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_uzbek_latin", Some("Latn"), Some("uz")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/uz_Latn.txt",
     ".br")),
 }
@@ -1364,11 +1211,9 @@ pub static AOSP_UZBEK_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-vi"))
 )]
-wordlist! {
-    ident : AOSP_VIETNAMESE_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_vietnamese_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("vi")), }, bytes :
+word_list! {
+    ident : AOSP_VIETNAMESE_LATIN, metadata : crate
+    ::WordListMetadata::new("aosp_vietnamese_latin", Some("Latn"), Some("vi")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/vi_Latn.txt",
     ".br")),
 }
@@ -1382,11 +1227,9 @@ pub static AOSP_VIETNAMESE_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-hani", feature = "lang-zh"))
 )]
-wordlist! {
-    ident : AOSP_CHINESE_HAN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_chinese_han"), script :
-    Some(std::borrow::Cow::Borrowed("Hani")), language :
-    Some(std::borrow::Cow::Borrowed("zh")), }, bytes :
+word_list! {
+    ident : AOSP_CHINESE_HAN, metadata : crate
+    ::WordListMetadata::new("aosp_chinese_han", Some("Hani"), Some("zh")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/zh_Hani.txt",
     ".br")),
 }
@@ -1400,11 +1243,9 @@ pub static AOSP_CHINESE_HAN: crate::WordList = crate::WordList::stub();
 #[cfg(
     all(not(docsrs), any(feature = "aosp", feature = "script-latn", feature = "lang-zu"))
 )]
-wordlist! {
-    ident : AOSP_ZULU_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("aosp_zulu_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language :
-    Some(std::borrow::Cow::Borrowed("zu")), }, bytes :
+word_list! {
+    ident : AOSP_ZULU_LATIN, metadata : crate ::WordListMetadata::new("aosp_zulu_latin",
+    Some("Latn"), Some("zu")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/', "aosp/zu_Latn.txt",
     ".br")),
 }
@@ -1416,10 +1257,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_ZULU_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-adlm")))]
-wordlist! {
-    ident : DIFFENATOR_ADLAM, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_adlam"), script :
-    Some(std::borrow::Cow::Borrowed("Adlm")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_ADLAM, metadata : crate
+    ::WordListMetadata::new("diffenator_adlam", Some("Adlm"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Adlam.txt", ".br")),
 }
@@ -1431,10 +1271,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_ADLAM: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-arab")))]
-wordlist! {
-    ident : DIFFENATOR_ARABIC, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_arabic"), script :
-    Some(std::borrow::Cow::Borrowed("Arab")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_ARABIC, metadata : crate
+    ::WordListMetadata::new("diffenator_arabic", Some("Arab"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Arabic.txt", ".br")),
 }
@@ -1446,10 +1285,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_ARABIC: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-armn")))]
-wordlist! {
-    ident : DIFFENATOR_ARMENIAN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_armenian"), script :
-    Some(std::borrow::Cow::Borrowed("Armn")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_ARMENIAN, metadata : crate
+    ::WordListMetadata::new("diffenator_armenian", Some("Armn"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Armenian.txt", ".br")),
 }
@@ -1461,10 +1299,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_ARMENIAN: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-avst")))]
-wordlist! {
-    ident : DIFFENATOR_AVESTAN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_avestan"), script :
-    Some(std::borrow::Cow::Borrowed("Avst")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_AVESTAN, metadata : crate
+    ::WordListMetadata::new("diffenator_avestan", Some("Avst"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Avestan.txt", ".br")),
 }
@@ -1476,10 +1313,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_AVESTAN: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-beng")))]
-wordlist! {
-    ident : DIFFENATOR_BENGALI, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_bengali"), script :
-    Some(std::borrow::Cow::Borrowed("Beng")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_BENGALI, metadata : crate
+    ::WordListMetadata::new("diffenator_bengali", Some("Beng"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Bengali.txt", ".br")),
 }
@@ -1491,10 +1327,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_BENGALI: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-bopo")))]
-wordlist! {
-    ident : DIFFENATOR_BOPOMOFO, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_bopomofo"), script :
-    Some(std::borrow::Cow::Borrowed("Bopo")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_BOPOMOFO, metadata : crate
+    ::WordListMetadata::new("diffenator_bopomofo", Some("Bopo"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Bopomofo.txt", ".br")),
 }
@@ -1506,11 +1341,10 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_BOPOMOFO: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-cans")))]
-wordlist! {
-    ident : DIFFENATOR_CANADIAN_ABORIGINAL, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_canadian_aboriginal"), script :
-    Some(std::borrow::Cow::Borrowed("Cans")), language : None, }, bytes :
-    ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
+word_list! {
+    ident : DIFFENATOR_CANADIAN_ABORIGINAL, metadata : crate
+    ::WordListMetadata::new("diffenator_canadian_aboriginal", Some("Cans"), None), bytes
+    : ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Canadian_Aboriginal.txt", ".br")),
 }
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-cans")))]
@@ -1521,10 +1355,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_CANADIAN_ABORIGINAL: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-cakm")))]
-wordlist! {
-    ident : DIFFENATOR_CHAKMA, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_chakma"), script :
-    Some(std::borrow::Cow::Borrowed("Cakm")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_CHAKMA, metadata : crate
+    ::WordListMetadata::new("diffenator_chakma", Some("Cakm"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Chakma.txt", ".br")),
 }
@@ -1536,10 +1369,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_CHAKMA: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-cher")))]
-wordlist! {
-    ident : DIFFENATOR_CHEROKEE, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_cherokee"), script :
-    Some(std::borrow::Cow::Borrowed("Cher")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_CHEROKEE, metadata : crate
+    ::WordListMetadata::new("diffenator_cherokee", Some("Cher"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Cherokee.txt", ".br")),
 }
@@ -1551,10 +1383,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_CHEROKEE: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-zyyy")))]
-wordlist! {
-    ident : DIFFENATOR_COMMON, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_common"), script :
-    Some(std::borrow::Cow::Borrowed("Zyyy")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_COMMON, metadata : crate
+    ::WordListMetadata::new("diffenator_common", Some("Zyyy"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Common.txt", ".br")),
 }
@@ -1566,10 +1397,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_COMMON: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-cyrl")))]
-wordlist! {
-    ident : DIFFENATOR_CYRILLIC, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_cyrillic"), script :
-    Some(std::borrow::Cow::Borrowed("Cyrl")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_CYRILLIC, metadata : crate
+    ::WordListMetadata::new("diffenator_cyrillic", Some("Cyrl"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Cyrillic.txt", ".br")),
 }
@@ -1581,10 +1411,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_CYRILLIC: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-deva")))]
-wordlist! {
-    ident : DIFFENATOR_DEVANAGARI, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_devanagari"), script :
-    Some(std::borrow::Cow::Borrowed("Deva")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_DEVANAGARI, metadata : crate
+    ::WordListMetadata::new("diffenator_devanagari", Some("Deva"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Devanagari.txt", ".br")),
 }
@@ -1596,10 +1425,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_DEVANAGARI: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-ethi")))]
-wordlist! {
-    ident : DIFFENATOR_ETHIOPIC, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_ethiopic"), script :
-    Some(std::borrow::Cow::Borrowed("Ethi")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_ETHIOPIC, metadata : crate
+    ::WordListMetadata::new("diffenator_ethiopic", Some("Ethi"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Ethiopic.txt", ".br")),
 }
@@ -1611,10 +1439,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_ETHIOPIC: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-geor")))]
-wordlist! {
-    ident : DIFFENATOR_GEORGIAN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_georgian"), script :
-    Some(std::borrow::Cow::Borrowed("Geor")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_GEORGIAN, metadata : crate
+    ::WordListMetadata::new("diffenator_georgian", Some("Geor"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Georgian.txt", ".br")),
 }
@@ -1626,10 +1453,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_GEORGIAN: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-grek")))]
-wordlist! {
-    ident : DIFFENATOR_GREEK, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_greek"), script :
-    Some(std::borrow::Cow::Borrowed("Grek")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_GREEK, metadata : crate
+    ::WordListMetadata::new("diffenator_greek", Some("Grek"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Greek.txt", ".br")),
 }
@@ -1641,10 +1467,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_GREEK: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-gujr")))]
-wordlist! {
-    ident : DIFFENATOR_GUJARATI, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_gujarati"), script :
-    Some(std::borrow::Cow::Borrowed("Gujr")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_GUJARATI, metadata : crate
+    ::WordListMetadata::new("diffenator_gujarati", Some("Gujr"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Gujarati.txt", ".br")),
 }
@@ -1656,10 +1481,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_GUJARATI: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-guru")))]
-wordlist! {
-    ident : DIFFENATOR_GURMUKHI, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_gurmukhi"), script :
-    Some(std::borrow::Cow::Borrowed("Guru")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_GURMUKHI, metadata : crate
+    ::WordListMetadata::new("diffenator_gurmukhi", Some("Guru"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Gurmukhi.txt", ".br")),
 }
@@ -1671,10 +1495,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_GURMUKHI: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-hebr")))]
-wordlist! {
-    ident : DIFFENATOR_HEBREW, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_hebrew"), script :
-    Some(std::borrow::Cow::Borrowed("Hebr")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_HEBREW, metadata : crate
+    ::WordListMetadata::new("diffenator_hebrew", Some("Hebr"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Hebrew.txt", ".br")),
 }
@@ -1686,10 +1509,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_HEBREW: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-hira")))]
-wordlist! {
-    ident : DIFFENATOR_HIRAGANA, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_hiragana"), script :
-    Some(std::borrow::Cow::Borrowed("Hira")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_HIRAGANA, metadata : crate
+    ::WordListMetadata::new("diffenator_hiragana", Some("Hira"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Hiragana.txt", ".br")),
 }
@@ -1701,10 +1523,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_HIRAGANA: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-jpan")))]
-wordlist! {
-    ident : DIFFENATOR_JAPANESE, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_japanese"), script :
-    Some(std::borrow::Cow::Borrowed("Jpan")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_JAPANESE, metadata : crate
+    ::WordListMetadata::new("diffenator_japanese", Some("Jpan"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Japanese.txt", ".br")),
 }
@@ -1716,10 +1537,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_JAPANESE: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-kana")))]
-wordlist! {
-    ident : DIFFENATOR_KATAKANA, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_katakana"), script :
-    Some(std::borrow::Cow::Borrowed("Kana")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_KATAKANA, metadata : crate
+    ::WordListMetadata::new("diffenator_katakana", Some("Kana"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Katakana.txt", ".br")),
 }
@@ -1731,10 +1551,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_KATAKANA: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-khmr")))]
-wordlist! {
-    ident : DIFFENATOR_KHMER, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_khmer"), script :
-    Some(std::borrow::Cow::Borrowed("Khmr")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_KHMER, metadata : crate
+    ::WordListMetadata::new("diffenator_khmer", Some("Khmr"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Khmer.txt", ".br")),
 }
@@ -1746,10 +1565,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_KHMER: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-laoo")))]
-wordlist! {
-    ident : DIFFENATOR_LAO, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_lao"), script :
-    Some(std::borrow::Cow::Borrowed("Laoo")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_LAO, metadata : crate ::WordListMetadata::new("diffenator_lao",
+    Some("Laoo"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Lao.txt", ".br")),
 }
@@ -1761,10 +1579,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_LAO: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-latn")))]
-wordlist! {
-    ident : DIFFENATOR_LATIN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_latin"), script :
-    Some(std::borrow::Cow::Borrowed("Latn")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_LATIN, metadata : crate
+    ::WordListMetadata::new("diffenator_latin", Some("Latn"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Latin.txt", ".br")),
 }
@@ -1776,10 +1593,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_LATIN: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-lisu")))]
-wordlist! {
-    ident : DIFFENATOR_LISU, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_lisu"), script :
-    Some(std::borrow::Cow::Borrowed("Lisu")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_LISU, metadata : crate ::WordListMetadata::new("diffenator_lisu",
+    Some("Lisu"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Lisu.txt", ".br")),
 }
@@ -1791,10 +1607,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_LISU: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-mlym")))]
-wordlist! {
-    ident : DIFFENATOR_MALAYALAM, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_malayalam"), script :
-    Some(std::borrow::Cow::Borrowed("Mlym")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_MALAYALAM, metadata : crate
+    ::WordListMetadata::new("diffenator_malayalam", Some("Mlym"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Malayalam.txt", ".br")),
 }
@@ -1806,10 +1621,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_MALAYALAM: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-mong")))]
-wordlist! {
-    ident : DIFFENATOR_MONGOLIAN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_mongolian"), script :
-    Some(std::borrow::Cow::Borrowed("Mong")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_MONGOLIAN, metadata : crate
+    ::WordListMetadata::new("diffenator_mongolian", Some("Mong"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Mongolian.txt", ".br")),
 }
@@ -1821,10 +1635,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_MONGOLIAN: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-mymr")))]
-wordlist! {
-    ident : DIFFENATOR_MYANMAR, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_myanmar"), script :
-    Some(std::borrow::Cow::Borrowed("Mymr")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_MYANMAR, metadata : crate
+    ::WordListMetadata::new("diffenator_myanmar", Some("Mymr"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Myanmar.txt", ".br")),
 }
@@ -1836,10 +1649,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_MYANMAR: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-olck")))]
-wordlist! {
-    ident : DIFFENATOR_OL_CHIKI, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_ol_chiki"), script :
-    Some(std::borrow::Cow::Borrowed("Olck")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_OL_CHIKI, metadata : crate
+    ::WordListMetadata::new("diffenator_ol_chiki", Some("Olck"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Ol_Chiki.txt", ".br")),
 }
@@ -1851,10 +1663,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_OL_CHIKI: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-orya")))]
-wordlist! {
-    ident : DIFFENATOR_ORIYA, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_oriya"), script :
-    Some(std::borrow::Cow::Borrowed("Orya")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_ORIYA, metadata : crate
+    ::WordListMetadata::new("diffenator_oriya", Some("Orya"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Oriya.txt", ".br")),
 }
@@ -1866,10 +1677,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_ORIYA: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-osge")))]
-wordlist! {
-    ident : DIFFENATOR_OSAGE, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_osage"), script :
-    Some(std::borrow::Cow::Borrowed("Osge")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_OSAGE, metadata : crate
+    ::WordListMetadata::new("diffenator_osage", Some("Osge"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Osage.txt", ".br")),
 }
@@ -1881,10 +1691,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_OSAGE: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-sinh")))]
-wordlist! {
-    ident : DIFFENATOR_SINHALA, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_sinhala"), script :
-    Some(std::borrow::Cow::Borrowed("Sinh")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_SINHALA, metadata : crate
+    ::WordListMetadata::new("diffenator_sinhala", Some("Sinh"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Sinhala.txt", ".br")),
 }
@@ -1896,10 +1705,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_SINHALA: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-syrc")))]
-wordlist! {
-    ident : DIFFENATOR_SYRIAC, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_syriac"), script :
-    Some(std::borrow::Cow::Borrowed("Syrc")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_SYRIAC, metadata : crate
+    ::WordListMetadata::new("diffenator_syriac", Some("Syrc"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Syriac.txt", ".br")),
 }
@@ -1911,10 +1719,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_SYRIAC: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-taml")))]
-wordlist! {
-    ident : DIFFENATOR_TAMIL, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_tamil"), script :
-    Some(std::borrow::Cow::Borrowed("Taml")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_TAMIL, metadata : crate
+    ::WordListMetadata::new("diffenator_tamil", Some("Taml"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Tamil.txt", ".br")),
 }
@@ -1926,10 +1733,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_TAMIL: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-telu")))]
-wordlist! {
-    ident : DIFFENATOR_TELUGU, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_telugu"), script :
-    Some(std::borrow::Cow::Borrowed("Telu")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_TELUGU, metadata : crate
+    ::WordListMetadata::new("diffenator_telugu", Some("Telu"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Telugu.txt", ".br")),
 }
@@ -1941,10 +1747,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_TELUGU: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-thai")))]
-wordlist! {
-    ident : DIFFENATOR_THAI, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_thai"), script :
-    Some(std::borrow::Cow::Borrowed("Thai")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_THAI, metadata : crate ::WordListMetadata::new("diffenator_thai",
+    Some("Thai"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Thai.txt", ".br")),
 }
@@ -1956,10 +1761,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_THAI: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-thaa")))]
-wordlist! {
-    ident : DIFFENATOR_THANAA, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_thanaa"), script :
-    Some(std::borrow::Cow::Borrowed("Thaa")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_THANAA, metadata : crate
+    ::WordListMetadata::new("diffenator_thanaa", Some("Thaa"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Thanaa.txt", ".br")),
 }
@@ -1971,10 +1775,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_THANAA: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-tibt")))]
-wordlist! {
-    ident : DIFFENATOR_TIBETAN, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_tibetan"), script :
-    Some(std::borrow::Cow::Borrowed("Tibt")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_TIBETAN, metadata : crate
+    ::WordListMetadata::new("diffenator_tibetan", Some("Tibt"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Tibetan.txt", ".br")),
 }
@@ -1986,10 +1789,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_TIBETAN: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-tfng")))]
-wordlist! {
-    ident : DIFFENATOR_TIFINAGH, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_tifinagh"), script :
-    Some(std::borrow::Cow::Borrowed("Tfng")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_TIFINAGH, metadata : crate
+    ::WordListMetadata::new("diffenator_tifinagh", Some("Tfng"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Tifinagh.txt", ".br")),
 }
@@ -2001,10 +1803,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_TIFINAGH: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "diffenator", feature = "script-vaii")))]
-wordlist! {
-    ident : DIFFENATOR_VAI, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("diffenator_vai"), script :
-    Some(std::borrow::Cow::Borrowed("Vaii")), language : None, }, bytes :
+word_list! {
+    ident : DIFFENATOR_VAI, metadata : crate ::WordListMetadata::new("diffenator_vai",
+    Some("Vaii"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "diffenator/Vai.txt", ".br")),
 }
@@ -2016,10 +1817,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_VAI: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "ucd", feature = "script-zyyy")))]
-wordlist! {
-    ident : UCD_EMOJI_ALL, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("ucd_emoji_all"), script :
-    Some(std::borrow::Cow::Borrowed("Zyyy")), language : None, }, bytes :
+word_list! {
+    ident : UCD_EMOJI_ALL, metadata : crate ::WordListMetadata::new("ucd_emoji_all",
+    Some("Zyyy"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "ucd/Emoji_All.txt", ".br")),
 }
@@ -2031,10 +1831,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static UCD_EMOJI_ALL: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "ucd", feature = "script-zyyy")))]
-wordlist! {
-    ident : UCD_EMOJI_COLOR, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("ucd_emoji_color"), script :
-    Some(std::borrow::Cow::Borrowed("Zyyy")), language : None, }, bytes :
+word_list! {
+    ident : UCD_EMOJI_COLOR, metadata : crate ::WordListMetadata::new("ucd_emoji_color",
+    Some("Zyyy"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "ucd/Emoji_Color.txt", ".br")),
 }
@@ -2046,10 +1845,9 @@ wordlist! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static UCD_EMOJI_COLOR: crate::WordList = crate::WordList::stub();
 #[cfg(all(not(docsrs), any(feature = "ucd", feature = "script-zyyy")))]
-wordlist! {
-    ident : UCD_EMOJI_TEXTUAL, metadata : crate ::WordListMetadata { name :
-    ::std::borrow::Cow::Borrowed("ucd_emoji_textual"), script :
-    Some(std::borrow::Cow::Borrowed("Zyyy")), language : None, }, bytes :
+word_list! {
+    ident : UCD_EMOJI_TEXTUAL, metadata : crate
+    ::WordListMetadata::new("ucd_emoji_textual", Some("Zyyy"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "ucd/Emoji_Textual.txt", ".br")),
 }

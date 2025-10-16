@@ -5,7 +5,7 @@ use std::{env, ffi::OsStr, fs, path::PathBuf};
 use anyhow::{Context, anyhow};
 use pico_args::Arguments;
 use proc_macro2::TokenStream;
-use static_lang_word_lists::WordListMetadata;
+use serde::Deserialize;
 use walkdir::{DirEntry, WalkDir};
 
 mod slwl;
@@ -17,6 +17,16 @@ fn main() -> anyhow::Result<()> {
         "slwl" => slwl::main(args),
         unknown => Err(anyhow!("unknown task: {unknown}")),
     }
+}
+
+// Simplified version of `static_lang_word_lists::word_lists::WordListMetadata`.
+// Keep in sync
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct WordListMetadata {
+    name: String,
+    script: Option<String>,
+    language: Option<String>,
 }
 
 fn workspace_root() -> PathBuf {

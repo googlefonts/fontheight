@@ -118,6 +118,7 @@ pub fn main(mut args: Arguments) -> anyhow::Result<()> {
     });
 
     let output = quote! {
+        #[rustfmt::skip]
         #[derive(Debug, Copy, Clone)]
         struct WordListDecl {
             name: &'static str,
@@ -127,6 +128,7 @@ pub fn main(mut args: Arguments) -> anyhow::Result<()> {
             features_attr: &'static str,
         }
 
+        #[rustfmt::skip]
         static WORD_LISTS: &[WordListDecl] = &[
             #(#chicken_entries),*
         ];
@@ -135,7 +137,6 @@ pub fn main(mut args: Arguments) -> anyhow::Result<()> {
         syn::parse2(output).context("failed to parse TokenStream with syn")?;
     let formatted = prettyplease::unparse(&syntax_tree);
 
-    // TODO: is a #[rustfmt::skip] in the generated file necessary?
     #[rustfmt::skip]
     writeln!(
         &mut slwl_build,

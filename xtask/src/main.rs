@@ -33,10 +33,9 @@ fn is_metadata_toml(entry: &DirEntry) -> bool {
         && entry.path().extension() == Some(OsStr::new("toml"))
 }
 
-// TODO: sort this so it's deterministic
 fn load_all_metadata() -> anyhow::Result<Vec<(PathBuf, WordListMetadata)>> {
     let data_dir = workspace_root().join("static-lang-word-lists/data");
-    WalkDir::new(&data_dir)
+    let mut metadatas = WalkDir::new(&data_dir)
         .into_iter()
         .filter_map(|de_res| {
             match de_res {
@@ -63,7 +62,9 @@ fn load_all_metadata() -> anyhow::Result<Vec<(PathBuf, WordListMetadata)>> {
                 Ok((metadata_toml, metadata))
             },
         )
-        .collect()
+        .collect::<anyhow::Result<Vec<_>>>()?;
+    metadatas.sort_by(|(path_a, _), (path_b, _)| path_a.cmp(path_b));
+    Ok(metadatas)
 }
 
 fn format_tokens(stream: TokenStream) -> anyhow::Result<String> {

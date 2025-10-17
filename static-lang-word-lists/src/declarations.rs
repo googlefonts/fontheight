@@ -11,7 +11,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-af")))]
 ///The
 #[doc = ::std::stringify!(AOSP_AFRIKAANS_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_AFRIKAANS_LATIN: crate::WordList = crate::WordList::stub();
@@ -27,7 +27,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-ethi", feature = "lang-am")))]
 ///The
 #[doc = ::std::stringify!(AOSP_AMHARIC_ETHIOPIC)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_AMHARIC_ETHIOPIC: crate::WordList = crate::WordList::stub();
@@ -43,7 +43,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-arab", feature = "lang-ar")))]
 ///The
 #[doc = ::std::stringify!(AOSP_ARABIC)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_ARABIC: crate::WordList = crate::WordList::stub();
@@ -59,7 +59,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-beng", feature = "lang-as")))]
 ///The
 #[doc = ::std::stringify!(AOSP_ASSAMESE_BENGALI)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_ASSAMESE_BENGALI: crate::WordList = crate::WordList::stub();
@@ -75,7 +75,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-az")))]
 ///The
 #[doc = ::std::stringify!(AOSP_AZERBAIJANI_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_AZERBAIJANI_LATIN: crate::WordList = crate::WordList::stub();
@@ -91,7 +91,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-cyrl", feature = "lang-be")))]
 ///The
 #[doc = ::std::stringify!(AOSP_BELARUSIAN_CYRILLIC)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_BELARUSIAN_CYRILLIC: crate::WordList = crate::WordList::stub();
@@ -107,7 +107,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-be")))]
 ///The
 #[doc = ::std::stringify!(AOSP_BELARUSIAN_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_BELARUSIAN_LATIN: crate::WordList = crate::WordList::stub();
@@ -123,7 +123,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-cyrl", feature = "lang-bg")))]
 ///The
 #[doc = ::std::stringify!(AOSP_BULGARIAN_CYRILLIC)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_BULGARIAN_CYRILLIC: crate::WordList = crate::WordList::stub();
@@ -139,7 +139,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-beng", feature = "lang-bn")))]
 ///The
 #[doc = ::std::stringify!(AOSP_BENGALI)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_BENGALI: crate::WordList = crate::WordList::stub();
@@ -155,7 +155,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-bs")))]
 ///The
 #[doc = ::std::stringify!(AOSP_BOSNIAN_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_BOSNIAN_LATIN: crate::WordList = crate::WordList::stub();
@@ -171,7 +171,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-ca")))]
 ///The
 #[doc = ::std::stringify!(AOSP_CATALAN_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_CATALAN_LATIN: crate::WordList = crate::WordList::stub();
@@ -187,7 +187,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-cs")))]
 ///The
 #[doc = ::std::stringify!(AOSP_CZECH_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_CZECH_LATIN: crate::WordList = crate::WordList::stub();
@@ -203,7 +203,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-da")))]
 ///The
 #[doc = ::std::stringify!(AOSP_DANISH_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_DANISH_LATIN: crate::WordList = crate::WordList::stub();
@@ -219,7 +219,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-de")))]
 ///The
 #[doc = ::std::stringify!(AOSP_GERMAN_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_GERMAN_LATIN: crate::WordList = crate::WordList::stub();
@@ -235,7 +235,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-grek", feature = "lang-el")))]
 ///The
 #[doc = ::std::stringify!(AOSP_MODERN_GREEK)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_MODERN_GREEK: crate::WordList = crate::WordList::stub();
@@ -251,7 +251,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-en")))]
 ///The
 #[doc = ::std::stringify!(AOSP_ENGLISH_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_ENGLISH_LATIN: crate::WordList = crate::WordList::stub();
@@ -267,7 +267,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-es")))]
 ///The
 #[doc = ::std::stringify!(AOSP_SPANISH_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_SPANISH_LATIN: crate::WordList = crate::WordList::stub();
@@ -283,7 +283,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-et")))]
 ///The
 #[doc = ::std::stringify!(AOSP_ESTONIAN_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_ESTONIAN_LATIN: crate::WordList = crate::WordList::stub();
@@ -299,7 +299,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-eu")))]
 ///The
 #[doc = ::std::stringify!(AOSP_BASQUE_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_BASQUE_LATIN: crate::WordList = crate::WordList::stub();
@@ -315,7 +315,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-arab", feature = "lang-fa")))]
 ///The
 #[doc = ::std::stringify!(AOSP_PERSIAN_ARABIC)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_PERSIAN_ARABIC: crate::WordList = crate::WordList::stub();
@@ -331,7 +331,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-fi")))]
 ///The
 #[doc = ::std::stringify!(AOSP_FINNISH_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_FINNISH_LATIN: crate::WordList = crate::WordList::stub();
@@ -347,7 +347,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-fr")))]
 ///The
 #[doc = ::std::stringify!(AOSP_FRENCH_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_FRENCH_LATIN: crate::WordList = crate::WordList::stub();
@@ -363,7 +363,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-gl")))]
 ///The
 #[doc = ::std::stringify!(AOSP_GALICIAN_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_GALICIAN_LATIN: crate::WordList = crate::WordList::stub();
@@ -379,7 +379,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-gujr", feature = "lang-gu")))]
 ///The
 #[doc = ::std::stringify!(AOSP_GUJARATI)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_GUJARATI: crate::WordList = crate::WordList::stub();
@@ -395,7 +395,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-deva", feature = "lang-hi")))]
 ///The
 #[doc = ::std::stringify!(AOSP_HINDI_DEVANAGARI)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_HINDI_DEVANAGARI: crate::WordList = crate::WordList::stub();
@@ -411,7 +411,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-hi")))]
 ///The
 #[doc = ::std::stringify!(AOSP_HINDI_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_HINDI_LATIN: crate::WordList = crate::WordList::stub();
@@ -427,7 +427,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-hr")))]
 ///The
 #[doc = ::std::stringify!(AOSP_CROATIAN_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_CROATIAN_LATIN: crate::WordList = crate::WordList::stub();
@@ -443,7 +443,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-hu")))]
 ///The
 #[doc = ::std::stringify!(AOSP_HUNGARIAN_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_HUNGARIAN_LATIN: crate::WordList = crate::WordList::stub();
@@ -459,7 +459,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-armn", feature = "lang-hy")))]
 ///The
 #[doc = ::std::stringify!(AOSP_ARMENIAN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_ARMENIAN: crate::WordList = crate::WordList::stub();
@@ -475,7 +475,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-is")))]
 ///The
 #[doc = ::std::stringify!(AOSP_ICELANDIC_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_ICELANDIC_LATIN: crate::WordList = crate::WordList::stub();
@@ -491,7 +491,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-it")))]
 ///The
 #[doc = ::std::stringify!(AOSP_ITALIAN_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_ITALIAN_LATIN: crate::WordList = crate::WordList::stub();
@@ -507,7 +507,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-hira", feature = "lang-ja")))]
 ///The
 #[doc = ::std::stringify!(AOSP_JAPANESE_HIRAGANA)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_JAPANESE_HIRAGANA: crate::WordList = crate::WordList::stub();
@@ -523,7 +523,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-kana", feature = "lang-ja")))]
 ///The
 #[doc = ::std::stringify!(AOSP_JAPANESE_KATAKANA)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_JAPANESE_KATAKANA: crate::WordList = crate::WordList::stub();
@@ -539,7 +539,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-geor", feature = "lang-ka")))]
 ///The
 #[doc = ::std::stringify!(AOSP_GEORGIAN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_GEORGIAN: crate::WordList = crate::WordList::stub();
@@ -555,7 +555,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-cyrl", feature = "lang-kk")))]
 ///The
 #[doc = ::std::stringify!(AOSP_KAZAKH_CYRILLIC)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_KAZAKH_CYRILLIC: crate::WordList = crate::WordList::stub();
@@ -571,7 +571,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-kk")))]
 ///The
 #[doc = ::std::stringify!(AOSP_KAZAKH_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_KAZAKH_LATIN: crate::WordList = crate::WordList::stub();
@@ -587,7 +587,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-khmr", feature = "lang-km")))]
 ///The
 #[doc = ::std::stringify!(AOSP_CENTRAL_KHMER)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_CENTRAL_KHMER: crate::WordList = crate::WordList::stub();
@@ -603,7 +603,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-knda", feature = "lang-kn")))]
 ///The
 #[doc = ::std::stringify!(AOSP_KANNADA)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_KANNADA: crate::WordList = crate::WordList::stub();
@@ -619,7 +619,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-hang", feature = "lang-ko")))]
 ///The
 #[doc = ::std::stringify!(AOSP_KOREAN_HANGUL)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_KOREAN_HANGUL: crate::WordList = crate::WordList::stub();
@@ -635,7 +635,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-cyrl", feature = "lang-ky")))]
 ///The
 #[doc = ::std::stringify!(AOSP_KIRGHIZ_CYRILLIC)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_KIRGHIZ_CYRILLIC: crate::WordList = crate::WordList::stub();
@@ -651,7 +651,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-ky")))]
 ///The
 #[doc = ::std::stringify!(AOSP_KIRGHIZ_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_KIRGHIZ_LATIN: crate::WordList = crate::WordList::stub();
@@ -666,7 +666,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-laoo", feature = "lang-lo")))]
 ///The
 #[doc = ::std::stringify!(AOSP_LAO)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_LAO: crate::WordList = crate::WordList::stub();
@@ -682,7 +682,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-lt")))]
 ///The
 #[doc = ::std::stringify!(AOSP_LITHUANIAN_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_LITHUANIAN_LATIN: crate::WordList = crate::WordList::stub();
@@ -698,7 +698,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-lv")))]
 ///The
 #[doc = ::std::stringify!(AOSP_LATVIAN_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_LATVIAN_LATIN: crate::WordList = crate::WordList::stub();
@@ -714,7 +714,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-cyrl", feature = "lang-mk")))]
 ///The
 #[doc = ::std::stringify!(AOSP_MACEDONIAN_CYRILLIC)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_MACEDONIAN_CYRILLIC: crate::WordList = crate::WordList::stub();
@@ -730,7 +730,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-mlym", feature = "lang-ml")))]
 ///The
 #[doc = ::std::stringify!(AOSP_MALAYALAM)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_MALAYALAM: crate::WordList = crate::WordList::stub();
@@ -746,7 +746,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-cyrl", feature = "lang-mn")))]
 ///The
 #[doc = ::std::stringify!(AOSP_MONGOLIAN_CYRILLIC)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_MONGOLIAN_CYRILLIC: crate::WordList = crate::WordList::stub();
@@ -762,7 +762,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-deva", feature = "lang-mr")))]
 ///The
 #[doc = ::std::stringify!(AOSP_MARATHI_DEVANAGARI)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_MARATHI_DEVANAGARI: crate::WordList = crate::WordList::stub();
@@ -775,7 +775,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "lang-ms")))]
 ///The
 #[doc = ::std::stringify!(AOSP_MALAY)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_MALAY: crate::WordList = crate::WordList::stub();
@@ -791,7 +791,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-mymr", feature = "lang-my")))]
 ///The
 #[doc = ::std::stringify!(AOSP_BURMESE_MYANMAR)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_BURMESE_MYANMAR: crate::WordList = crate::WordList::stub();
@@ -807,7 +807,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-nb")))]
 ///The
 #[doc = ::std::stringify!(AOSP_NORWEGIAN_BOKMÅL_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_NORWEGIAN_BOKMÅL_LATIN: crate::WordList = crate::WordList::stub();
@@ -823,7 +823,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-deva", feature = "lang-ne")))]
 ///The
 #[doc = ::std::stringify!(AOSP_NEPALI_DEVANAGARI)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_NEPALI_DEVANAGARI: crate::WordList = crate::WordList::stub();
@@ -839,7 +839,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-nl")))]
 ///The
 #[doc = ::std::stringify!(AOSP_DUTCH_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_DUTCH_LATIN: crate::WordList = crate::WordList::stub();
@@ -855,7 +855,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-orya", feature = "lang-or")))]
 ///The
 #[doc = ::std::stringify!(AOSP_ORIYA)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_ORIYA: crate::WordList = crate::WordList::stub();
@@ -871,7 +871,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-guru", feature = "lang-pa")))]
 ///The
 #[doc = ::std::stringify!(AOSP_PANJABI_GURMUKHI)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_PANJABI_GURMUKHI: crate::WordList = crate::WordList::stub();
@@ -887,7 +887,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-pl")))]
 ///The
 #[doc = ::std::stringify!(AOSP_POLISH_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_POLISH_LATIN: crate::WordList = crate::WordList::stub();
@@ -903,7 +903,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-pt")))]
 ///The
 #[doc = ::std::stringify!(AOSP_PORTUGUESE_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_PORTUGUESE_LATIN: crate::WordList = crate::WordList::stub();
@@ -919,7 +919,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-rm")))]
 ///The
 #[doc = ::std::stringify!(AOSP_ROMANSH_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_ROMANSH_LATIN: crate::WordList = crate::WordList::stub();
@@ -935,7 +935,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-ro")))]
 ///The
 #[doc = ::std::stringify!(AOSP_ROMANIAN_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_ROMANIAN_LATIN: crate::WordList = crate::WordList::stub();
@@ -951,7 +951,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-cyrl", feature = "lang-ru")))]
 ///The
 #[doc = ::std::stringify!(AOSP_RUSSIAN_CYRILLIC)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_RUSSIAN_CYRILLIC: crate::WordList = crate::WordList::stub();
@@ -967,7 +967,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-sinh", feature = "lang-si")))]
 ///The
 #[doc = ::std::stringify!(AOSP_SINHALA)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_SINHALA: crate::WordList = crate::WordList::stub();
@@ -983,7 +983,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-sk")))]
 ///The
 #[doc = ::std::stringify!(AOSP_SLOVAK_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_SLOVAK_LATIN: crate::WordList = crate::WordList::stub();
@@ -999,7 +999,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-sl")))]
 ///The
 #[doc = ::std::stringify!(AOSP_SLOVENIAN_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_SLOVENIAN_LATIN: crate::WordList = crate::WordList::stub();
@@ -1015,7 +1015,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-sq")))]
 ///The
 #[doc = ::std::stringify!(AOSP_ALBANIAN_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_ALBANIAN_LATIN: crate::WordList = crate::WordList::stub();
@@ -1031,7 +1031,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-cyrl", feature = "lang-sr")))]
 ///The
 #[doc = ::std::stringify!(AOSP_SERBIAN_CYRILLIC)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_SERBIAN_CYRILLIC: crate::WordList = crate::WordList::stub();
@@ -1047,7 +1047,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-sr")))]
 ///The
 #[doc = ::std::stringify!(AOSP_SERBIAN_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_SERBIAN_LATIN: crate::WordList = crate::WordList::stub();
@@ -1063,7 +1063,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-sv")))]
 ///The
 #[doc = ::std::stringify!(AOSP_SWEDISH_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_SWEDISH_LATIN: crate::WordList = crate::WordList::stub();
@@ -1079,7 +1079,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-sw")))]
 ///The
 #[doc = ::std::stringify!(AOSP_SWAHILI_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_SWAHILI_LATIN: crate::WordList = crate::WordList::stub();
@@ -1095,7 +1095,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-taml", feature = "lang-ta")))]
 ///The
 #[doc = ::std::stringify!(AOSP_TAMIL)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_TAMIL: crate::WordList = crate::WordList::stub();
@@ -1111,7 +1111,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-telu", feature = "lang-te")))]
 ///The
 #[doc = ::std::stringify!(AOSP_TELUGU)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_TELUGU: crate::WordList = crate::WordList::stub();
@@ -1127,7 +1127,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-thai", feature = "lang-th")))]
 ///The
 #[doc = ::std::stringify!(AOSP_THAI)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_THAI: crate::WordList = crate::WordList::stub();
@@ -1140,7 +1140,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "lang-tl")))]
 ///The
 #[doc = ::std::stringify!(AOSP_TAGALOG)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_TAGALOG: crate::WordList = crate::WordList::stub();
@@ -1156,7 +1156,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-tr")))]
 ///The
 #[doc = ::std::stringify!(AOSP_TURKISH_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_TURKISH_LATIN: crate::WordList = crate::WordList::stub();
@@ -1172,7 +1172,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-cyrl", feature = "lang-uk")))]
 ///The
 #[doc = ::std::stringify!(AOSP_UKRAINIAN_CYRILLIC)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_UKRAINIAN_CYRILLIC: crate::WordList = crate::WordList::stub();
@@ -1188,7 +1188,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-arab", feature = "lang-ur")))]
 ///The
 #[doc = ::std::stringify!(AOSP_URDU_ARABIC)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_URDU_ARABIC: crate::WordList = crate::WordList::stub();
@@ -1204,7 +1204,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-uz")))]
 ///The
 #[doc = ::std::stringify!(AOSP_UZBEK_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_UZBEK_LATIN: crate::WordList = crate::WordList::stub();
@@ -1220,7 +1220,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-vi")))]
 ///The
 #[doc = ::std::stringify!(AOSP_VIETNAMESE_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_VIETNAMESE_LATIN: crate::WordList = crate::WordList::stub();
@@ -1236,7 +1236,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-hani", feature = "lang-zh")))]
 ///The
 #[doc = ::std::stringify!(AOSP_CHINESE_HAN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_CHINESE_HAN: crate::WordList = crate::WordList::stub();
@@ -1252,7 +1252,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "aosp", feature = "script-latn", feature = "lang-zu")))]
 ///The
 #[doc = ::std::stringify!(AOSP_ZULU_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static AOSP_ZULU_LATIN: crate::WordList = crate::WordList::stub();
@@ -1266,7 +1266,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-adlm")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_ADLAM)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_ADLAM: crate::WordList = crate::WordList::stub();
@@ -1280,7 +1280,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-arab")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_ARABIC)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_ARABIC: crate::WordList = crate::WordList::stub();
@@ -1294,7 +1294,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-armn")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_ARMENIAN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_ARMENIAN: crate::WordList = crate::WordList::stub();
@@ -1308,7 +1308,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-avst")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_AVESTAN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_AVESTAN: crate::WordList = crate::WordList::stub();
@@ -1322,7 +1322,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-beng")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_BENGALI)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_BENGALI: crate::WordList = crate::WordList::stub();
@@ -1336,7 +1336,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-bopo")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_BOPOMOFO)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_BOPOMOFO: crate::WordList = crate::WordList::stub();
@@ -1350,7 +1350,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-cans")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_CANADIAN_ABORIGINAL)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_CANADIAN_ABORIGINAL: crate::WordList = crate::WordList::stub();
@@ -1364,7 +1364,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-cakm")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_CHAKMA)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_CHAKMA: crate::WordList = crate::WordList::stub();
@@ -1378,7 +1378,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-cher")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_CHEROKEE)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_CHEROKEE: crate::WordList = crate::WordList::stub();
@@ -1392,7 +1392,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-zyyy")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_COMMON)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_COMMON: crate::WordList = crate::WordList::stub();
@@ -1406,7 +1406,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-cyrl")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_CYRILLIC)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_CYRILLIC: crate::WordList = crate::WordList::stub();
@@ -1420,7 +1420,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-deva")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_DEVANAGARI)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_DEVANAGARI: crate::WordList = crate::WordList::stub();
@@ -1434,7 +1434,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-ethi")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_ETHIOPIC)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_ETHIOPIC: crate::WordList = crate::WordList::stub();
@@ -1448,7 +1448,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-geor")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_GEORGIAN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_GEORGIAN: crate::WordList = crate::WordList::stub();
@@ -1462,7 +1462,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-grek")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_GREEK)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_GREEK: crate::WordList = crate::WordList::stub();
@@ -1476,7 +1476,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-gujr")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_GUJARATI)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_GUJARATI: crate::WordList = crate::WordList::stub();
@@ -1490,7 +1490,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-guru")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_GURMUKHI)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_GURMUKHI: crate::WordList = crate::WordList::stub();
@@ -1504,7 +1504,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-hebr")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_HEBREW)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_HEBREW: crate::WordList = crate::WordList::stub();
@@ -1518,7 +1518,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-hira")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_HIRAGANA)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_HIRAGANA: crate::WordList = crate::WordList::stub();
@@ -1532,7 +1532,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-jpan")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_JAPANESE)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_JAPANESE: crate::WordList = crate::WordList::stub();
@@ -1546,7 +1546,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-kana")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_KATAKANA)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_KATAKANA: crate::WordList = crate::WordList::stub();
@@ -1560,7 +1560,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-khmr")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_KHMER)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_KHMER: crate::WordList = crate::WordList::stub();
@@ -1574,7 +1574,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-laoo")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_LAO)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_LAO: crate::WordList = crate::WordList::stub();
@@ -1588,7 +1588,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-latn")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_LATIN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_LATIN: crate::WordList = crate::WordList::stub();
@@ -1602,7 +1602,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-lisu")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_LISU)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_LISU: crate::WordList = crate::WordList::stub();
@@ -1616,7 +1616,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-mlym")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_MALAYALAM)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_MALAYALAM: crate::WordList = crate::WordList::stub();
@@ -1630,7 +1630,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-mong")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_MONGOLIAN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_MONGOLIAN: crate::WordList = crate::WordList::stub();
@@ -1644,7 +1644,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-mymr")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_MYANMAR)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_MYANMAR: crate::WordList = crate::WordList::stub();
@@ -1658,7 +1658,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-olck")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_OL_CHIKI)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_OL_CHIKI: crate::WordList = crate::WordList::stub();
@@ -1672,7 +1672,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-orya")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_ORIYA)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_ORIYA: crate::WordList = crate::WordList::stub();
@@ -1686,7 +1686,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-osge")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_OSAGE)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_OSAGE: crate::WordList = crate::WordList::stub();
@@ -1700,7 +1700,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-sinh")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_SINHALA)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_SINHALA: crate::WordList = crate::WordList::stub();
@@ -1714,7 +1714,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-syrc")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_SYRIAC)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_SYRIAC: crate::WordList = crate::WordList::stub();
@@ -1728,7 +1728,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-taml")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_TAMIL)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_TAMIL: crate::WordList = crate::WordList::stub();
@@ -1742,7 +1742,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-telu")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_TELUGU)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_TELUGU: crate::WordList = crate::WordList::stub();
@@ -1756,7 +1756,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-thai")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_THAI)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_THAI: crate::WordList = crate::WordList::stub();
@@ -1770,7 +1770,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-thaa")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_THANAA)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_THANAA: crate::WordList = crate::WordList::stub();
@@ -1784,7 +1784,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-tibt")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_TIBETAN)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_TIBETAN: crate::WordList = crate::WordList::stub();
@@ -1798,7 +1798,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-tfng")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_TIFINAGH)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_TIFINAGH: crate::WordList = crate::WordList::stub();
@@ -1812,7 +1812,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "diffenator", feature = "script-vaii")))]
 ///The
 #[doc = ::std::stringify!(DIFFENATOR_VAI)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_VAI: crate::WordList = crate::WordList::stub();
@@ -1826,7 +1826,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "ucd", feature = "script-zyyy")))]
 ///The
 #[doc = ::std::stringify!(UCD_EMOJI_ALL)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static UCD_EMOJI_ALL: crate::WordList = crate::WordList::stub();
@@ -1840,7 +1840,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "ucd", feature = "script-zyyy")))]
 ///The
 #[doc = ::std::stringify!(UCD_EMOJI_COLOR)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static UCD_EMOJI_COLOR: crate::WordList = crate::WordList::stub();
@@ -1854,7 +1854,7 @@ word_list! {
 #[cfg(all(docsrs, any(feature = "ucd", feature = "script-zyyy")))]
 ///The
 #[doc = ::std::stringify!(UCD_EMOJI_TEXTUAL)]
-/**word list.
+/** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static UCD_EMOJI_TEXTUAL: crate::WordList = crate::WordList::stub();

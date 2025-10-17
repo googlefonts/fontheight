@@ -84,7 +84,7 @@ impl WordList {
     /// a metadata TOML file.
     /// A fully specified metadata file may look like this:
     /// ```toml
-    #[doc = include_str!("../data/diffenator/Latin.toml")]
+    #[doc = include_str!("../data/aosp/en_Latn.toml")]
     /// ```
     /// 
     /// For more details on the TOML format, see [the GitHub README](https://github.com/googlefonts/fontheight/tree/main/static-lang-word-lists#word-list-metadata-schema).

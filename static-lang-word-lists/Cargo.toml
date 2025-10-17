@@ -16,7 +16,7 @@ include = [
     "build.rs",
     "chicken.rs",
     # Used in docs
-    "data/diffenator/Latin.toml",
+    "data/aosp/en_Latn.toml",
 ]
 
 [dependencies]

@@ -109,11 +109,11 @@ pub fn main(_args: Arguments) -> anyhow::Result<()> {
         #(#word_list_entries)*
 
         // TODO: https://github.com/rust-phf/rust-phf/issues/356
-        // #[doc = "A lookup map for the crate-provided [`WordList`]s. Maps their names to the corresponding static [`WordList`]."]
-        // pub static LOOKUP_TABLE: ::phf::Map<&'static str, &'static crate::WordList> =
-        //     ::phf::phf_map! {
+        #[doc = "A lookup map for the crate-provided [`WordList`]s. Maps their names to the corresponding static [`WordList`]."]
+        pub static LOOKUP_TABLE: ::phf::Map<&'static str, &'static crate::WordList> =
+            ::phf::phf_map! {
         //         #(#lookup_table_entries)*
-        //     };
+            };
     };
     write!(
         &mut slwl_declarations,

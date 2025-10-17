@@ -14,7 +14,7 @@ For documentation, please refer to [docs.rs](https://docs.rs/static-lang-word-li
 
 ## How this crate works
 
-A build script that downloads the word lists from GitHub, compresses them with Brotli, and embeds that data in the binary, lazily decompressed at runtime
+A build script that downloads the word lists from GitHub, compresses them with [Brotli](https://brotli.org/), and embeds that data in the binary, lazily decompressed at runtime
 
 ### Technical details
 

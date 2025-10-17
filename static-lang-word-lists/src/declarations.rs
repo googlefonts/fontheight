@@ -1858,5 +1858,5 @@ word_list! {
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static UCD_EMOJI_TEXTUAL: crate::WordList = crate::WordList::stub();
-///A lookup map for the crate-provided [`WordList`]s. Maps their names to the corresponding static [`WordList`].
+///A lookup map for the crate-provided [`WordList`](crate::WordList)s. Maps their names to the corresponding static [`WordList`](crate::WordList).
 pub static LOOKUP_TABLE: ::phf::Map<&'static str, &'static crate::WordList> = ::phf::phf_map! {};

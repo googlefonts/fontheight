@@ -177,7 +177,7 @@ impl WordList {
 
     /// Get the script of the word list, if known.
     ///
-    /// The script is expected to be a [ISO 15924](https://en.wikipedia.org/wiki/ISO_15924)
+    /// The script is expected to be an [ISO 15924](https://en.wikipedia.org/wiki/ISO_15924)
     /// four-letter capitalised code, but this is only guaranteed for built-in
     /// word lists.
     #[inline]
@@ -188,7 +188,7 @@ impl WordList {
 
     /// Get the language of the word list, if known.
     ///
-    /// The language is expected to be a [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639-1)
+    /// The language is expected to be an [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639-1)
     /// two-letter code, but this is only guaranteed for built-in word lists.
     #[inline]
     #[must_use]

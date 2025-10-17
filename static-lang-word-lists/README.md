@@ -31,6 +31,26 @@ This README only concerns the build script's role
 
 To build using local files, set the `STATIC_LANG_WORD_LISTS_LOCAL` environment variable
 
+### Adding a new word list
+
+1. Add the word lists as .txt files into `static-lang-word-lists/data`, in a subdirectory with a kebab-case name for your source
+2. For each .txt file, create a corresponding TOML file with the same stem. See [the schema](#word-list-metadata-schema) for the required & optional fields
+3. Run `cargo xtask slwl`. It'll emit crate feature definitions to stdout, copy & paste over the existing `[feature]` table in [`static-lang-word-lists/Cargo.toml`](Cargo.toml)
+4. Check the crate builds with `cargo build --package static-lang-word-lists`. You will need the `STATIC_LANG_WORD_LISTS_LOCAL` environment variable set
+
+### Word list metadata schema
+
+Metadata files are [TOML](https://toml.io/en/v1.0.0) files.
+The ones that live in this crate have the same file name as their word list, only differing in extension.
+
+| Field name | Field type | Required? | Description                                                                           |
+|:----------:|:----------:|:---------:|---------------------------------------------------------------------------------------|
+|   `name`   |   string   |    ✔️     | A cosmetic name for the word list, usually in snake_case                              |
+|  `script`  |   string   |     ❌     | An [ISO 15924](https://en.wikipedia.org/wiki/ISO_15924) four-letter capitalised code* |
+| `language` |   string   |     ❌     | An [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639-1) two-letter lowercase code*    |
+
+(* this is not enforced, but will at least be true of crate-provided word lists.)
+
 ## Credits
 
 Diffenator wordlists are from [diffenator2](https://github.com/googlefonts/diffenator2). [Apache-2.0](https://github.com/googlefonts/diffenator2/blob/69a873d79811e957aa5824e04d4859717f206c47/LICENSE.txt) licensed.

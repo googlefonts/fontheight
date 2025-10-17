@@ -80,13 +80,14 @@ pub struct WordList {
 impl WordList {
     /// Load a word list from a file.
     ///
-    /// The file is expected to contain one word per line.
-    /// The word list may also be accompanied by a metadata TOML file.
-    // TODO: some kind of schema or similar
+    /// The file is expected to contain one word per line, and is accompanied by
+    /// a metadata TOML file.
     /// A fully specified metadata file may look like this:
     /// ```toml
     #[doc = include_str!("../data/diffenator/Latin.toml")]
     /// ```
+    /// 
+    /// For more details on the TOML format, see [the GitHub README](https://github.com/googlefonts/fontheight/tree/main/static-lang-word-lists#word-list-metadata-schema).
     #[allow(clippy::result_large_err)]
     pub fn load(
         path: impl AsRef<Path>,

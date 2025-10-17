@@ -1,2 +1,4 @@
 static-lang-word-lists/chicken.rs linguist-generated
 static-lang-word-lists/src/declarations.rs linguist-generated
+static-lang-word-lists/raw linguist-vendored
+static-lang-word-lists/data/**/*.txt linguist-vendored

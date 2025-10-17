@@ -12,7 +12,7 @@ use crate::{
     WordListMetadata, format_tokens, load_all_metadata, workspace_root,
 };
 
-pub fn main(_args: Arguments) -> anyhow::Result<()> {
+pub fn main(mut args: Arguments) -> anyhow::Result<()> {
     let workspace_root = workspace_root();
     let slwl_declarations_path =
         workspace_root.join("static-lang-word-lists/src/declarations.rs");
@@ -125,11 +125,13 @@ pub fn main(_args: Arguments) -> anyhow::Result<()> {
         "wrote to static-lang-word-lists/chicken.rs & \
          static-lang-word-lists/src/declarations.rs"
     );
-    eprintln!(
-        "make sure crate features are added in \
-         static-lang-word-lists/Cargo.toml"
-    );
-    println!("{}", format_all_features(&all_features));
+    if !args.contains(["-q", "--no-emit-features"]) {
+        eprintln!(
+            "make sure crate features are added in \
+             static-lang-word-lists/Cargo.toml"
+        );
+        println!("{}", format_all_features(&all_features));
+    }
 
     Ok(())
 }

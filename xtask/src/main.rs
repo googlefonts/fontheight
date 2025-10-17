@@ -54,11 +54,20 @@ fn load_all_metadata() -> anyhow::Result<Vec<(PathBuf, WordListMetadata)>> {
                 },
                 // Irrelevant stuff
                 Ok(_) => None,
-                Err(why) => {
-                    eprintln!(
-                        "failed to explore part of \
-                         static-lang-word-lists/data: {why}"
-                    );
+                Err(err) => {
+                    if let Some(path) = err.path()
+                        && (path.is_dir()
+                            || path.extension() == Some(OsStr::new("toml")))
+                    {
+                        // TOML file or directory; i.e. important, so we panic
+                        // (because emitting a Result::Err from here would be a
+                        // pain, and this is unlikely to happen)
+                        panic!("{err}");
+                    }
+                    // If we didn't hit the above if statement, the error
+                    // probably isn't important and we can carry on, but we'll
+                    // let the user know because we're considerate
+                    eprintln!("warning: {err}");
                     None
                 },
             }

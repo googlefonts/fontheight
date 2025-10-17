@@ -29,6 +29,10 @@ fn main() {
     println!("cargo::rerun-if-env-changed=STATIC_LANG_WORD_LISTS_LOCAL");
 
     if IS_DOCS_RS {
+        // docs.rs doesn't allow network connection when building, so we don't
+        // have access to the word list files, ergo there's nothing to compress.
+        // src/declarations.rs has conditional compilation that stubs word lists
+        // for docs.rs specifically, so everything will still build
         return;
     }
 
@@ -42,6 +46,8 @@ fn main() {
         },
     };
 
+    // This speeds up debug builds significantly but still does a good job of
+    // reducing size
     let compression_level = if env::var("PROFILE").as_deref() == Ok("debug") {
         8
     } else {

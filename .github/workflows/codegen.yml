@@ -1,0 +1,42 @@
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - static-lang-word-lists/Cargo.toml
+      - static-lang-word-lists/build.rs
+      - static-lang-word-lists/chicken.rs
+      - static-lang-word-lists/data/**
+      - static-lang-word-lists/src/**
+      - xtask/Cargo.toml
+      - xtask/src/**
+  pull_request:
+    paths:
+      - static-lang-word-lists/Cargo.toml
+      - static-lang-word-lists/build.rs
+      - static-lang-word-lists/chicken.rs
+      - static-lang-word-lists/data/**
+      - static-lang-word-lists/src/**
+      - xtask/Cargo.toml
+      - xtask/src/**
+
+name: Check codegen is up-to-date
+
+jobs:
+  xtask-slwl:
+    name: Check chicken.rs & declarations.rs is up-to-date
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Checkout ${{ github.head_ref || github.ref_name }}
+        uses: actions/checkout@v4
+      - name: Run cargo xtask slwl
+        run: cargo xtask slwl
+      - name: Check for git diffs
+        run: |
+          if ! git diff --quiet --exit-code; then
+            echo "::error title=Outdated codegen::cargo xtask slwl produced diffs"
+            git diff --color
+            exit 1
+          fi

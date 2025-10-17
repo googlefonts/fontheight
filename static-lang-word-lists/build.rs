@@ -32,22 +32,25 @@ fn main() {
         return;
     }
 
-    let wordlist_source_dir = match (LOCAL_BUILD, IS_DOCS_RS) {
+    let word_list_source_dir = match LOCAL_BUILD {
         // By default, download the word lists
-        (false, false) => download_repo_word_lists(),
-        // On docs.rs we have no network access, so we stub everything.
-        // wordlist_source_dir isn't accessed
-        (_, true) => Default::default(),
+        false => download_repo_word_lists(),
         // For local development, you can opt to build from local files
-        (true, _) => {
+        true => {
             println!("cargo::warning=building from local files");
             PathBuf::from("data")
         },
     };
 
+    let compression_level = if env::var("PROFILE").as_deref() == Ok("debug") {
+        8
+    } else {
+        11
+    };
+
     thread::scope(|s| {
         // Bind references to names so they can be copied to each spawned thread
-        let wordlist_source_dir = wordlist_source_dir.as_path();
+        let wordlist_source_dir = word_list_source_dir.as_path();
         WORD_LISTS.iter().copied().for_each(|rel_path| {
             s.spawn(move || {
                 let bytes = get_a_file(rel_path, wordlist_source_dir);
@@ -55,7 +58,7 @@ fn main() {
                 // runtime
                 str::from_utf8(&bytes)
                     .expect("word list should be valid UTF-8");
-                compress(&bytes, rel_path);
+                compress(&bytes, rel_path, compression_level);
             });
         });
     });
@@ -150,18 +153,18 @@ fn download_repo_word_lists() -> PathBuf {
     out_dir.join("data")
 }
 
-fn compress(bytes: &[u8], relative_path: &str) -> PathBuf {
+fn compress(
+    bytes: &[u8],
+    relative_path: &str,
+    compression_level: u8,
+) -> PathBuf {
     let br_path = out_dir_path(relative_path).with_extension("txt.br");
     let mut br_file = open_path(&br_path);
 
     let mut cursor = Cursor::new(bytes);
     brotli::BrotliCompress(&mut cursor, &mut br_file, &BrotliEncoderParams {
         mode: BrotliEncoderMode::BROTLI_MODE_TEXT,
-        quality: if env::var("PROFILE").as_deref() == Ok("debug") {
-            8
-        } else {
-            11
-        },
+        quality: compression_level as i32,
         size_hint: bytes.len(),
         ..Default::default()
     })

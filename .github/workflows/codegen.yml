@@ -24,7 +24,7 @@ name: Check codegen is up-to-date
 
 jobs:
   xtask-slwl:
-    name: Check chicken.rs & declarations.rs is up-to-date
+    name: SLWL / chicken.rs & declarations.rs
     runs-on: ubuntu-latest
     steps:
       - name: Setup Rust

@@ -16,7 +16,6 @@ use brotli::enc::{
 };
 use zip::ZipArchive;
 
-// TODO: update this comment once the dust settles
 // Provides WORD_LISTS: &[&str] for word list relative path
 include!("chicken.rs");
 

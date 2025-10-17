@@ -215,3 +215,9 @@ Sorted DiffenatorVai based on:
 On crates.io as `fontheight`.
 
 For documentation, please refer to [docs.rs](https://docs.rs/fontheight/latest).
+
+### `static-lang-word-lists` Rust crate
+
+Provides word lists embedded within the application binary that are compressed at build time, and lazily decompressed at runtime.
+
+See the crate [README](static-lang-word-lists/README.md) & [documentation](https://docs.rs/static-lang-word-lists) for what's available.

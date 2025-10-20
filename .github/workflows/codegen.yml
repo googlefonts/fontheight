@@ -3,6 +3,7 @@ on:
     branches:
       - main
     paths:
+      - Cargo.lock
       - static-lang-word-lists/Cargo.toml
       - static-lang-word-lists/build.rs
       - static-lang-word-lists/chicken.rs
@@ -12,6 +13,7 @@ on:
       - xtask/src/**
   pull_request:
     paths:
+      - Cargo.lock
       - static-lang-word-lists/Cargo.toml
       - static-lang-word-lists/build.rs
       - static-lang-word-lists/chicken.rs

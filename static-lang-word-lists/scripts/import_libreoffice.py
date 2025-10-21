@@ -20,6 +20,7 @@ https://github.com/streetsidesoftware/cspell/tree/main/packages/hunspell-reader#
 
 import re
 import subprocess
+from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from time import time
 from typing import Collection, Iterable, Iterator
@@ -152,8 +153,8 @@ def ngram_slim(all_words: Collection[str]) -> set[str]:
     return all_words
 
 
-def main(libreoffice_root: Path) -> None:
-    for dic_path in sorted(libreoffice_root.glob("**/*.dic")):
+def main(args: Namespace) -> None:
+    for dic_path in sorted(args.libreoffice_repo_path.glob("**/*.dic")):
         print()
         if not dic_path.with_suffix(".aff").exists():
             print(f"skipped {dic_path}: no corresponding .aff file")
@@ -164,6 +165,10 @@ def main(libreoffice_root: Path) -> None:
 
         output_path = (OUTPUT / dic_path.stem).with_suffix(".txt")
 
+        if output_path.exists() and args.skip_existing:
+            print(f"skipped {dic_path}: already processed")
+            continue
+
         start = time()
 
         output = subprocess.check_output(
@@ -173,7 +178,10 @@ def main(libreoffice_root: Path) -> None:
             shell=True,
         )
         all_words = set(output.splitlines())
-        assert "" not in all_words
+        try:
+            all_words.remove("")
+        except KeyError:
+            pass
         print(f"extracted {len(all_words)} words")
 
         print("minimising round #1...")
@@ -197,14 +205,16 @@ def main(libreoffice_root: Path) -> None:
 
 
 if __name__ == "__main__":
-    from argparse import ArgumentParser
-
     parser = ArgumentParser()
     parser.add_argument(
         "libreoffice_repo_path",
         type=Path,
     )
+    parser.add_argument(
+        "--skip-existing",
+        action="store_true",
+    )
 
     args = parser.parse_args()
 
-    main(args.libreoffice_repo_path)
+    main(args)

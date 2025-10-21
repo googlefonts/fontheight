@@ -1,6 +1,6 @@
 #!/usr/bin/env -S uv run --script
 # /// script
-# requires-python = ">=3.9"
+# requires-python = ">=3.11"
 # dependencies = [
 #     "babelfish>=0.6",
 #     "pyahocorasick>=2.2,<3",
@@ -21,6 +21,8 @@ https://github.com/streetsidesoftware/cspell/tree/main/packages/hunspell-reader#
 import re
 import subprocess
 from pathlib import Path
+from time import time
+from typing import Collection, Iterable, Iterator
 
 import ahocorasick
 import tomli_w
@@ -46,9 +48,7 @@ def write_metadata(dic_path: Path, metadata_dest: Path) -> None:
     else:
         dic_name = dic_path.stem
 
-    if (
-        re_match := re.fullmatch(r"([a-z]{2})[-_]([A-Z]{2})", dic_name)
-    ) is not None:
+    if (re_match := re.fullmatch(r"([a-z]{2})[-_]([A-Z]{2})", dic_name)) is not None:
         try:
             language = Language.fromalpha2(re_match.group(1).lower())
         except Exception as e:
@@ -89,8 +89,71 @@ def write_metadata(dic_path: Path, metadata_dest: Path) -> None:
     print(f"wrote metadata to {metadata_dest.relative_to(DATA)}")
 
 
+# Minimisation with Aho Corasick ported from
+# https://github.com/googlefonts/diffenator2/blob/69a873d79811e957aa5824e04d4859717f206c47/src/diffenator2/wordlistbuilder.py#L65-L80
+def remove_substring_words(all_words: Iterable[str]) -> set[str]:
+    minimised_words = set()
+    auto = ahocorasick.Automaton()
+    for word in sorted(all_words, key=lambda w: -len(w)):
+        auto.add_word(word, word)
+        minimised_words.add(word)
+    auto.make_automaton()
+
+    for word in all_words:
+        for _, found in auto.iter(word):
+            if word != found:
+                try:
+                    minimised_words.remove(found)
+                except KeyError:
+                    pass
+    return minimised_words
+
+
+# https://github.com/googlefonts/diffenator2/blob/69a873d79811e957aa5824e04d4859717f206c47/scripts/ngram_slim.py#L11-L19
+# with functions inlined
+def ngram_slim(all_words: Collection[str]) -> set[str]:
+    # https://github.com/googlefonts/diffenator2/blob/69a873d79811e957aa5824e04d4859717f206c47/src/diffenator2/wordlistbuilder.py#L9-L13
+    def all_ngrams(word: str, size: int) -> Iterator[str]:
+        yield from (word[i : i + size] for i in range(max(1, len(word) - size)))
+
+    # https://github.com/googlefonts/diffenator2/blob/69a873d79811e957aa5824e04d4859717f206c47/src/diffenator2/wordlistbuilder.py#L16
+    def maybe_add_word(
+        bank: set[str],
+        word: str,
+        ngram_set: set[str],
+        keep_chars: set[str] | None = None,
+        size: int = 4,
+    ):
+        if word in bank:
+            return False
+
+        if keep_chars is not None and not all(c in keep_chars for c in word):
+            return False
+
+        if all(ngram in ngram_set for ngram in all_ngrams(word, size=size)):
+            return False
+
+        bank.add(word)
+
+        for ngram in all_ngrams(word, size=size):
+            ngram_set.add(ngram)
+        return True
+
+    while True:
+        bank = set()
+        ngram_auto = set()
+        for word in sorted(all_words, key=lambda x: -len(x)):
+            maybe_add_word(bank, word, ngram_auto)
+        if len(bank) == len(all_words):
+            break
+        all_words = bank
+
+    assert isinstance(all_words, set)
+    return all_words
+
+
 def main(libreoffice_root: Path) -> None:
-    for dic_path in libreoffice_root.glob("**/*.dic"):
+    for dic_path in sorted(libreoffice_root.glob("**/*.dic")):
         print()
         if not dic_path.with_suffix(".aff").exists():
             print(f"skipped {dic_path}: no corresponding .aff file")
@@ -101,6 +164,8 @@ def main(libreoffice_root: Path) -> None:
 
         output_path = (OUTPUT / dic_path.stem).with_suffix(".txt")
 
+        start = time()
+
         output = subprocess.check_output(
             ("hunspell-reader", "words", "--progress", str(dic_path)),
             text=True,
@@ -109,32 +174,25 @@ def main(libreoffice_root: Path) -> None:
         )
         all_words = set(output.splitlines())
         assert "" not in all_words
-        print(f"extracted {len(all_words)} words\nminimising...")
+        print(f"extracted {len(all_words)} words")
 
-        # Minimisation with Aho Corasick ported from https://github.com/googlefonts/diffenator2/blob/69a873d79811e957aa5824e04d4859717f206c47/src/diffenator2/wordlistbuilder.py#L65-L80
-        minimised_words = set()
-        auto = ahocorasick.Automaton()
-        for word in sorted(all_words, key=lambda w: -len(w)):
-            auto.add_word(word, word)
-            minimised_words.add(word)
-        auto.make_automaton()
-
-        for word in all_words:
-            for _, found in auto.iter(word):
-                if word != found:
-                    try:
-                        minimised_words.remove(found)
-                    except KeyError:
-                        pass
-
+        print("minimising round #1...")
+        r1_words = remove_substring_words(all_words)
         print(
-            f"reduced to {len(minimised_words)} words,",
-            f"{100 - (len(minimised_words) / len(all_words) * 100):.1f}% reduction",
+            f"reduced to {len(r1_words)} words,",
+            f"{100 - (len(r1_words) / len(all_words) * 100):.1f}% reduction",
         )
-        output_path.write_text(
-            "\n".join(sorted(minimised_words)) + "\n", encoding="utf-8"
+
+        print("minimising round #2...")
+        # do ngram slimming second since it's slower but more thorough
+        r2_words = ngram_slim(r1_words)
+        print(
+            f"reduced to {len(r2_words)} words,",
+            f"{100 - (len(r2_words) / len(r1_words) * 100):.1f}% reduction",
         )
-        print(f"wrote {output_path.relative_to(DATA)}")
+
+        output_path.write_text("\n".join(sorted(r2_words)) + "\n", encoding="utf-8")
+        print(f"wrote {output_path.relative_to(DATA)} (took {time() - start:.1f}s)")
         write_metadata(dic_path, output_path.with_suffix(".toml"))
 
 

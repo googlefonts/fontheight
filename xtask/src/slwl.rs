@@ -65,17 +65,23 @@ pub fn main(mut args: Arguments) -> anyhow::Result<()> {
         let feature_list =
             get_features_for_word_list(&word_list_path, metadata);
         all_features.extend(feature_list.clone());
-        let feature_gate = quote! { #[cfg(any(#( feature = #feature_list, )* ))]};
+        let feature_cfg_attr_inner = if feature_list.len() > 1 {
+            quote! { any(#( feature = #feature_list, )* ) }
+        } else if let [feature] = feature_list.as_slice() {
+            quote! { feature = #feature }
+        } else {
+            unreachable!()
+        };
 
-        chicken_entries.push(quote! { #feature_gate #path });
+        chicken_entries.push(quote! { #[cfg(#feature_cfg_attr_inner)] #path });
 
         all_word_lists_entries.push(quote! {
-            #feature_gate &#ident,
+            #[cfg(#feature_cfg_attr_inner)] &#ident,
         });
 
         word_list_entries.push(quote! {
             // Not docsrs and a relevant feature
-            #[cfg(all(not(docsrs), any(#( feature = #feature_list, )* )))]
+            #[cfg(all(not(docsrs), #feature_cfg_attr_inner))]
             word_list! {
                 ident: #ident,
                 metadata: crate::WordListMetadata::new(#name, #script, #language),
@@ -84,7 +90,7 @@ pub fn main(mut args: Arguments) -> anyhow::Result<()> {
                 ),
             }
             // Is docs.rs + relevant feature
-            #[cfg(all(docsrs, any(#( feature = #feature_list, )* )))]
+            #[cfg(all(docsrs, #feature_cfg_attr_inner))]
             #[doc = "The "]
             #[doc = ::std::stringify!(#ident)]
             #[doc = " word list.\n\nCompiled into the binary compressed with Brotli, decompressed at runtime."]
@@ -93,7 +99,6 @@ pub fn main(mut args: Arguments) -> anyhow::Result<()> {
     });
 
     let chicken = quote! {
-        #[rustfmt::skip]
         static WORD_LISTS: &[&str] = &[
             #(#chicken_entries),*
         ];

@@ -32,7 +32,14 @@ from babelfish.exceptions import LanguageConvertError
 
 DATA = Path(__file__).parent.parent / "data"
 OUTPUT = DATA / "libreoffice"
-OUTPUT.mkdir(exist_ok=True)
+
+
+# Dictionaries that end up being so big they need world-ending amounts of RAM
+# for Node. You can try and improve this by setting
+# NODE_OPTIONS="--max-old-space-size=XXXXXX", but these dictionaries are so big
+# that doesn't even seem to help; they'll still exhaust all the memory. These
+# were all tested with --max-old-space-size=25000
+INFEASIBLE = ("hu_HU", "ko_KR", "mn_MN")
 
 
 def write_metadata(dic_path: Path, metadata_dest: Path) -> None:
@@ -154,12 +161,13 @@ def ngram_slim(all_words: Collection[str]) -> set[str]:
 
 
 def main(args: Namespace) -> None:
+    OUTPUT.mkdir(exist_ok=True)
     for dic_path in sorted(args.libreoffice_repo_path.glob("**/*.dic")):
         print()
         if not dic_path.with_suffix(".aff").exists():
             print(f"skipped {dic_path}: no corresponding .aff file")
             continue
-        elif dic_path.stem in ("hu_HU", "mn_MN"):
+        elif dic_path.stem in INFEASIBLE:
             print(f"skipped {dic_path}: known to be too large")
             continue
 

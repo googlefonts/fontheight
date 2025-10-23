@@ -38,7 +38,7 @@ OUTPUT = DATA / "libreoffice"
 # for Node. You can try and improve this by setting
 # NODE_OPTIONS="--max-old-space-size=XXXXXX", but these dictionaries are so big
 # that doesn't even seem to help; they'll still exhaust all the memory. These
-# were all tested with --max-old-space-size=25000
+# were all tested with --max-old-space-size=50000
 INFEASIBLE = ("hu_HU", "ko_KR", "mn_MN")
 
 

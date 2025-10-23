@@ -1,18 +1,25 @@
 #![allow(missing_docs)]
 
-mod fmt;
+use std::{
+    fs,
+    fs::OpenOptions,
+    io::{Write, stdout},
+    iter,
+    path::PathBuf,
+    process::ExitCode,
+    time::Instant,
+};
 
-use std::{fs, iter, path::PathBuf, process::ExitCode, time::Instant};
-
-use anyhow::Context;
+use anyhow::{Context, bail};
 use clap::Parser;
 use clap_verbosity_flag::Verbosity;
 use env_logger::Env;
+use fmt::{FormatReport, OutputFormat};
 use fontheight::Reporter;
 use log::{error, info, warn};
 use rayon::prelude::*;
 
-use crate::fmt::{FormatReport, OutputFormat};
+mod fmt;
 
 fn main() -> ExitCode {
     match _main() {
@@ -47,16 +54,40 @@ struct Args {
 
     #[command(flatten)]
     verbosity: FontheightVerbosity,
+
+    /// Write the reports into the given path.
+    /// Will print to stdout if not specified
+    #[arg(short, long = "output")]
+    output_path: Option<PathBuf>,
+
+    /// Output all the reports into a single HTML file
+    #[arg(long)]
+    html: bool,
 }
 
 fn _main() -> anyhow::Result<()> {
     let args = Args::parse();
-    debug_assert!(!args.font_path.is_empty());
+    if args.font_path.len() > 1 && args.html {
+        bail!("you can't pass multiple fonts if using --html");
+    }
 
     env_logger::builder()
         .filter_level(args.verbosity.into())
         .parse_env(Env::new().filter("FONTHEIGHT_LOG"))
         .init();
+
+    let mut output: Box<dyn Write> = match &args.output_path {
+        None => Box::new(stdout().lock()),
+        Some(path) => {
+            let handle = OpenOptions::new()
+                .write(true)
+                .truncate(true)
+                .create(true)
+                .open(path)
+                .context("failed to open output file")?;
+            Box::new(handle)
+        },
+    };
 
     args.font_path
         .iter()
@@ -116,11 +147,28 @@ fn _main() -> anyhow::Result<()> {
                 .collect::<Result<Vec<_>, _>>()?;
 
             let took = start.elapsed();
-            println!("{}:", font_path.display());
-            reports.iter().for_each(|report| {
-                println!("{}", report.format(OutputFormat::Human));
-            });
-            info!("Took {took:?}");
+            info!("{} took {took:?}", font_path.display());
+
+            if !args.html {
+                writeln!(&mut output, "{}:", font_path.display())
+                    .context("failed to write to output")?;
+                reports
+                    .iter()
+                    .try_for_each(|report| {
+                        writeln!(
+                            &mut output,
+                            "{}",
+                            report.format(OutputFormat::Human)
+                        )
+                    })
+                    .context("failed to write to output")?;
+            } else {
+                let html =
+                    fmt::html::format_all_reports(&reports, reporter.fontref());
+                output
+                    .write_all(html.as_bytes())
+                    .context("failed to write to output")?;
+            }
             Ok(())
         })
 }

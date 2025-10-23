@@ -21,12 +21,16 @@ anyhow = "1"
 clap-verbosity-flag = { version = "3", features = ["log"] }
 fontheight = { version = "0.1.5", path = "../core" }
 log = { workspace = true }
+maud = "0.27.0"
 rayon = { workspace = true }
+skrifa = { workspace = true }
+svg = "0.18"
 
 [dependencies.static-lang-word-lists]
 version = "0.4"
 path = "../static-lang-word-lists"
 features = ["all"]
+
 
 [dependencies.clap]
 version = "4.5"

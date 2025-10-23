@@ -18,11 +18,11 @@ rayon = ["dep:rayon", "static-lang-word-lists/rayon"]
 # Note: make sure harfrust's read-fonts matches skrifa's read-fonts
 harfrust = "=0.3.2"
 itertools = "0.14.0"
-kurbo = "0.11.1"
+kurbo = { workspace = true }
 ordered-float = "5"
 rayon = { workspace = true, optional = true }
 # Note: make sure skrifa's read-fonts matches harfrust's read-fonts
-skrifa = "=0.37.0"
+skrifa = { workspace = true }
 thiserror = { workspace = true }
 
 [dependencies.static-lang-word-lists]

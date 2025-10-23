@@ -1,6 +1,7 @@
 use std::{fmt, fmt::Write};
 
 use fontheight::{Location, Report, WordExtremes};
+use log::debug;
 use maud::{DOCTYPE, Escaper, Markup, Render, html};
 use skrifa::{FontRef, Tag, raw::TableProvider};
 use static_lang_word_lists::WordList;
@@ -76,12 +77,38 @@ fn get_relevant_base_record(
                     .find(|record| record.base_script_tag == ot_script)
             },
         )?;
-    let min_max = relevant_script_record
+
+    let base_script = relevant_script_record
         .base_script(base.offset_data())
-        .ok()?
-        .default_min_max()?
         .ok()?;
-    // TODO: language-specific overrides...
+    let min_max = match word_list
+        .language()
+        .and_then(|lang| {
+            base_script.base_lang_sys_records().iter().find(|record| {
+                record.base_lang_sys_tag
+                    == Tag::new_checked(lang.as_bytes()).unwrap()
+            })
+        })
+        .map(|lang_record| {
+            lang_record.min_max(base_script.offset_data()).unwrap()
+        }) {
+        None => {
+            let min_max = base_script.default_min_max()?.ok()?;
+            debug!(
+                "found script BASE entry for {}",
+                word_list.script().unwrap()
+            );
+            min_max
+        },
+        Some(min_max) => {
+            debug!(
+                "found language-specific BASE override for {}",
+                word_list.language().unwrap()
+            );
+            min_max
+        },
+    };
+
     Some((
         min_max.max_coord()?.ok()?.coordinate(),
         min_max.min_coord()?.ok()?.coordinate(),

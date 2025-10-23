@@ -8,8 +8,11 @@ members = [
 ]
 
 [workspace.dependencies]
+kurbo = "0.12.0"
 log = "0.4.25"
 rayon = "1.10"
+# Note: make sure skrifa's read-fonts matches harfrust's read-fonts
+skrifa = "=0.37.0"
 thiserror = "2"
 
 [profile.release]

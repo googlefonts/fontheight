@@ -2,6 +2,8 @@ use std::fmt;
 
 use fontheight::Report;
 
+pub mod html;
+
 #[derive(Debug, Copy, Clone)]
 pub struct ReportFormatter<'a> {
     report: &'a Report<'a>,

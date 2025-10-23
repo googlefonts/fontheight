@@ -2,7 +2,7 @@ use std::{fmt, fmt::Write};
 
 use fontheight::{Location, Report, WordExtremes};
 use log::debug;
-use maud::{DOCTYPE, Escaper, Markup, Render, html};
+use maud::{DOCTYPE, Escaper, Markup, PreEscaped, Render, html};
 use skrifa::{FontRef, Tag, raw::TableProvider};
 use static_lang_word_lists::WordList;
 use svg::node::element::{Line, SVG};
@@ -189,10 +189,11 @@ fn draw_exemplar(
     location: &Location,
     font: &FontRef,
 ) -> Markup {
+    let svg = draw_svg(exemplar.word, font, location, source).to_string();
     html! {
         li {
             figure {
-                (draw_svg(exemplar.word, font, location, source))
+                (PreEscaped(svg))
                 figcaption {
                     (exemplar.word) " (from " (source.name()) ")" br;
                     (Debug(location))
@@ -222,12 +223,13 @@ pub fn format_all_reports<'a>(
     reports: &'a [Report<'a>],
     font: &FontRef,
 ) -> String {
+    // TODO: sort reports & consolidate word list sources
     html! {
         (DOCTYPE)
         html {
             head {
                 title { "Tall Glyphs" }
-                meta charset="utf-8"
+                meta charset="utf-8";
                 style { (CSS) }
             }
             body {
@@ -238,11 +240,12 @@ pub fn format_all_reports<'a>(
                         "green: [head.yMax, head.yMin]"
                     } br;
                     span style="color: red" {
-                        "red: [os2.sTypoAscender, os2.sTypoDescender]" br;
+                        "red: [os2.sTypoAscender, os2.sTypoDescender] "
                         "= clipping limit for Android"
                     } br;
                     span style="color: pink" {
-                        "pink: [1900&frasl;2048&times;upem, &minus;500&frasl;2048&times;upem]"
+                        (PreEscaped("pink: [1900&frasl;2048&times;upem, "))
+                        (PreEscaped("&minus;500&frasl;2048&times;upem]"))
                     } br;
                     span style="color: cyan" {
                         "cyan: BASE table entry for script (if present)"
@@ -251,7 +254,8 @@ pub fn format_all_reports<'a>(
                 @for report in reports { (format_report(report, font)) }
             }
         }
-    }.into_string()
+    }
+    .into_string()
 }
 
 // https://github.com/simoncozens/autobase/blob/9887854fd7436d034c15bf5875686b7583536e76/autobase/src/utils.rs#L223-L248

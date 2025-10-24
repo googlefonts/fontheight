@@ -1,4 +1,4 @@
-use std::{fmt, fmt::Write};
+use std::{fmt, fmt::Write, ops::Neg};
 
 use fontheight::{Location, Report, WordExtremes};
 use harfrust::{ShaperData, ShaperInstance, UnicodeBuffer};
@@ -165,7 +165,7 @@ fn draw_svg(
     ];
     let mut lows = vec![
         (os2.s_typo_descender() as f32, "red"),
-        (os2.us_win_descent() as f32, "blue"),
+        ((os2.us_win_descent() as f32).neg(), "blue"),
         (head.y_min() as f32, "green"),
         (-500. / 2048. * upm, "pink"),
     ];
@@ -307,6 +307,9 @@ pub fn format_all_reports<'a>(
                     "Lines legend:" br;
                     span style="color: green" {
                         "green: [head.yMax, head.yMin]"
+                    } br;
+                    span style="color: blue" {
+                        "blue: [os2.usWinAscent, -os2.usWinDescent]"
                     } br;
                     span style="color: red" {
                         "red: [os2.sTypoAscender, os2.sTypoDescender] "

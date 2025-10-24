@@ -3,15 +3,19 @@ use std::{
     fmt,
 };
 
+use indexmap::IndexMap;
+use ordered_float::NotNan;
 use skrifa::MetadataProvider;
 
 use crate::errors::{InvalidTagError, MismatchedAxesError};
 
+// TODO: document NaN panics
+
 /// A mapping of axis tags to values.
 ///
 /// ```
-/// # use fontheight::Location;
-/// # use fontheight::errors::InvalidTagError;
+/// # use harfshapedfa::Location;
+/// # use harfshapedfa::errors::InvalidTagError;
 /// # fn main() -> Result<(), InvalidTagError> {
 /// let mut loc = Location::new();
 /// loc.axis("wght", 400.0)?
@@ -21,23 +25,30 @@ use crate::errors::{InvalidTagError, MismatchedAxesError};
 /// # }
 /// ```
 #[derive(Clone, Default)]
-pub struct Location {
-    user_coords: HashMap<skrifa::Tag, f32>,
-}
+pub struct Location(IndexMap<skrifa::Tag, NotNan<f32>>);
 
 impl Location {
     /// Create a new location.
     #[must_use]
     pub fn new() -> Self {
-        // HashMap::new isn't const so even if we desugared this we couldn't
+        // IndexMap::new isn't const so even if we desugared this we couldn't
         // make Location::new const
         Default::default()
     }
 
-    pub(crate) const fn from_skrifa(
-        user_coords: HashMap<skrifa::Tag, f32>,
-    ) -> Self {
-        Self { user_coords }
+    #[must_use]
+    pub fn from_skrifa(user_coords: HashMap<skrifa::Tag, f32>) -> Self {
+        Self(
+            user_coords
+                .into_iter()
+                .map(|(tag, value)| {
+                    let value = NotNan::new(value).unwrap_or_else(|_| {
+                        panic!("{tag} coordinate was NaN");
+                    });
+                    (tag, value)
+                })
+                .collect(),
+        )
     }
 
     /// Set the value of an axis.
@@ -47,8 +58,8 @@ impl Location {
     /// Designed to support method chaining:
     ///
     /// ```
-    /// # use fontheight::Location;
-    /// # use fontheight::errors::InvalidTagError;
+    /// # use harfshapedfa::Location;
+    /// # use harfshapedfa::errors::InvalidTagError;
     /// # fn main() -> Result<(), InvalidTagError> {
     /// let mut loc = Location::new();
     /// loc.axis("wght", 400.0)?
@@ -63,7 +74,10 @@ impl Location {
         value: f32,
     ) -> Result<&mut Self, InvalidTagError> {
         let tag = skrifa::Tag::new_checked(tag.as_ref())?;
-        self.user_coords.insert(tag, value);
+        let value = NotNan::new(value).unwrap_or_else(|_| {
+            panic!("{tag} coordinate was NaN");
+        });
+        self.0.insert(tag, value);
         Ok(self)
     }
 
@@ -72,7 +86,7 @@ impl Location {
     /// Fails if any keys aren't valid axis tags.
     ///
     /// Note: this is just an alias to the [`TryFrom`] implementation.
-    pub fn try_from_simple(
+    pub fn try_from_std(
         location: HashMap<String, f32>,
     ) -> Result<Self, InvalidTagError> {
         Self::try_from(location)
@@ -80,28 +94,33 @@ impl Location {
 
     /// Creates a [`HashMap<String, f32>`](HashMap) from `&self`.
     #[must_use]
-    pub fn to_simple(&self) -> HashMap<String, f32> {
-        self.user_coords
+    pub fn to_std(&self) -> HashMap<String, f32> {
+        self.0
             .iter()
-            .map(|(tag, &val)| (tag.to_string(), val))
+            .map(|(tag, val)| (tag.to_string(), val.into_inner()))
             .collect()
     }
 
     /// Creates a [`skrifa::instance::Location`] from `&self`.
-    pub(crate) fn to_skrifa(
+    #[must_use]
+    pub fn to_skrifa(
         &self,
         font: &skrifa::FontRef,
     ) -> skrifa::instance::Location {
         font.axes().location(
-            self.user_coords.iter().map(|(tag, coord)| (*tag, *coord)),
+            self.0.iter().map(|(tag, coord)| (*tag, coord.into_inner())),
         )
     }
 
     /// Creates a [`harfrust::Variation`] from `&self`.
-    pub(crate) fn to_harfrust(&self) -> Vec<harfrust::Variation> {
-        self.user_coords
+    #[must_use]
+    pub fn to_harfrust(&self) -> Vec<harfrust::Variation> {
+        self.0
             .iter()
-            .map(|(&tag, &value)| harfrust::Variation { tag, value })
+            .map(|(&tag, value)| harfrust::Variation {
+                tag,
+                value: value.into_inner(),
+            })
             .collect()
     }
 
@@ -117,8 +136,7 @@ impl Location {
         &self,
         font: &skrifa::FontRef,
     ) -> Result<(), MismatchedAxesError> {
-        let mut provided =
-            self.user_coords.keys().copied().collect::<HashSet<_>>();
+        let mut provided = self.0.keys().copied().collect::<HashSet<_>>();
         font.axes().iter().map(|axis| axis.tag()).for_each(|tag| {
             provided.remove(&tag);
         });
@@ -136,11 +154,7 @@ impl Location {
 impl fmt::Debug for Location {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_map()
-            .entries(
-                self.user_coords
-                    .iter()
-                    .map(|(tag, &val)| (tag.to_string(), val)),
-            )
+            .entries(self.0.iter().map(|(tag, &val)| (tag.to_string(), val)))
             .finish()
     }
 }
@@ -151,10 +165,14 @@ impl TryFrom<HashMap<String, f32>> for Location {
     fn try_from(location: HashMap<String, f32>) -> Result<Self, Self::Error> {
         let user_coords = location
             .into_iter()
-            .map(|(tag, val)| {
-                skrifa::Tag::new_checked(tag.as_bytes()).map(|t| (t, val))
+            .map(|(tag, value)| -> Result<_, InvalidTagError> {
+                let tag = skrifa::Tag::new_checked(tag.as_bytes())?;
+                let value = NotNan::new(value).unwrap_or_else(|_| {
+                    panic!("{tag} coordinate was NaN");
+                });
+                Ok((tag, value))
             })
             .collect::<Result<_, _>>()?;
-        Ok(Self { user_coords })
+        Ok(Self(user_coords))
     }
 }

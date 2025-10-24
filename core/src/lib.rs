@@ -32,33 +32,31 @@ use std::{
     borrow::Cow,
     cmp,
     collections::{BTreeSet, HashMap},
-    str::FromStr,
 };
 
 pub use exemplars::{CollectToExemplars, Exemplars};
-use harfrust::{
-    Direction, Language, Script, ShapePlan, Shaper, ShaperData, ShaperInstance,
-    Tag, UnicodeBuffer, script,
-};
+use harfrust::{Shaper, ShaperData, ShaperInstance, UnicodeBuffer};
+pub use harfshapedfa::Location;
+use harfshapedfa::{HarfRustShaperExt, ShapingMeta};
 use itertools::Itertools;
 use kurbo::Shape;
-pub use locations::Location;
 use ordered_float::{NotNan, OrderedFloat};
-use pens::BezierPen;
 use skrifa::{
     FontRef, MetadataProvider, instance::Size, outline::DrawSettings,
 };
 pub use static_lang_word_lists::WordList;
 use static_lang_word_lists::WordListIter;
 
-use crate::errors::{
-    FontHeightError, HarfRustUnknownLanguageError, ShapingPlanError,
-    SkrifaDrawError, SkrifaReadError,
+use crate::{
+    errors::{
+        FontHeightError, SkrifaDrawError, SkrifaReadError,
+        WordListShapingPlanError,
+    },
+    pens::BezierPen,
 };
 
 pub mod errors;
 mod exemplars;
-mod locations;
 mod pens;
 
 /// Font Height's entrypoint. Parses fonts and can check word lists at
@@ -217,13 +215,22 @@ impl<'a> InstanceReporter<'a> {
     pub fn to_word_extremes_iter(
         &self,
         word_list: &'a WordList,
-    ) -> Result<WordExtremesIterator<'_>, ShapingPlanError> {
+    ) -> Result<WordExtremesIterator<'_>, WordListShapingPlanError> {
         let shaper = self
             .shaper_data
             .shaper(self.font)
             .instance(Some(&self.shaper_instance))
             .build();
-        let shaping_meta = ShapingMeta::new_from(word_list, &shaper)?;
+        let shaping_meta = word_list
+            .script()
+            .map(|script| {
+                ShapingMeta::new(script, word_list.language(), &shaper)
+            })
+            .transpose()
+            .map_err(|err| WordListShapingPlanError {
+                word_list_name: word_list.name().to_owned(),
+                inner: err,
+            })?;
         Ok(WordExtremesIterator {
             shaper,
             instance_extremes: &self.instance_extremes,
@@ -242,7 +249,7 @@ impl<'a> InstanceReporter<'a> {
         word_list: &'a WordList,
         k_words: Option<usize>,
         n_exemplars: usize,
-    ) -> Result<Report<'a>, ShapingPlanError> {
+    ) -> Result<Report<'a>, WordListShapingPlanError> {
         use std::convert::identity;
 
         use exemplars::ExemplarCollector;
@@ -262,7 +269,16 @@ impl<'a> InstanceReporter<'a> {
             .shaper(self.font)
             .instance(Some(&self.shaper_instance))
             .build();
-        let shaping_meta = ShapingMeta::new_from(word_list, &shaper)?;
+        let shaping_meta = word_list
+            .script()
+            .map(|script| {
+                ShapingMeta::new(script, word_list.language(), &shaper)
+            })
+            .transpose()
+            .map_err(|err| WordListShapingPlanError {
+                word_list_name: word_list.name().to_owned(),
+                inner: err,
+            })?;
 
         let exemplars = word_list
             .par_iter()
@@ -278,18 +294,7 @@ impl<'a> InstanceReporter<'a> {
 
                     // Default features are still included by default
                     let glyph_buffer = match &shaping_meta {
-                        Some(meta) => {
-                            buffer.set_script(meta.script);
-                            if let Some(lang) = meta.language.clone() {
-                                buffer.set_language(lang);
-                            }
-                            buffer.set_direction(meta.direction);
-                            shaper.shape_with_plan(
-                                &meta.shaping_plan,
-                                buffer,
-                                &[],
-                            )
-                        },
+                        Some(meta) => shaper.shape_with_meta(meta, buffer, &[]),
                         None => {
                             buffer.guess_segment_properties();
                             shaper.shape(buffer, &[])
@@ -391,14 +396,7 @@ impl<'a> Iterator for WordExtremesIterator<'a> {
 
             // Default features are still included by default
             let glyph_buffer = match &self.shaping_meta {
-                Some(meta) => {
-                    buffer.set_script(meta.script);
-                    if let Some(lang) = meta.language.clone() {
-                        buffer.set_language(lang);
-                    }
-                    buffer.set_direction(meta.direction);
-                    self.shaper.shape_with_plan(&meta.shaping_plan, buffer, &[])
-                },
+                Some(meta) => self.shaper.shape_with_meta(meta, buffer, &[]),
                 None => {
                     buffer.guess_segment_properties();
                     self.shaper.shape(buffer, &[])
@@ -539,6 +537,7 @@ impl InstanceExtremes {
     }
 
     /// Get the [`VerticalExtremes`] for the given glyph ID.
+    #[must_use]
     pub fn get(&self, glyph_id: u32) -> Option<VerticalExtremes> {
         self.0.get(&glyph_id).copied()
     }
@@ -624,151 +623,5 @@ impl<'a> Report<'a> {
             word_list,
             exemplars,
         }
-    }
-}
-
-struct ShapingMeta {
-    shaping_plan: ShapePlan,
-    script: Script,
-    direction: Direction,
-    language: Option<Language>,
-}
-
-impl ShapingMeta {
-    fn new_from(
-        word_list: &WordList,
-        shaper: &Shaper,
-    ) -> Result<Option<Self>, ShapingPlanError> {
-        // If we didn't get a script, we're not going to make a shaping plan,
-        // give up
-        let Some(script) = word_list.script() else {
-            return Ok(None);
-        };
-        let script_tag = script.parse::<Tag>().map_err(|inner| {
-            ShapingPlanError::UnknownScriptTag {
-                word_list_name: word_list.name().to_owned(),
-                inner: inner.into(),
-            }
-        })?;
-        // Unwrap is safe here as script_tag is never null as [0, 0, 0, 0] isn't
-        // a valid Rust string
-        let script = Script::from_iso15924_tag(script_tag).unwrap();
-
-        let language = word_list
-            .language()
-            .map(|lang| {
-                // harfrust's own error here is just "invalid language"
-                // (v0.1.1), so discard it for our own
-                Language::from_str(lang).map_err(|_| {
-                    ShapingPlanError::UnknownLanguage {
-                        word_list_name: word_list.name().to_owned(),
-                        inner: HarfRustUnknownLanguageError::new(lang),
-                    }
-                })
-            })
-            .transpose()?;
-        let direction =
-            direction_from_script(script).unwrap_or(Direction::LeftToRight);
-
-        let shaping_plan = ShapePlan::new(
-            shaper,
-            direction,
-            Some(script),
-            language.as_ref(),
-            // Default features are still included by default
-            &[],
-        );
-
-        Ok(Some(Self {
-            shaping_plan,
-            script,
-            direction,
-            language,
-        }))
-    }
-}
-
-const fn direction_from_script(script: Script) -> Option<Direction> {
-    // Copied from harfrust (internal API)
-    // https://github.com/harfbuzz/harfrust/blob/bf4b7ca20cf95e7183c5f9e1c13a56e9ca6c1174/src/hb/common.rs#L75-L161
-
-    match script {
-        // Unicode-1.1 additions
-        script::ARABIC |
-        script::HEBREW |
-
-        // Unicode-3.0 additions
-        script::SYRIAC |
-        script::THAANA |
-
-        // Unicode-4.0 additions
-        script::CYPRIOT |
-
-        // Unicode-4.1 additions
-        script::KHAROSHTHI |
-
-        // Unicode-5.0 additions
-        script::PHOENICIAN |
-        script::NKO |
-
-        // Unicode-5.1 additions
-        script::LYDIAN |
-
-        // Unicode-5.2 additions
-        script::AVESTAN |
-        script::IMPERIAL_ARAMAIC |
-        script::INSCRIPTIONAL_PAHLAVI |
-        script::INSCRIPTIONAL_PARTHIAN |
-        script::OLD_SOUTH_ARABIAN |
-        script::OLD_TURKIC |
-        script::SAMARITAN |
-
-        // Unicode-6.0 additions
-        script::MANDAIC |
-
-        // Unicode-6.1 additions
-        script::MEROITIC_CURSIVE |
-        script::MEROITIC_HIEROGLYPHS |
-
-        // Unicode-7.0 additions
-        script::MANICHAEAN |
-        script::MENDE_KIKAKUI |
-        script::NABATAEAN |
-        script::OLD_NORTH_ARABIAN |
-        script::PALMYRENE |
-        script::PSALTER_PAHLAVI |
-
-        // Unicode-8.0 additions
-        script::HATRAN |
-
-        // Unicode-9.0 additions
-        script::ADLAM |
-
-        // Unicode-11.0 additions
-        script::HANIFI_ROHINGYA |
-        script::OLD_SOGDIAN |
-        script::SOGDIAN |
-
-        // Unicode-12.0 additions
-        script::ELYMAIC |
-
-        // Unicode-13.0 additions
-        script::CHORASMIAN |
-        script::YEZIDI |
-
-        // Unicode-14.0 additions
-        script::OLD_UYGHUR => {
-            Some(Direction::RightToLeft)
-        }
-
-        // https://github.com/harfbuzz/harfbuzz/issues/1000
-        script::OLD_HUNGARIAN |
-        script::OLD_ITALIC |
-        script::RUNIC |
-        script::TIFINAGH => {
-            None
-        }
-
-        _ => Some(Direction::LeftToRight),
     }
 }

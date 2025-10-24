@@ -137,6 +137,7 @@ impl Location {
         font: &skrifa::FontRef,
     ) -> Result<(), MismatchedAxesError> {
         let mut provided = self.0.keys().copied().collect::<HashSet<_>>();
+        // TODO: check values are legal too
         font.axes().iter().map(|axis| axis.tag()).for_each(|tag| {
             provided.remove(&tag);
         });

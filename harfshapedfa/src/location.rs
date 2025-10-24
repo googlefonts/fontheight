@@ -1,4 +1,5 @@
 use std::{
+    cmp::Ordering,
     collections::{HashMap, HashSet},
     fmt,
 };
@@ -24,7 +25,7 @@ use crate::errors::{InvalidTagError, MismatchedAxesError};
 /// # Ok(())
 /// # }
 /// ```
-#[derive(Clone, Default)]
+#[derive(Clone, Default, Eq, PartialEq)]
 pub struct Location(IndexMap<skrifa::Tag, NotNan<f32>>);
 
 impl Location {
@@ -149,6 +150,26 @@ impl Location {
                 extras: Vec::from_iter(extras),
             })
         }
+    }
+}
+
+impl PartialOrd for Location {
+    // TODO: docs
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        if self.0.keys().any(|tag| !other.0.contains_key(tag))
+            || other.0.keys().any(|tag| !self.0.contains_key(tag))
+        {
+            // Difference in axes
+            return None;
+        }
+
+        for (tag, left_val) in self.0.iter() {
+            match NotNan::cmp(left_val, &other.0[tag]) {
+                Ordering::Equal => { /* check next axis */ },
+                not_equal => return Some(not_equal),
+            }
+        }
+        Some(Ordering::Equal)
     }
 }
 

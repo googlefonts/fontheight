@@ -1,4 +1,4 @@
-use std::{fmt, fmt::Write, ops::Neg};
+use std::{cmp::Ordering, collections::BTreeMap, fmt, fmt::Write, ops::Neg};
 
 use fontheight::{Location, Report, WordExtremes};
 use harfrust::{ShaperData, ShaperInstance, UnicodeBuffer};
@@ -264,7 +264,7 @@ fn draw_exemplar(
             figure {
                 (PreEscaped(svg))
                 figcaption {
-                    (exemplar.word) " (from " (source.name()) ")" br;
+                    "\"" (exemplar.word) "\" (from " (source.name()) ")" br;
                     (Debug(location))
                 }
             }
@@ -272,16 +272,32 @@ fn draw_exemplar(
     }
 }
 
-fn format_report<'a>(report: &'a Report<'a>, font: &FontRef) -> Markup {
+fn format_script_reports<'a>(
+    script: &str,
+    reports: &'a [&'a Report<'a>],
+    font: &FontRef,
+) -> Markup {
     html! {
         details open {
-            summary { h2 { (report.word_list.script().unwrap_or("Misc.")) } }
-            ul.drawn {
-                @for high_exemplar in report.exemplars.highest() {
-                    (draw_exemplar(*high_exemplar, report.word_list, report.location, font))
-                }
-                @for low_exemplar in report.exemplars.lowest() {
-                    (draw_exemplar(*low_exemplar, report.word_list, report.location, font))
+            summary { h2 { (script) } }
+            @for report in reports {
+                ul.drawn {
+                    @for high_exemplar in report.exemplars.highest() {
+                        (draw_exemplar(
+                            *high_exemplar,
+                            report.word_list,
+                            report.location,
+                            font,
+                        ))
+                    }
+                    @for low_exemplar in report.exemplars.lowest() {
+                        (draw_exemplar(
+                            *low_exemplar,
+                            report.word_list,
+                            report.location,
+                            font,
+                        ))
+                    }
                 }
             }
         }
@@ -292,7 +308,28 @@ pub fn format_all_reports<'a>(
     reports: &'a [Report<'a>],
     font: &FontRef,
 ) -> String {
-    // TODO: sort reports & consolidate word list sources
+    // Group on script and then present exemplars from word lists in order by
+    // name
+    let mut script_exemplars = BTreeMap::<&str, Vec<&Report>>::new();
+    reports.iter().for_each(|report| {
+        // ZWSP at the start of Unknown so it gets sorted last
+        let script = report.word_list.script().unwrap_or("\u{200B}Unknown");
+        script_exemplars.entry(script).or_default().push(report);
+    });
+    // Sort reports by name, then by location
+    script_exemplars.values_mut().for_each(|reports| {
+        reports.sort_unstable_by(|report_a, report_b| {
+            Ord::cmp(report_a.word_list.name(), report_b.word_list.name())
+                .then_with(|| {
+                    PartialOrd::partial_cmp(
+                        &report_a.location,
+                        &report_b.location,
+                    )
+                    .unwrap_or(Ordering::Equal)
+                })
+        });
+    });
+
     html! {
         (DOCTYPE)
         html {
@@ -323,7 +360,9 @@ pub fn format_all_reports<'a>(
                         "cyan: BASE table entry for script (if present)"
                     } br;
                 }
-                @for report in reports { (format_report(report, font)) }
+                @for (script, reports) in script_exemplars {
+                    (format_script_reports(script, &reports, font))
+                }
             }
         }
     }

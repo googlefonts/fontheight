@@ -375,6 +375,8 @@ dependencies = [
  "clap-verbosity-flag",
  "env_logger",
  "fontheight",
+ "harfrust",
+ "harfshapedfa",
  "log",
  "maud",
  "rayon",

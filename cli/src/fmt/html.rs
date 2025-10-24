@@ -1,11 +1,20 @@
 use std::{fmt, fmt::Write};
 
 use fontheight::{Location, Report, WordExtremes};
+use harfrust::{ShaperData, ShaperInstance, UnicodeBuffer};
+use harfshapedfa::{
+    HarfRustShaperExt, ShapingMeta, utils::iso15924_to_opentype,
+};
 use log::debug;
 use maud::{DOCTYPE, Escaper, Markup, PreEscaped, Render, html};
-use skrifa::{FontRef, Tag, raw::TableProvider};
+use skrifa::{
+    FontRef, MetadataProvider, Tag,
+    instance::Size,
+    outline::{DrawSettings, OutlinePen, pen::SvgPen},
+    raw::TableProvider,
+};
 use static_lang_word_lists::WordList;
-use svg::node::element::{Line, SVG};
+use svg::node::element::{Line, Path, SVG};
 
 static CSS: &str = "\
 body {
@@ -46,7 +55,7 @@ ul.drawn {
 }
 
 .drawn svg {
-    height: 256px;
+    height: 100px;
     border: 1px grey dashed;
     padding: 1rem;
 }";
@@ -67,7 +76,7 @@ fn get_relevant_base_record(
     // TODO: should probably at least warn! for any errors that emerge here that
     //       we're not expecting
     let base = font.base().ok()?;
-    let ot_script = word_list.script().map(iso15924_to_opentype)?;
+    let ot_script = word_list.script().map(iso15924_to_opentype)?.ok()?;
     let relevant_script_record =
         base.horiz_axis()?.ok()?.base_script_list().ok().and_then(
             |base_script_list| {
@@ -116,15 +125,33 @@ fn get_relevant_base_record(
 }
 
 fn draw_svg(
-    _word: &str,
+    word: &str,
     font: &FontRef,
-    _location: &Location,
+    location: &Location,
     word_list: &WordList,
 ) -> SVG {
-    // TODO: proper bounds
-    let x_min = 0;
-    let x_max = 3000;
-    let height = 3000f32;
+    let shaper_data = ShaperData::new(font);
+    let shaper_instance =
+        ShaperInstance::from_variations(font, location.to_harfrust());
+    let shaper = shaper_data
+        .shaper(font)
+        .instance(Some(&shaper_instance))
+        .build();
+    let shaping_meta = word_list
+        .script()
+        .map(|script| ShapingMeta::new(script, word_list.language(), &shaper))
+        .transpose()
+        .unwrap(); // TODO: error handling
+    let mut buffer = UnicodeBuffer::new();
+    buffer.push_str(word);
+    // Default features are still included by default
+    let glyph_buffer = match &shaping_meta {
+        Some(meta) => shaper.shape_with_meta(meta, buffer, &[]),
+        None => {
+            buffer.guess_segment_properties();
+            shaper.shape(buffer, &[])
+        },
+    };
 
     let os2 = font.os2().unwrap();
     let head = font.head().unwrap();
@@ -159,6 +186,48 @@ fn draw_svg(
         .copied()
         .unwrap();
 
+    let skrifa_location = location.to_skrifa(font);
+    let outlines = font.outline_glyphs();
+    let mut svg_pen = SvgPen::new();
+    let (x_max, _) = glyph_buffer
+        .glyph_infos()
+        .iter()
+        .zip(glyph_buffer.glyph_positions())
+        .fold(
+            (0f32, 0f32),
+            |(advance_width, advance_height), (glyph_info, position)| {
+                let glyph = outlines.get(glyph_info.glyph_id.into()).unwrap();
+                let offset_x = advance_width + position.x_offset as f32;
+                let offset_y = advance_height + position.y_offset as f32;
+                let mut offset_svg_pen = OffsetPen {
+                    offset_x,
+                    offset_y,
+                    inner: &mut svg_pen,
+                };
+                let mut flipped_offset_svg_pen = VerticalFlipPen {
+                    height: highest,
+                    inner: &mut offset_svg_pen,
+                };
+                glyph
+                    .draw(
+                        DrawSettings::unhinted(
+                            Size::unscaled(),
+                            &skrifa_location,
+                        ),
+                        &mut flipped_offset_svg_pen,
+                    )
+                    .unwrap();
+                (
+                    offset_x + position.x_advance as f32,
+                    offset_y + position.y_advance as f32,
+                )
+            },
+        );
+    let word_svg = Path::new().set("d", svg_pen.to_string());
+
+    let x_min = 0.;
+    let height = highest;
+
     let line = |y: f32, colour: &str| {
         Line::new()
             .set("x1", x_min)
@@ -180,7 +249,7 @@ fn draw_svg(
             format!("{x_min} 0 {} {}", x_max - x_min, highest - lowest),
         )
         .set("preserveAspectRatio", "meet")
-    // TODO: add the word itself
+        .add(word_svg)
 }
 
 fn draw_exemplar(
@@ -258,30 +327,103 @@ pub fn format_all_reports<'a>(
     .into_string()
 }
 
-// https://github.com/simoncozens/autobase/blob/9887854fd7436d034c15bf5875686b7583536e76/autobase/src/utils.rs#L223-L248
-fn iso15924_to_opentype(script: &str) -> Tag {
-    match script {
-        // Special cases: https://github.com/fonttools/fonttools/blob/3c1822544d608f87c41fc8fb9ba41ea129257aa8/Lib/fontTools/unicodedata/OTTags.py
-        // Relevant specification: https://learn.microsoft.com/en-us/typography/opentype/spec/scripttags
-        // SCRIPT_EXCEPTIONS
-        "Hira" => Tag::new(b"kana"),
-        "Hrkt" => Tag::new(b"kana"),
-        "Laoo" => Tag::new(b"lao "),
-        "Yiii" => Tag::new(b"yi  "),
-        "Nkoo" => Tag::new(b"nko "),
-        "Vaii" => Tag::new(b"vai "),
-        // NEW_SCRIPT_TAGS
-        "Beng" => Tag::new(b"bng2"),
-        "Deva" => Tag::new(b"dev2"),
-        "Gujr" => Tag::new(b"gjr2"),
-        "Guru" => Tag::new(b"gur2"),
-        "Knda" => Tag::new(b"knd2"),
-        "Mlym" => Tag::new(b"mlm2"),
-        "Orya" => Tag::new(b"ory2"),
-        "Taml" => Tag::new(b"tml2"),
-        "Telu" => Tag::new(b"tel2"),
-        "Mymr" => Tag::new(b"mym2"),
-        // General case
-        _ => Tag::new_checked(script.to_lowercase().as_bytes()).unwrap(),
+struct VerticalFlipPen<'p, P> {
+    height: f32,
+    inner: &'p mut P,
+}
+
+impl<P> OutlinePen for VerticalFlipPen<'_, P>
+where
+    P: OutlinePen,
+{
+    fn move_to(&mut self, x: f32, y: f32) {
+        debug_assert!(y <= self.height);
+        self.inner.move_to(x, self.height - y);
+    }
+
+    fn line_to(&mut self, x: f32, y: f32) {
+        debug_assert!(y <= self.height);
+        self.inner.line_to(x, self.height - y);
+    }
+
+    fn quad_to(&mut self, cx0: f32, cy0: f32, x: f32, y: f32) {
+        debug_assert!(y <= self.height);
+        self.inner
+            .quad_to(cx0, self.height - cy0, x, self.height - y);
+    }
+
+    fn curve_to(
+        &mut self,
+        cx0: f32,
+        cy0: f32,
+        cx1: f32,
+        cy1: f32,
+        x: f32,
+        y: f32,
+    ) {
+        debug_assert!(y <= self.height);
+        self.inner.curve_to(
+            cx0,
+            self.height - cy0,
+            cx1,
+            self.height - cy1,
+            x,
+            self.height - y,
+        );
+    }
+
+    fn close(&mut self) {
+        self.inner.close()
+    }
+}
+
+struct OffsetPen<'p, P> {
+    offset_x: f32,
+    offset_y: f32,
+    inner: &'p mut P,
+}
+
+impl<P> OutlinePen for OffsetPen<'_, P>
+where
+    P: OutlinePen,
+{
+    fn move_to(&mut self, x: f32, y: f32) {
+        self.inner.move_to(x + self.offset_x, y + self.offset_y);
+    }
+
+    fn line_to(&mut self, x: f32, y: f32) {
+        self.inner.line_to(x + self.offset_x, y + self.offset_y);
+    }
+
+    fn quad_to(&mut self, cx0: f32, cy0: f32, x: f32, y: f32) {
+        self.inner.quad_to(
+            cx0 + self.offset_x,
+            cy0 + self.offset_y,
+            x + self.offset_x,
+            y + self.offset_y,
+        );
+    }
+
+    fn curve_to(
+        &mut self,
+        cx0: f32,
+        cy0: f32,
+        cx1: f32,
+        cy1: f32,
+        x: f32,
+        y: f32,
+    ) {
+        self.inner.curve_to(
+            cx0 + self.offset_x,
+            cy0 + self.offset_y,
+            cx1 + self.offset_x,
+            cy1 + self.offset_y,
+            x + self.offset_x,
+            y + self.offset_y,
+        );
+    }
+
+    fn close(&mut self) {
+        self.inner.close();
     }
 }

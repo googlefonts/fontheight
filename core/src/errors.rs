@@ -6,7 +6,9 @@
 //! may return more specific errors (all of which will up-convert to
 //! [`FontHeightError`] one way or another).
 
-use skrifa::{outline::DrawError, raw::types::InvalidTag};
+use harfshapedfa::errors::ShapingPlanError;
+pub use harfshapedfa::errors::{InvalidTagError, MismatchedAxesError};
+use skrifa::outline::DrawError;
 use thiserror::Error;
 
 /// Font Height hit an error, sorry!
@@ -29,7 +31,7 @@ pub enum FontHeightError {
     /// Invalid metadata for a [`WordList`](crate::WordList) meant creating a
     /// shaping plan for it failed.
     #[error(transparent)]
-    WordListMetadata(#[from] ShapingPlanError),
+    WordListMetadata(#[from] WordListShapingPlanError),
 }
 
 /// Creating the shaping plan for a [`WordList`](crate::WordList) failed.
@@ -47,44 +49,10 @@ pub enum FontHeightError {
 /// metadata and it's unable to be used. [`WordList`](crate::WordList)s without
 /// metadata will not cause this error.
 #[derive(Debug, Error)]
-pub enum ShapingPlanError {
-    /// The script metadata value on the [`WordList`](crate::WordList) was
-    /// invalid
-    #[error(
-        "invalid script in word list metadata for {word_list_name}: {inner}"
-    )]
-    UnknownScriptTag {
-        /// The name of the word list that had invalid metadata
-        word_list_name: String,
-        /// The underlying error
-        inner: InvalidTagError,
-    },
-    /// The language metadata value on the [`WordList`](crate::WordList) was
-    /// invalid
-    #[error(
-        "invalid language in word list metadata for {word_list_name}: {inner}"
-    )]
-    UnknownLanguage {
-        /// The name of the word list that had invalid metadata
-        word_list_name: String,
-        /// The underlying error
-        inner: HarfRustUnknownLanguageError,
-    },
-}
-
-/// [`harfrust`] didn't recognise the language
-#[derive(Debug, Error)]
-#[error("invalid language: \"{language}\"")]
-pub struct HarfRustUnknownLanguageError {
-    language: String,
-}
-
-impl HarfRustUnknownLanguageError {
-    pub(crate) fn new(lang: impl Into<String>) -> Self {
-        HarfRustUnknownLanguageError {
-            language: lang.into(),
-        }
-    }
+#[error("couldn't make shaping plan for {word_list_name}: {inner}")]
+pub struct WordListShapingPlanError {
+    pub(crate) word_list_name: String,
+    pub(crate) inner: ShapingPlanError,
 }
 
 // New-typed errors to not have 3rd party errors in public API
@@ -97,18 +65,3 @@ pub struct SkrifaReadError(#[from] skrifa::raw::ReadError);
 #[derive(Debug, Error)]
 #[error("could not draw glyph {0}: {1}")]
 pub struct SkrifaDrawError(pub(crate) skrifa::GlyphId, pub(crate) DrawError);
-
-/// Returned by [`Location::validate_for`](crate::Location::validate_for),
-/// indicating axes are specified in the [`Location`](crate::Location) that
-/// aren't in the font being validated against.
-#[derive(Debug, Error)]
-#[error("mismatched axes: present in Location but not font {extras:?}")]
-pub struct MismatchedAxesError {
-    pub(crate) extras: Vec<skrifa::Tag>,
-}
-
-/// The axis/script tag was invalid (it had illegal characters or wasn't four
-/// characters).
-#[derive(Debug, Error)]
-#[error(transparent)]
-pub struct InvalidTagError(#[from] InvalidTag);

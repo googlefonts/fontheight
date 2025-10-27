@@ -57,7 +57,6 @@ ul.drawn {
 .drawn svg {
     height: 150px;
     border: 1px grey dashed;
-    padding: 1rem;
 }";
 
 struct Debug<T: fmt::Debug>(T);
@@ -216,6 +215,8 @@ fn draw_svg(
                         &mut flipped_offset_svg_pen,
                     )
                     .unwrap();
+                // TODO: get glyph bounds/extents and update y_min & y_max as
+                //       needed
                 (
                     advance_width + position.x_advance as f32,
                     advance_height + position.y_advance as f32,

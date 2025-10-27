@@ -1858,5 +1858,250 @@ word_list! {
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static UCD_EMOJI_TEXTUAL: crate::WordList = crate::WordList::stub();
-///A lookup map for the crate-provided [`WordList`](crate::WordList)s. Maps their names to the corresponding static [`WordList`](crate::WordList).
-pub static LOOKUP_TABLE: ::phf::Map<&'static str, &'static crate::WordList> = ::phf::phf_map! {};
+///All the available [`WordList`](crate::WordList)s
+pub static ALL_WORD_LISTS: &[&crate::WordList] = &[
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-af"))]
+    &AOSP_AFRIKAANS_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-ethi", feature = "lang-am"))]
+    &AOSP_AMHARIC_ETHIOPIC,
+    #[cfg(any(feature = "aosp", feature = "script-arab", feature = "lang-ar"))]
+    &AOSP_ARABIC,
+    #[cfg(any(feature = "aosp", feature = "script-beng", feature = "lang-as"))]
+    &AOSP_ASSAMESE_BENGALI,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-az"))]
+    &AOSP_AZERBAIJANI_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-cyrl", feature = "lang-be"))]
+    &AOSP_BELARUSIAN_CYRILLIC,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-be"))]
+    &AOSP_BELARUSIAN_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-cyrl", feature = "lang-bg"))]
+    &AOSP_BULGARIAN_CYRILLIC,
+    #[cfg(any(feature = "aosp", feature = "script-beng", feature = "lang-bn"))]
+    &AOSP_BENGALI,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-bs"))]
+    &AOSP_BOSNIAN_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-ca"))]
+    &AOSP_CATALAN_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-cs"))]
+    &AOSP_CZECH_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-da"))]
+    &AOSP_DANISH_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-de"))]
+    &AOSP_GERMAN_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-grek", feature = "lang-el"))]
+    &AOSP_MODERN_GREEK,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-en"))]
+    &AOSP_ENGLISH_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-es"))]
+    &AOSP_SPANISH_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-et"))]
+    &AOSP_ESTONIAN_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-eu"))]
+    &AOSP_BASQUE_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-arab", feature = "lang-fa"))]
+    &AOSP_PERSIAN_ARABIC,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-fi"))]
+    &AOSP_FINNISH_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-fr"))]
+    &AOSP_FRENCH_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-gl"))]
+    &AOSP_GALICIAN_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-gujr", feature = "lang-gu"))]
+    &AOSP_GUJARATI,
+    #[cfg(any(feature = "aosp", feature = "script-deva", feature = "lang-hi"))]
+    &AOSP_HINDI_DEVANAGARI,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-hi"))]
+    &AOSP_HINDI_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-hr"))]
+    &AOSP_CROATIAN_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-hu"))]
+    &AOSP_HUNGARIAN_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-armn", feature = "lang-hy"))]
+    &AOSP_ARMENIAN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-is"))]
+    &AOSP_ICELANDIC_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-it"))]
+    &AOSP_ITALIAN_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-hira", feature = "lang-ja"))]
+    &AOSP_JAPANESE_HIRAGANA,
+    #[cfg(any(feature = "aosp", feature = "script-kana", feature = "lang-ja"))]
+    &AOSP_JAPANESE_KATAKANA,
+    #[cfg(any(feature = "aosp", feature = "script-geor", feature = "lang-ka"))]
+    &AOSP_GEORGIAN,
+    #[cfg(any(feature = "aosp", feature = "script-cyrl", feature = "lang-kk"))]
+    &AOSP_KAZAKH_CYRILLIC,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-kk"))]
+    &AOSP_KAZAKH_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-khmr", feature = "lang-km"))]
+    &AOSP_CENTRAL_KHMER,
+    #[cfg(any(feature = "aosp", feature = "script-knda", feature = "lang-kn"))]
+    &AOSP_KANNADA,
+    #[cfg(any(feature = "aosp", feature = "script-hang", feature = "lang-ko"))]
+    &AOSP_KOREAN_HANGUL,
+    #[cfg(any(feature = "aosp", feature = "script-cyrl", feature = "lang-ky"))]
+    &AOSP_KIRGHIZ_CYRILLIC,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-ky"))]
+    &AOSP_KIRGHIZ_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-laoo", feature = "lang-lo"))]
+    &AOSP_LAO,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-lt"))]
+    &AOSP_LITHUANIAN_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-lv"))]
+    &AOSP_LATVIAN_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-cyrl", feature = "lang-mk"))]
+    &AOSP_MACEDONIAN_CYRILLIC,
+    #[cfg(any(feature = "aosp", feature = "script-mlym", feature = "lang-ml"))]
+    &AOSP_MALAYALAM,
+    #[cfg(any(feature = "aosp", feature = "script-cyrl", feature = "lang-mn"))]
+    &AOSP_MONGOLIAN_CYRILLIC,
+    #[cfg(any(feature = "aosp", feature = "script-deva", feature = "lang-mr"))]
+    &AOSP_MARATHI_DEVANAGARI,
+    #[cfg(any(feature = "aosp", feature = "lang-ms"))]
+    &AOSP_MALAY,
+    #[cfg(any(feature = "aosp", feature = "script-mymr", feature = "lang-my"))]
+    &AOSP_BURMESE_MYANMAR,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-nb"))]
+    &AOSP_NORWEGIAN_BOKMÅL_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-deva", feature = "lang-ne"))]
+    &AOSP_NEPALI_DEVANAGARI,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-nl"))]
+    &AOSP_DUTCH_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-orya", feature = "lang-or"))]
+    &AOSP_ORIYA,
+    #[cfg(any(feature = "aosp", feature = "script-guru", feature = "lang-pa"))]
+    &AOSP_PANJABI_GURMUKHI,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-pl"))]
+    &AOSP_POLISH_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-pt"))]
+    &AOSP_PORTUGUESE_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-rm"))]
+    &AOSP_ROMANSH_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-ro"))]
+    &AOSP_ROMANIAN_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-cyrl", feature = "lang-ru"))]
+    &AOSP_RUSSIAN_CYRILLIC,
+    #[cfg(any(feature = "aosp", feature = "script-sinh", feature = "lang-si"))]
+    &AOSP_SINHALA,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-sk"))]
+    &AOSP_SLOVAK_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-sl"))]
+    &AOSP_SLOVENIAN_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-sq"))]
+    &AOSP_ALBANIAN_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-cyrl", feature = "lang-sr"))]
+    &AOSP_SERBIAN_CYRILLIC,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-sr"))]
+    &AOSP_SERBIAN_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-sv"))]
+    &AOSP_SWEDISH_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-sw"))]
+    &AOSP_SWAHILI_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-taml", feature = "lang-ta"))]
+    &AOSP_TAMIL,
+    #[cfg(any(feature = "aosp", feature = "script-telu", feature = "lang-te"))]
+    &AOSP_TELUGU,
+    #[cfg(any(feature = "aosp", feature = "script-thai", feature = "lang-th"))]
+    &AOSP_THAI,
+    #[cfg(any(feature = "aosp", feature = "lang-tl"))]
+    &AOSP_TAGALOG,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-tr"))]
+    &AOSP_TURKISH_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-cyrl", feature = "lang-uk"))]
+    &AOSP_UKRAINIAN_CYRILLIC,
+    #[cfg(any(feature = "aosp", feature = "script-arab", feature = "lang-ur"))]
+    &AOSP_URDU_ARABIC,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-uz"))]
+    &AOSP_UZBEK_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-vi"))]
+    &AOSP_VIETNAMESE_LATIN,
+    #[cfg(any(feature = "aosp", feature = "script-hani", feature = "lang-zh"))]
+    &AOSP_CHINESE_HAN,
+    #[cfg(any(feature = "aosp", feature = "script-latn", feature = "lang-zu"))]
+    &AOSP_ZULU_LATIN,
+    #[cfg(any(feature = "diffenator", feature = "script-adlm"))]
+    &DIFFENATOR_ADLAM,
+    #[cfg(any(feature = "diffenator", feature = "script-arab"))]
+    &DIFFENATOR_ARABIC,
+    #[cfg(any(feature = "diffenator", feature = "script-armn"))]
+    &DIFFENATOR_ARMENIAN,
+    #[cfg(any(feature = "diffenator", feature = "script-avst"))]
+    &DIFFENATOR_AVESTAN,
+    #[cfg(any(feature = "diffenator", feature = "script-beng"))]
+    &DIFFENATOR_BENGALI,
+    #[cfg(any(feature = "diffenator", feature = "script-bopo"))]
+    &DIFFENATOR_BOPOMOFO,
+    #[cfg(any(feature = "diffenator", feature = "script-cans"))]
+    &DIFFENATOR_CANADIAN_ABORIGINAL,
+    #[cfg(any(feature = "diffenator", feature = "script-cakm"))]
+    &DIFFENATOR_CHAKMA,
+    #[cfg(any(feature = "diffenator", feature = "script-cher"))]
+    &DIFFENATOR_CHEROKEE,
+    #[cfg(any(feature = "diffenator", feature = "script-zyyy"))]
+    &DIFFENATOR_COMMON,
+    #[cfg(any(feature = "diffenator", feature = "script-cyrl"))]
+    &DIFFENATOR_CYRILLIC,
+    #[cfg(any(feature = "diffenator", feature = "script-deva"))]
+    &DIFFENATOR_DEVANAGARI,
+    #[cfg(any(feature = "diffenator", feature = "script-ethi"))]
+    &DIFFENATOR_ETHIOPIC,
+    #[cfg(any(feature = "diffenator", feature = "script-geor"))]
+    &DIFFENATOR_GEORGIAN,
+    #[cfg(any(feature = "diffenator", feature = "script-grek"))]
+    &DIFFENATOR_GREEK,
+    #[cfg(any(feature = "diffenator", feature = "script-gujr"))]
+    &DIFFENATOR_GUJARATI,
+    #[cfg(any(feature = "diffenator", feature = "script-guru"))]
+    &DIFFENATOR_GURMUKHI,
+    #[cfg(any(feature = "diffenator", feature = "script-hebr"))]
+    &DIFFENATOR_HEBREW,
+    #[cfg(any(feature = "diffenator", feature = "script-hira"))]
+    &DIFFENATOR_HIRAGANA,
+    #[cfg(any(feature = "diffenator", feature = "script-jpan"))]
+    &DIFFENATOR_JAPANESE,
+    #[cfg(any(feature = "diffenator", feature = "script-kana"))]
+    &DIFFENATOR_KATAKANA,
+    #[cfg(any(feature = "diffenator", feature = "script-khmr"))]
+    &DIFFENATOR_KHMER,
+    #[cfg(any(feature = "diffenator", feature = "script-laoo"))]
+    &DIFFENATOR_LAO,
+    #[cfg(any(feature = "diffenator", feature = "script-latn"))]
+    &DIFFENATOR_LATIN,
+    #[cfg(any(feature = "diffenator", feature = "script-lisu"))]
+    &DIFFENATOR_LISU,
+    #[cfg(any(feature = "diffenator", feature = "script-mlym"))]
+    &DIFFENATOR_MALAYALAM,
+    #[cfg(any(feature = "diffenator", feature = "script-mong"))]
+    &DIFFENATOR_MONGOLIAN,
+    #[cfg(any(feature = "diffenator", feature = "script-mymr"))]
+    &DIFFENATOR_MYANMAR,
+    #[cfg(any(feature = "diffenator", feature = "script-olck"))]
+    &DIFFENATOR_OL_CHIKI,
+    #[cfg(any(feature = "diffenator", feature = "script-orya"))]
+    &DIFFENATOR_ORIYA,
+    #[cfg(any(feature = "diffenator", feature = "script-osge"))]
+    &DIFFENATOR_OSAGE,
+    #[cfg(any(feature = "diffenator", feature = "script-sinh"))]
+    &DIFFENATOR_SINHALA,
+    #[cfg(any(feature = "diffenator", feature = "script-syrc"))]
+    &DIFFENATOR_SYRIAC,
+    #[cfg(any(feature = "diffenator", feature = "script-taml"))]
+    &DIFFENATOR_TAMIL,
+    #[cfg(any(feature = "diffenator", feature = "script-telu"))]
+    &DIFFENATOR_TELUGU,
+    #[cfg(any(feature = "diffenator", feature = "script-thai"))]
+    &DIFFENATOR_THAI,
+    #[cfg(any(feature = "diffenator", feature = "script-thaa"))]
+    &DIFFENATOR_THANAA,
+    #[cfg(any(feature = "diffenator", feature = "script-tibt"))]
+    &DIFFENATOR_TIBETAN,
+    #[cfg(any(feature = "diffenator", feature = "script-tfng"))]
+    &DIFFENATOR_TIFINAGH,
+    #[cfg(any(feature = "diffenator", feature = "script-vaii"))]
+    &DIFFENATOR_VAI,
+    #[cfg(any(feature = "ucd", feature = "script-zyyy"))]
+    &UCD_EMOJI_ALL,
+    #[cfg(any(feature = "ucd", feature = "script-zyyy"))]
+    &UCD_EMOJI_COLOR,
+    #[cfg(any(feature = "ucd", feature = "script-zyyy"))]
+    &UCD_EMOJI_TEXTUAL,
+];

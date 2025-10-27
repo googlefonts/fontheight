@@ -37,7 +37,7 @@ pub fn main(mut args: Arguments) -> anyhow::Result<()> {
     let mut chicken_entries = Vec::with_capacity(metadatas.len());
     let mut all_features = BTreeSet::new();
     let mut word_list_entries = Vec::with_capacity(metadatas.len());
-    let mut lookup_table_entries = Vec::with_capacity(metadatas.len());
+    let mut all_word_lists_entries = Vec::with_capacity(metadatas.len());
 
     metadatas.iter().for_each(|(toml_path, metadata)| {
         let word_list_path = toml_path.with_extension("txt");
@@ -69,9 +69,8 @@ pub fn main(mut args: Arguments) -> anyhow::Result<()> {
 
         chicken_entries.push(quote! { #feature_gate #path });
 
-        lookup_table_entries.push(quote! {
-            #feature_gate
-            #name => #ident,
+        all_word_lists_entries.push(quote! {
+            #feature_gate &#ident,
         });
 
         word_list_entries.push(quote! {
@@ -94,7 +93,7 @@ pub fn main(mut args: Arguments) -> anyhow::Result<()> {
     });
 
     let chicken = quote! {
-         #[rustfmt::skip]
+        #[rustfmt::skip]
         static WORD_LISTS: &[&str] = &[
             #(#chicken_entries),*
         ];
@@ -109,12 +108,10 @@ pub fn main(mut args: Arguments) -> anyhow::Result<()> {
     let declarations = quote! {
         #(#word_list_entries)*
 
-        // TODO: https://github.com/rust-phf/rust-phf/issues/356
-        #[doc = "A lookup map for the crate-provided [`WordList`](crate::WordList)s. Maps their names to the corresponding static [`WordList`](crate::WordList)."]
-        pub static LOOKUP_TABLE: ::phf::Map<&'static str, &'static crate::WordList> =
-            ::phf::phf_map! {
-        //         #(#lookup_table_entries)*
-            };
+        #[doc = "All the available [`WordList`](crate::WordList)s"]
+        pub static ALL_WORD_LISTS: &[&crate::WordList] = &[
+            #(#all_word_lists_entries)*
+        ];
     };
     write!(
         &mut slwl_declarations,

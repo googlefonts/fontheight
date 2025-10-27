@@ -22,7 +22,15 @@ clap-verbosity-flag = { version = "3", features = ["log"] }
 fontheight = { version = "0.1.5", path = "../core" }
 log = { workspace = true }
 rayon = { workspace = true }
-static-lang-word-lists = { version = "0.4.0", path = "../static-lang-word-lists" }
+
+[dependencies.static-lang-word-lists]
+version = "0.4"
+path = "../static-lang-word-lists"
+features = [
+    "aosp",
+    "diffenator",
+    "ucd",
+]
 
 [dependencies.clap]
 version = "4.5"

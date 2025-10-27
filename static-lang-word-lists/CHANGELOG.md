@@ -7,6 +7,7 @@
 ### Added
 
 - Feature flags, for any source, script, or language of word list. See [the docs](https://docs.rs/static-lang-word-lists/v0.4.0#feature-flags) for more.
+- LibreOffice dictionaries
 - `ALL_WORD_LISTS`, a slice with all enabled word lists included
 
 ### Changes

@@ -1,17 +1,22 @@
 # `static-lang-word-lists` changelog
 
-## v0.4.0 - unrelease
+## v0.4.0 - 2025/10/27
 
-**Breaking change**: not all word lists are included by default (only diffenator word lists)
+**Breaking changes**: not all word lists are included by default (only diffenator word lists). `LOOKUP_TABLE` has been removed.
 
 ### Added
 
 - Feature flags, for any source, script, or language of word list. See [the docs](https://docs.rs/static-lang-word-lists/v0.4.0#feature-flags) for more.
+- `ALL_WORD_LISTS`, a slice with all enabled word lists included
 
 ### Changes
 
 - Accessing metadata of static word lists is faster, no longer requiring deserialisation
 - Build script should compile & run faster (it's doing less now)
+
+### Removed
+
+- `LOOKUP_TABLE`, use `ALL_WORD_LISTS` instead
 
 ## v0.3.1 - 2025/09/23
 

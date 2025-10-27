@@ -12,8 +12,8 @@
 //!
 //! If there's a specific word list you're after, you can refer to its `static`
 //! by name.
-//! The crate also provides a [`LOOKUP_TABLE`] which maps word list names to
-//! their `static`.
+//! The crate also provides the static [`ALL_WORD_LISTS`] for convenient
+//! iteration/filtering.
 //!
 //! Word lists are decompressed when you call [`WordList::iter`].
 //!

@@ -39,7 +39,13 @@
 //! If there are no word lists for a script/language, there won't be a feature
 //! flag.
 //!
+//! To enable all word lists, there is the catch-all feature `all`.
+//! (This does not enable functionality-related flags, such as `rayon`.)
+//!
 //! **By default, only the diffenator word lists are enabled**.
+//!
+//! It is not considered a breaking change if more word lists get added to a
+//! given feature.
 //!
 //! ## Creating your own word lists
 //!

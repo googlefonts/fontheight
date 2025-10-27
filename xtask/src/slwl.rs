@@ -65,12 +65,11 @@ pub fn main(mut args: Arguments) -> anyhow::Result<()> {
         let feature_list =
             get_features_for_word_list(&word_list_path, metadata);
         all_features.extend(feature_list.clone());
-        let feature_cfg_attr_inner = if feature_list.len() > 1 {
-            quote! { any(#( feature = #feature_list, )* ) }
-        } else if let [feature] = feature_list.as_slice() {
-            quote! { feature = #feature }
-        } else {
-            unreachable!()
+        // This is now an expectation as every word list should have a source,
+        // and be part of "all"
+        debug_assert!(feature_list.len() > 1);
+        let feature_cfg_attr_inner = quote! {
+            any(#( feature = #feature_list, )* )
         };
 
         chicken_entries.push(quote! { #[cfg(#feature_cfg_attr_inner)] #path });
@@ -144,7 +143,7 @@ pub fn get_features_for_word_list(
     path: &Path,
     metadata: &WordListMetadata,
 ) -> Vec<String> {
-    let mut features = Vec::with_capacity(1);
+    let mut features = vec![String::from("all")];
 
     let source = path
         .parent()

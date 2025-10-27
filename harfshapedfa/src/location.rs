@@ -151,10 +151,18 @@ impl Location {
             })
         }
     }
+
+    pub fn sort_axes(&mut self) {
+        self.0.sort_keys();
+    }
+
+    // TODO
+    // pub fn sort_axes_by(&mut self, )
 }
 
 impl PartialOrd for Location {
     // TODO: docs
+    // FIXME: if axis order is different, produces inconsistent results
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         if self.0.keys().any(|tag| !other.0.contains_key(tag))
             || other.0.keys().any(|tag| !self.0.contains_key(tag))

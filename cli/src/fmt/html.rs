@@ -1,4 +1,4 @@
-use std::{cmp::Ordering, collections::BTreeMap, fmt, fmt::Write, ops::Neg};
+use std::{collections::BTreeMap, fmt, fmt::Write, ops::Neg};
 
 use fontheight::{Location, Report, WordExtremes};
 use harfrust::{ShaperData, ShaperInstance, UnicodeBuffer};
@@ -55,7 +55,7 @@ ul.drawn {
 }
 
 .drawn svg {
-    height: 100px;
+    height: 150px;
     border: 1px grey dashed;
     padding: 1rem;
 }";
@@ -325,7 +325,7 @@ pub fn format_all_reports<'a>(
                         &report_a.location,
                         &report_b.location,
                     )
-                    .unwrap_or(Ordering::Equal)
+                    .expect("fontheight generated unsortable locations")
                 })
         });
     });

@@ -126,7 +126,9 @@ impl<'a> Reporter<'a> {
                     .zip(self.font.axes().iter())
                     .map(|(coord, axis)| (axis.tag(), From::from(*coord)))
                     .collect();
-                Location::from_skrifa(inner)
+                let mut loc = Location::from_skrifa(inner);
+                loc.sort_axes();
+                loc
             })
             .collect()
     }

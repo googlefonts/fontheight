@@ -57,4 +57,6 @@ Diffenator wordlists are from [diffenator2](https://github.com/googlefonts/diffe
 
 Emoji wordlists are from [unicode.org](https://home.unicode.org/). [Unicode](https://www.unicode.org/license.txt) licensed.
 
-AOSP word lists are from the [aosp-test-texts](https://github.com/googlefonts/aosp-test-texts), using the files produced by `scripts/extract_words.py`. [Apache-2.0](https://github.com/googlefonts/aosp-test-texts/blob/c8134e8ae2be52feb842df5cb5fa03d29e3df06f/LICENSE) licensed.
+AOSP word lists are from the [aosp-test-texts](https://github.com/googlefonts/aosp-test-texts), using the files produced by `scripts/extract_words.py` in that repo. [Apache-2.0](https://github.com/googlefonts/aosp-test-texts/blob/c8134e8ae2be52feb842df5cb5fa03d29e3df06f/LICENSE) licensed.
+
+LibreOffice word lists are generated from the [LibreOffice dictionaries repo](https://cgit.freedesktop.org/libreoffice/dictionaries), using the files produced by [`scripts/import_libreoffice.py`](./scripts/import_libreoffice.py). [MPL v2.0 and LGPL v3+ dual-licensed](https://www.libreoffice.org/about-us/licenses).

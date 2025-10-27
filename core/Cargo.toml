@@ -24,7 +24,7 @@ rayon = { workspace = true, optional = true }
 # Note: make sure skrifa's read-fonts matches harfrust's read-fonts
 skrifa = "=0.37.0"
 thiserror = { workspace = true }
-static-lang-word-lists = { version = ">=0.2,<0.4", path = "../static-lang-word-lists" }
+static-lang-word-lists = { version = ">=0.2,<0.5", path = "../static-lang-word-lists" }
 
 [package.metadata.docs.rs]
 all-features = true

@@ -26,11 +26,7 @@ rayon = { workspace = true }
 [dependencies.static-lang-word-lists]
 version = "0.4"
 path = "../static-lang-word-lists"
-features = [
-    "aosp",
-    "diffenator",
-    "ucd",
-]
+features = ["all"]
 
 [dependencies.clap]
 version = "4.5"

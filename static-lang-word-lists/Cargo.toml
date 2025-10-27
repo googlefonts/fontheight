@@ -48,6 +48,7 @@ features = [
 [features]
 default = ["diffenator"]
 rayon = ["dep:rayon"]
+all = []
 aosp = []
 diffenator = []
 lang-af = []

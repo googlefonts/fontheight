@@ -49,12 +49,7 @@ def write_metadata(dic_path: Path, metadata_dest: Path) -> None:
     """
     doc = dict(name=f"libreoffice_{dic_path.stem}".lower().replace("-", "_"))
 
-    if dic_path.stem.endswith("_frami"):
-        dic_name = dic_path.stem[: -len("_frami")]
-    elif dic_path.stem.endswith("-official"):
-        dic_name = dic_path.stem[: -len("-official")]
-    else:
-        dic_name = dic_path.stem
+    dic_name = dic_path.stem.removesuffix("_frami").removesuffix("-official")
 
     if (re_match := re.fullmatch(r"([a-z]{2})[-_]([A-Z]{2})", dic_name)) is not None:
         try:

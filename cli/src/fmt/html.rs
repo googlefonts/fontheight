@@ -198,15 +198,14 @@ fn draw_svg(
             |(advance_width, advance_height), (glyph_info, position)| {
                 let glyph = outlines.get(glyph_info.glyph_id.into()).unwrap();
                 let offset_x = advance_width + position.x_offset as f32;
-                let offset_y = advance_height + position.y_offset as f32;
-                let mut offset_svg_pen = OffsetPen {
-                    offset_x,
-                    offset_y,
+                let mut flipped_svg_pen = VerticalFlipPen {
+                    height: highest,
                     inner: &mut svg_pen,
                 };
-                let mut flipped_offset_svg_pen = VerticalFlipPen {
-                    height: highest,
-                    inner: &mut offset_svg_pen,
+                let mut flipped_offset_svg_pen = OffsetPen {
+                    offset_x,
+                    offset_y: position.y_offset as f32,
+                    inner: &mut flipped_svg_pen,
                 };
                 glyph
                     .draw(
@@ -218,8 +217,8 @@ fn draw_svg(
                     )
                     .unwrap();
                 (
-                    offset_x + position.x_advance as f32,
-                    offset_y + position.y_advance as f32,
+                    advance_width + position.x_advance as f32,
+                    advance_height + position.y_advance as f32,
                 )
             },
         );

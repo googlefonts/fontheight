@@ -90,8 +90,8 @@ fn _main() -> anyhow::Result<()> {
             let reports = instances
                 .iter()
                 .flat_map(|instance| {
-                    static_lang_word_lists::LOOKUP_TABLE
-                        .values()
+                    static_lang_word_lists::ALL_WORD_LISTS
+                        .iter()
                         .zip(iter::repeat(instance))
                 })
                 .par_bridge()

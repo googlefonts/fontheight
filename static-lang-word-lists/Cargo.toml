@@ -22,7 +22,6 @@ include = [
 [dependencies]
 brotli-decompressor = "5"
 log = { workspace = true }
-phf = { version = "0.13.1", features = ["macros"] }
 rayon = { workspace = true, optional = true }
 thiserror = { workspace = true }
 serde = { version = "1.0", features = ["derive"] }

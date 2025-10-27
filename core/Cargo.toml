@@ -24,7 +24,14 @@ rayon = { workspace = true, optional = true }
 # Note: make sure skrifa's read-fonts matches harfrust's read-fonts
 skrifa = "=0.37.0"
 thiserror = { workspace = true }
-static-lang-word-lists = { version = ">=0.2,<0.5", path = "../static-lang-word-lists" }
+
+[dependencies.static-lang-word-lists]
+version = ">=0.2,<0.5"
+path = "../static-lang-word-lists"
+default-features = false
+# Don't include any word lists, they should be included by downstream crates
+# through feature unification
+features = ["rayon"]
 
 [package.metadata.docs.rs]
 all-features = true

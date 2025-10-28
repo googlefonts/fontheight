@@ -1,16 +1,31 @@
+use kurbo::Shape;
+pub use kurbo::{BezPath, PathEl, Point, Rect};
 use skrifa::outline::OutlinePen;
 
-// Taken from https://github.com/googlefonts/fontations/blob/57715f39/skrifa/src/outline/mod.rs#L1159-L1184 (same license)
+// Adapted from https://github.com/googlefonts/fontations/blob/57715f39/skrifa/src/outline/mod.rs#L1159-L1184 (same license)
 #[derive(Debug, Default)]
-pub(crate) struct BezierPen {
-    pub(crate) path: kurbo::BezPath,
+pub struct BoundsPen {
+    path: BezPath,
 }
 
-fn kurbo_point(x: f32, y: f32) -> kurbo::Point {
-    (x as f64, y as f64).into()
+impl BoundsPen {
+    #[must_use]
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    #[must_use]
+    pub const fn path(&self) -> &BezPath {
+        &self.path
+    }
+
+    #[must_use]
+    pub fn bounding_box(&self) -> Rect {
+        self.path.bounding_box()
+    }
 }
 
-impl OutlinePen for BezierPen {
+impl OutlinePen for BoundsPen {
     fn move_to(&mut self, x: f32, y: f32) {
         self.path.move_to(kurbo_point(x, y));
     }
@@ -42,4 +57,8 @@ impl OutlinePen for BezierPen {
     fn close(&mut self) {
         self.path.close_path();
     }
+}
+
+fn kurbo_point(x: f32, y: f32) -> kurbo::Point {
+    (x as f64, y as f64).into()
 }

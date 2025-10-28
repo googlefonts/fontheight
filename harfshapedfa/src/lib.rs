@@ -15,6 +15,8 @@ use crate::{
 
 pub mod errors;
 mod location;
+#[cfg(feature = "pens")]
+pub mod pens;
 pub mod utils;
 
 pub struct ShapingMeta {

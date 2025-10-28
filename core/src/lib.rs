@@ -37,9 +37,8 @@ use std::{
 pub use exemplars::{CollectToExemplars, Exemplars};
 use harfrust::{Shaper, ShaperData, ShaperInstance, UnicodeBuffer};
 pub use harfshapedfa::Location;
-use harfshapedfa::{HarfRustShaperExt, ShapingMeta};
+use harfshapedfa::{HarfRustShaperExt, ShapingMeta, pens::BoundsPen};
 use itertools::Itertools;
-use kurbo::Shape;
 use ordered_float::{NotNan, OrderedFloat};
 use skrifa::{
     FontRef, MetadataProvider, instance::Size, outline::DrawSettings,
@@ -47,17 +46,12 @@ use skrifa::{
 pub use static_lang_word_lists::WordList;
 use static_lang_word_lists::WordListIter;
 
-use crate::{
-    errors::{
-        FontHeightError, SkrifaDrawError, SkrifaReadError,
-        WordListShapingPlanError,
-    },
-    pens::BezierPen,
+use crate::errors::{
+    FontHeightError, SkrifaDrawError, SkrifaReadError, WordListShapingPlanError,
 };
 
 pub mod errors;
 mod exemplars;
-mod pens;
 
 /// Font Height's entrypoint. Parses fonts and can check word lists at
 /// specified locations.
@@ -517,18 +511,18 @@ impl InstanceExtremes {
             .outline_glyphs()
             .iter()
             .map(|(id, outline)| -> Result<(u32, VerticalExtremes), SkrifaDrawError> {
-                let mut bez_pen = BezierPen::default();
+                let mut bounds_pen = BoundsPen::new();
                 outline
                     .draw(
                         DrawSettings::unhinted(
                             Size::unscaled(),
                             &location.to_skrifa(font),
                         ),
-                        &mut bez_pen,
+                        &mut bounds_pen,
                     )
                     .map_err(|err| SkrifaDrawError(id, err))?;
 
-                let kurbo::Rect { y0, y1, .. } = bez_pen.path.bounding_box();
+                let harfshapedfa::pens::Rect { y0, y1, .. } = bounds_pen.bounding_box();
                 Ok((u32::from(id), VerticalExtremes {
                     lowest: NotNan::new(y0).expect("bounding box with NaN y0"),
                     highest: NotNan::new(y1).expect("bounding box with NaN y1"),

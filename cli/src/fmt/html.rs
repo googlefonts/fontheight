@@ -76,18 +76,14 @@ fn get_relevant_base_record(
     //       we're not expecting
     let base = font.base().ok()?;
     let ot_script = word_list.script().map(iso15924_to_opentype)?.ok()?;
-    let relevant_script_record =
-        base.horiz_axis()?.ok()?.base_script_list().ok().and_then(
-            |base_script_list| {
-                base_script_list
-                    .base_script_records()
-                    .iter()
-                    .find(|record| record.base_script_tag == ot_script)
-            },
-        )?;
+    let base_script_list = base.horiz_axis()?.ok()?.base_script_list().ok()?;
+    let relevant_script_record = base_script_list
+        .base_script_records()
+        .iter()
+        .find(|record| record.base_script_tag == ot_script)?;
 
     let base_script = relevant_script_record
-        .base_script(base.offset_data())
+        .base_script(base_script_list.offset_data())
         .ok()?;
     let min_max = match word_list
         .language()
@@ -117,6 +113,7 @@ fn get_relevant_base_record(
         },
     };
 
+    // TODO: either of these can be None
     Some((
         min_max.max_coord()?.ok()?.coordinate(),
         min_max.min_coord()?.ok()?.coordinate(),

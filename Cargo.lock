@@ -358,7 +358,6 @@ dependencies = [
  "harfrust",
  "harfshapedfa",
  "itertools",
- "kurbo",
  "ordered-float",
  "rayon",
  "skrifa",
@@ -415,6 +414,7 @@ version = "0.1.0"
 dependencies = [
  "harfrust",
  "indexmap",
+ "kurbo",
  "ordered-float",
  "skrifa",
  "thiserror",

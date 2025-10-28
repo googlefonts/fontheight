@@ -10,7 +10,7 @@ members = [
 [workspace.dependencies]
 # Note: make sure harfrust's read-fonts matches skrifa's read-fonts
 harfrust = "=0.3.2"
-harfshapedfa = { version = "0.1.0", path = "harfshapedfa" }
+harfshapedfa = { version = "0.1.0", path = "harfshapedfa", features = ["pens"] }
 log = "0.4.25"
 ordered-float = "5"
 rayon = "1.10"

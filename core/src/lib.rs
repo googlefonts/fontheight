@@ -115,14 +115,12 @@ impl<'a> Reporter<'a> {
             .iter()
             .multi_cartesian_product()
             .map(|coords| {
-                let inner = coords
-                    .into_iter()
-                    .zip(self.font.axes().iter())
-                    .map(|(coord, axis)| (axis.tag(), From::from(*coord)))
-                    .collect();
-                let mut loc = Location::from_skrifa(inner);
-                loc.sort_axes();
-                loc
+                self.font
+                    .axes()
+                    .iter()
+                    .zip(coords)
+                    .map(|(axis, coord)| (axis.tag(), coord.into_inner()))
+                    .collect()
             })
             .collect()
     }

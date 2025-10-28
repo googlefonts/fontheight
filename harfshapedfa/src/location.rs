@@ -189,6 +189,21 @@ impl fmt::Debug for Location {
     }
 }
 
+// TODO: document panics
+impl<T> FromIterator<(T, f32)> for Location
+where
+    T: AsRef<[u8]>,
+{
+    fn from_iter<I: IntoIterator<Item = (T, f32)>>(iter: I) -> Self {
+        iter.into_iter()
+            .fold(Location::new(), |mut loc, (tag, value)| {
+                loc.axis(tag, value)
+                    .expect("invalid tag when building Location");
+                loc
+            })
+    }
+}
+
 impl TryFrom<HashMap<String, f32>> for Location {
     type Error = InvalidTagError;
 

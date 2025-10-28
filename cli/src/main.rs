@@ -163,8 +163,10 @@ fn _main() -> anyhow::Result<()> {
                     })
                     .context("failed to write to output")?;
             } else {
-                let html =
-                    fmt::html::format_all_reports(&reports, reporter.fontref());
+                let html = fmt::html::format_all_reports(
+                    &reports,
+                    reporter.fontref(),
+                )?;
                 output
                     .write_all(html.as_bytes())
                     .context("failed to write to output")?;

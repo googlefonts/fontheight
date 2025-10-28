@@ -24,6 +24,7 @@ harfrust.workspace = true
 harfshapedfa.workspace = true
 log.workspace = true
 maud = "0.27.0"
+ordered-float.workspace = true
 rayon.workspace = true
 skrifa.workspace = true
 svg = "0.18"

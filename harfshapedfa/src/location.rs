@@ -164,15 +164,17 @@ impl PartialOrd for Location {
     // TODO: docs
     // FIXME: if axis order is different, produces inconsistent results
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        if self.0.keys().any(|tag| !other.0.contains_key(tag))
-            || other.0.keys().any(|tag| !self.0.contains_key(tag))
-        {
-            // Difference in axes
+        if self.0.len() != other.0.len() {
+            // Difference in axes (order)
             return None;
         }
 
         for (tag, left_val) in self.0.iter() {
-            match NotNan::cmp(left_val, &other.0[tag]) {
+            let Some(right_val) = other.0.get(tag) else {
+                // Missing axis
+                return None;
+            };
+            match NotNan::cmp(left_val, right_val) {
                 Ordering::Equal => { /* check next axis */ },
                 not_equal => return Some(not_equal),
             }

@@ -378,6 +378,7 @@ dependencies = [
  "harfshapedfa",
  "log",
  "maud",
+ "ordered-float",
  "rayon",
  "skrifa",
  "static-lang-word-lists",

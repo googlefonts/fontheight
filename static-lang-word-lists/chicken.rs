@@ -777,173 +777,733 @@ static WORD_LISTS: &[&str] = &[
     "diffenator/Tifinagh.txt",
     #[cfg(any(feature = "all", feature = "diffenator", feature = "script-vaii"))]
     "diffenator/Vai.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-af"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-af",
+        )
+    )]
     "libreoffice/af_ZA.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-an"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-an",
+        )
+    )]
     "libreoffice/an_ES.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-ar"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-arab",
+            feature = "lang-ar",
+        )
+    )]
     "libreoffice/ar.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-as"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-beng",
+            feature = "lang-as",
+        )
+    )]
     "libreoffice/as_IN.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-be"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-cyrl",
+            feature = "lang-be",
+        )
+    )]
     "libreoffice/be-official.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-bg"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-cyrl",
+            feature = "lang-bg",
+        )
+    )]
     "libreoffice/bg_BG.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-bn"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-beng",
+            feature = "lang-bn",
+        )
+    )]
     "libreoffice/bn_BD.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-bo"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-tibt",
+            feature = "lang-bo",
+        )
+    )]
     "libreoffice/bo.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-br"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-br",
+        )
+    )]
     "libreoffice/br_FR.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-bs"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-bs",
+        )
+    )]
     "libreoffice/bs_BA.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice"))]
+    #[cfg(any(feature = "all", feature = "libreoffice", feature = "script-latn"))]
     "libreoffice/ca-valencia.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-ca"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-ca",
+        )
+    )]
     "libreoffice/ca.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice"))]
+    #[cfg(any(feature = "all", feature = "libreoffice", feature = "script-arab"))]
     "libreoffice/ckb.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-cs"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-cs",
+        )
+    )]
     "libreoffice/cs_CZ.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-da"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-da",
+        )
+    )]
     "libreoffice/da_DK.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-de"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-de",
+        )
+    )]
     "libreoffice/de_AT_frami.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-de"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-de",
+        )
+    )]
     "libreoffice/de_CH_frami.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-de"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-de",
+        )
+    )]
     "libreoffice/de_DE_frami.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-el"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-grek",
+            feature = "lang-el",
+        )
+    )]
     "libreoffice/el_GR.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-en"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-en",
+        )
+    )]
     "libreoffice/en_AU.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-en"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-en",
+        )
+    )]
     "libreoffice/en_CA.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-en"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-en",
+        )
+    )]
     "libreoffice/en_GB.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-en"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-en",
+        )
+    )]
     "libreoffice/en_US.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-en"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-en",
+        )
+    )]
     "libreoffice/en_ZA.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-eo"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-eo",
+        )
+    )]
     "libreoffice/eo.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_AR.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_BO.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_CL.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_CO.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_CR.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_CU.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_DO.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_EC.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_ES.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_GQ.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_GT.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_HN.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_MX.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_NI.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_PA.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_PE.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_PH.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_PR.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_PY.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_SV.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_US.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_UY.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     "libreoffice/es_VE.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-et"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-et",
+        )
+    )]
     "libreoffice/et_EE.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-fa"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-arab",
+            feature = "lang-fa",
+        )
+    )]
     "libreoffice/fa-IR.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-fr"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-fr",
+        )
+    )]
     "libreoffice/fr.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-gd"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-gd",
+        )
+    )]
     "libreoffice/gd_GB.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-gl"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-gl",
+        )
+    )]
     "libreoffice/gl_ES.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-gu"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-gujr",
+            feature = "lang-gu",
+        )
+    )]
     "libreoffice/gu_IN.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice"))]
+    #[cfg(any(feature = "all", feature = "libreoffice", feature = "script-latn"))]
     "libreoffice/gug.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-he"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-hebr",
+            feature = "lang-he",
+        )
+    )]
     "libreoffice/he_IL.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-hi"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-deva",
+            feature = "lang-hi",
+        )
+    )]
     "libreoffice/hi_IN.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-hr"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-hr",
+        )
+    )]
     "libreoffice/hr_HR.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-id"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-id",
+        )
+    )]
     "libreoffice/id_ID.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-is"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-is",
+        )
+    )]
     "libreoffice/is.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-it"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-it",
+        )
+    )]
     "libreoffice/it_IT.txt",
     #[cfg(any(feature = "all", feature = "libreoffice", feature = "script-latn"))]
     "libreoffice/kmr_Latn.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-kn"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-knda",
+            feature = "lang-kn",
+        )
+    )]
     "libreoffice/kn_IN.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-lo"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-laoo",
+            feature = "lang-lo",
+        )
+    )]
     "libreoffice/lo_LA.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-lt"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-lt",
+        )
+    )]
     "libreoffice/lt.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-lv"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-lv",
+        )
+    )]
     "libreoffice/lv_LV.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-mr"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-deva",
+            feature = "lang-mr",
+        )
+    )]
     "libreoffice/mr_IN.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-nb"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-nb",
+        )
+    )]
     "libreoffice/nb_NO.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-ne"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-deva",
+            feature = "lang-ne",
+        )
+    )]
     "libreoffice/ne_NP.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-nl"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-nl",
+        )
+    )]
     "libreoffice/nl_NL.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-nn"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-nn",
+        )
+    )]
     "libreoffice/nn_NO.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-oc"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-oc",
+        )
+    )]
     "libreoffice/oc_FR.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-or"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-orya",
+            feature = "lang-or",
+        )
+    )]
     "libreoffice/or_IN.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-pa"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-guru",
+            feature = "lang-pa",
+        )
+    )]
     "libreoffice/pa_IN.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-pl"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-pl",
+        )
+    )]
     "libreoffice/pl_PL.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-pt"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-pt",
+        )
+    )]
     "libreoffice/pt_BR.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-pt"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-pt",
+        )
+    )]
     "libreoffice/pt_PT.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-ro"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-ro",
+        )
+    )]
     "libreoffice/ro_RO.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-ru"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-cyrl",
+            feature = "lang-ru",
+        )
+    )]
     "libreoffice/ru_RU.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-sa"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-deva",
+            feature = "lang-sa",
+        )
+    )]
     "libreoffice/sa_IN.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-si"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-sinh",
+            feature = "lang-si",
+        )
+    )]
     "libreoffice/si_LK.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-sk"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sk",
+        )
+    )]
     "libreoffice/sk_SK.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-sl"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sl",
+        )
+    )]
     "libreoffice/sl_SI.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-sq"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sq",
+        )
+    )]
     "libreoffice/sq_AL.txt",
     #[cfg(
         any(
@@ -954,25 +1514,95 @@ static WORD_LISTS: &[&str] = &[
         )
     )]
     "libreoffice/sr-Latn.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-sr"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-cyrl",
+            feature = "lang-sr",
+        )
+    )]
     "libreoffice/sr.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-sv"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sv",
+        )
+    )]
     "libreoffice/sv_FI.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-sv"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sv",
+        )
+    )]
     "libreoffice/sv_SE.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-sw"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sw",
+        )
+    )]
     "libreoffice/sw_TZ.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-ta"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-taml",
+            feature = "lang-ta",
+        )
+    )]
     "libreoffice/ta_IN.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-te"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-telu",
+            feature = "lang-te",
+        )
+    )]
     "libreoffice/te_IN.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-th"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-thai",
+            feature = "lang-th",
+        )
+    )]
     "libreoffice/th_TH.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-tr"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-tr",
+        )
+    )]
     "libreoffice/tr_TR.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-uk"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-cyrl",
+            feature = "lang-uk",
+        )
+    )]
     "libreoffice/uk_UA.txt",
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-vi"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-vi",
+        )
+    )]
     "libreoffice/vi_VN.txt",
     #[cfg(any(feature = "all", feature = "ucd", feature = "script-zyyy"))]
     "ucd/Emoji_All.txt",

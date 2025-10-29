@@ -3483,15 +3483,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static DIFFENATOR_VAI: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-af"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-af",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_AF_ZA, metadata : crate
-    ::WordListMetadata::new("libreoffice_af_za", None, Some("af")), bytes :
+    ::WordListMetadata::new("libreoffice_af_za", Some("Latn"), Some("af")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/af_ZA.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-af")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-af",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_AF_ZA)]
 /** word list.
@@ -3499,15 +3517,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_AF_ZA: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-an"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-an",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_AN_ES, metadata : crate
-    ::WordListMetadata::new("libreoffice_an_es", None, Some("an")), bytes :
+    ::WordListMetadata::new("libreoffice_an_es", Some("Latn"), Some("an")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/an_ES.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-an")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-an",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_AN_ES)]
 /** word list.
@@ -3515,15 +3551,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_AN_ES: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-ar"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-arab",
+            feature = "lang-ar",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_AR, metadata : crate ::WordListMetadata::new("libreoffice_ar",
-    None, Some("ar")), bytes :
+    Some("Arab"), Some("ar")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/ar.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-ar")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-arab",
+            feature = "lang-ar",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_AR)]
 /** word list.
@@ -3531,15 +3585,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_AR: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-as"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-beng",
+            feature = "lang-as",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_AS_IN, metadata : crate
-    ::WordListMetadata::new("libreoffice_as_in", None, Some("as")), bytes :
+    ::WordListMetadata::new("libreoffice_as_in", Some("Beng"), Some("as")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/as_IN.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-as")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-beng",
+            feature = "lang-as",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_AS_IN)]
 /** word list.
@@ -3547,15 +3619,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_AS_IN: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-be"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-cyrl",
+            feature = "lang-be",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_BE_OFFICIAL, metadata : crate
-    ::WordListMetadata::new("libreoffice_be_official", None, Some("be")), bytes :
+    ::WordListMetadata::new("libreoffice_be_official", Some("Cyrl"), Some("be")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/be-official.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-be")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-cyrl",
+            feature = "lang-be",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_BE_OFFICIAL)]
 /** word list.
@@ -3563,15 +3653,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_BE_OFFICIAL: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-bg"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-cyrl",
+            feature = "lang-bg",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_BG_BG, metadata : crate
-    ::WordListMetadata::new("libreoffice_bg_bg", None, Some("bg")), bytes :
+    ::WordListMetadata::new("libreoffice_bg_bg", Some("Cyrl"), Some("bg")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/bg_BG.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-bg")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-cyrl",
+            feature = "lang-bg",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_BG_BG)]
 /** word list.
@@ -3579,15 +3687,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_BG_BG: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-bn"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-beng",
+            feature = "lang-bn",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_BN_BD, metadata : crate
-    ::WordListMetadata::new("libreoffice_bn_bd", None, Some("bn")), bytes :
+    ::WordListMetadata::new("libreoffice_bn_bd", Some("Beng"), Some("bn")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/bn_BD.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-bn")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-beng",
+            feature = "lang-bn",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_BN_BD)]
 /** word list.
@@ -3595,15 +3721,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_BN_BD: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-bo"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-tibt",
+            feature = "lang-bo",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_BO, metadata : crate ::WordListMetadata::new("libreoffice_bo",
-    None, Some("bo")), bytes :
+    Some("Tibt"), Some("bo")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/bo.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-bo")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-tibt",
+            feature = "lang-bo",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_BO)]
 /** word list.
@@ -3611,15 +3755,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_BO: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-br"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-br",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_BR_FR, metadata : crate
-    ::WordListMetadata::new("libreoffice_br_fr", None, Some("br")), bytes :
+    ::WordListMetadata::new("libreoffice_br_fr", Some("Latn"), Some("br")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/br_FR.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-br")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-br",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_BR_FR)]
 /** word list.
@@ -3627,29 +3789,54 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_BR_FR: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-bs"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-bs",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_BS_BA, metadata : crate
-    ::WordListMetadata::new("libreoffice_bs_ba", None, Some("bs")), bytes :
+    ::WordListMetadata::new("libreoffice_bs_ba", Some("Latn"), Some("bs")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/bs_BA.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-bs")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-bs",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_BS_BA)]
 /** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_BS_BA: crate::WordList = crate::WordList::stub();
-#[cfg(all(not(docsrs), any(feature = "all", feature = "libreoffice")))]
+#[cfg(
+    all(
+        not(docsrs),
+        any(feature = "all", feature = "libreoffice", feature = "script-latn")
+    )
+)]
 word_list! {
     ident : LIBREOFFICE_CA_VALENCIA, metadata : crate
-    ::WordListMetadata::new("libreoffice_ca_valencia", None, None), bytes :
+    ::WordListMetadata::new("libreoffice_ca_valencia", Some("Latn"), None), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/ca-valencia.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice")))]
+#[cfg(
+    all(docsrs, any(feature = "all", feature = "libreoffice", feature = "script-latn"))
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_CA_VALENCIA)]
 /** word list.
@@ -3657,28 +3844,54 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_CA_VALENCIA: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-ca"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-ca",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_CA, metadata : crate ::WordListMetadata::new("libreoffice_ca",
-    None, Some("ca")), bytes :
+    Some("Latn"), Some("ca")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/ca.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-ca")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-ca",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_CA)]
 /** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_CA: crate::WordList = crate::WordList::stub();
-#[cfg(all(not(docsrs), any(feature = "all", feature = "libreoffice")))]
+#[cfg(
+    all(
+        not(docsrs),
+        any(feature = "all", feature = "libreoffice", feature = "script-arab")
+    )
+)]
 word_list! {
     ident : LIBREOFFICE_CKB, metadata : crate ::WordListMetadata::new("libreoffice_ckb",
-    None, None), bytes : ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"),
-    '/', "libreoffice/ckb.txt", ".br")),
+    Some("Arab"), None), bytes :
+    ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
+    "libreoffice/ckb.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice")))]
+#[cfg(
+    all(docsrs, any(feature = "all", feature = "libreoffice", feature = "script-arab"))
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_CKB)]
 /** word list.
@@ -3686,15 +3899,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_CKB: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-cs"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-cs",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_CS_CZ, metadata : crate
-    ::WordListMetadata::new("libreoffice_cs_cz", None, Some("cs")), bytes :
+    ::WordListMetadata::new("libreoffice_cs_cz", Some("Latn"), Some("cs")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/cs_CZ.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-cs")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-cs",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_CS_CZ)]
 /** word list.
@@ -3702,15 +3933,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_CS_CZ: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-da"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-da",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_DA_DK, metadata : crate
-    ::WordListMetadata::new("libreoffice_da_dk", None, Some("da")), bytes :
+    ::WordListMetadata::new("libreoffice_da_dk", Some("Latn"), Some("da")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/da_DK.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-da")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-da",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_DA_DK)]
 /** word list.
@@ -3718,15 +3967,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_DA_DK: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-de"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-de",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_DE_AT_FRAMI, metadata : crate
-    ::WordListMetadata::new("libreoffice_de_at_frami", None, Some("de")), bytes :
+    ::WordListMetadata::new("libreoffice_de_at_frami", Some("Latn"), Some("de")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/de_AT_frami.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-de")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-de",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_DE_AT_FRAMI)]
 /** word list.
@@ -3734,15 +4001,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_DE_AT_FRAMI: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-de"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-de",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_DE_CH_FRAMI, metadata : crate
-    ::WordListMetadata::new("libreoffice_de_ch_frami", None, Some("de")), bytes :
+    ::WordListMetadata::new("libreoffice_de_ch_frami", Some("Latn"), Some("de")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/de_CH_frami.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-de")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-de",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_DE_CH_FRAMI)]
 /** word list.
@@ -3750,15 +4035,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_DE_CH_FRAMI: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-de"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-de",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_DE_DE_FRAMI, metadata : crate
-    ::WordListMetadata::new("libreoffice_de_de_frami", None, Some("de")), bytes :
+    ::WordListMetadata::new("libreoffice_de_de_frami", Some("Latn"), Some("de")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/de_DE_frami.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-de")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-de",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_DE_DE_FRAMI)]
 /** word list.
@@ -3766,15 +4069,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_DE_DE_FRAMI: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-el"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-grek",
+            feature = "lang-el",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_EL_GR, metadata : crate
-    ::WordListMetadata::new("libreoffice_el_gr", None, Some("el")), bytes :
+    ::WordListMetadata::new("libreoffice_el_gr", Some("Grek"), Some("el")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/el_GR.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-el")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-grek",
+            feature = "lang-el",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_EL_GR)]
 /** word list.
@@ -3782,15 +4103,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_EL_GR: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-en"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-en",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_EN_AU, metadata : crate
-    ::WordListMetadata::new("libreoffice_en_au", None, Some("en")), bytes :
+    ::WordListMetadata::new("libreoffice_en_au", Some("Latn"), Some("en")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/en_AU.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-en")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-en",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_EN_AU)]
 /** word list.
@@ -3798,15 +4137,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_EN_AU: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-en"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-en",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_EN_CA, metadata : crate
-    ::WordListMetadata::new("libreoffice_en_ca", None, Some("en")), bytes :
+    ::WordListMetadata::new("libreoffice_en_ca", Some("Latn"), Some("en")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/en_CA.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-en")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-en",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_EN_CA)]
 /** word list.
@@ -3814,15 +4171,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_EN_CA: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-en"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-en",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_EN_GB, metadata : crate
-    ::WordListMetadata::new("libreoffice_en_gb", None, Some("en")), bytes :
+    ::WordListMetadata::new("libreoffice_en_gb", Some("Latn"), Some("en")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/en_GB.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-en")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-en",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_EN_GB)]
 /** word list.
@@ -3830,15 +4205,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_EN_GB: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-en"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-en",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_EN_US, metadata : crate
-    ::WordListMetadata::new("libreoffice_en_us", None, Some("en")), bytes :
+    ::WordListMetadata::new("libreoffice_en_us", Some("Latn"), Some("en")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/en_US.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-en")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-en",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_EN_US)]
 /** word list.
@@ -3846,15 +4239,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_EN_US: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-en"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-en",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_EN_ZA, metadata : crate
-    ::WordListMetadata::new("libreoffice_en_za", None, Some("en")), bytes :
+    ::WordListMetadata::new("libreoffice_en_za", Some("Latn"), Some("en")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/en_ZA.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-en")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-en",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_EN_ZA)]
 /** word list.
@@ -3862,15 +4273,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_EN_ZA: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-eo"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-eo",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_EO, metadata : crate ::WordListMetadata::new("libreoffice_eo",
-    None, Some("eo")), bytes :
+    Some("Latn"), Some("eo")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/eo.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-eo")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-eo",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_EO)]
 /** word list.
@@ -3878,15 +4307,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_EO: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_AR, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_ar", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_ar", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_AR.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_AR)]
 /** word list.
@@ -3894,15 +4341,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_AR: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_BO, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_bo", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_bo", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_BO.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_BO)]
 /** word list.
@@ -3910,15 +4375,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_BO: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_CL, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_cl", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_cl", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_CL.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_CL)]
 /** word list.
@@ -3926,15 +4409,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_CL: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_CO, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_co", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_co", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_CO.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_CO)]
 /** word list.
@@ -3942,15 +4443,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_CO: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_CR, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_cr", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_cr", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_CR.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_CR)]
 /** word list.
@@ -3958,15 +4477,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_CR: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_CU, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_cu", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_cu", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_CU.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_CU)]
 /** word list.
@@ -3974,15 +4511,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_CU: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_DO, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_do", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_do", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_DO.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_DO)]
 /** word list.
@@ -3990,15 +4545,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_DO: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_EC, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_ec", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_ec", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_EC.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_EC)]
 /** word list.
@@ -4006,15 +4579,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_EC: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_ES, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_es", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_es", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_ES.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_ES)]
 /** word list.
@@ -4022,15 +4613,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_ES: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_GQ, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_gq", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_gq", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_GQ.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_GQ)]
 /** word list.
@@ -4038,15 +4647,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_GQ: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_GT, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_gt", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_gt", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_GT.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_GT)]
 /** word list.
@@ -4054,15 +4681,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_GT: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_HN, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_hn", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_hn", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_HN.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_HN)]
 /** word list.
@@ -4070,15 +4715,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_HN: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_MX, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_mx", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_mx", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_MX.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_MX)]
 /** word list.
@@ -4086,15 +4749,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_MX: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_NI, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_ni", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_ni", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_NI.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_NI)]
 /** word list.
@@ -4102,15 +4783,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_NI: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_PA, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_pa", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_pa", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_PA.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_PA)]
 /** word list.
@@ -4118,15 +4817,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_PA: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_PE, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_pe", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_pe", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_PE.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_PE)]
 /** word list.
@@ -4134,15 +4851,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_PE: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_PH, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_ph", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_ph", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_PH.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_PH)]
 /** word list.
@@ -4150,15 +4885,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_PH: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_PR, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_pr", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_pr", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_PR.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_PR)]
 /** word list.
@@ -4166,15 +4919,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_PR: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_PY, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_py", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_py", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_PY.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_PY)]
 /** word list.
@@ -4182,15 +4953,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_PY: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_SV, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_sv", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_sv", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_SV.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_SV)]
 /** word list.
@@ -4198,15 +4987,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_SV: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_US, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_us", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_us", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_US.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_US)]
 /** word list.
@@ -4214,15 +5021,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_US: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_UY, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_uy", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_uy", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_UY.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_UY)]
 /** word list.
@@ -4230,15 +5055,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_UY: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-es"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ES_VE, metadata : crate
-    ::WordListMetadata::new("libreoffice_es_ve", None, Some("es")), bytes :
+    ::WordListMetadata::new("libreoffice_es_ve", Some("Latn"), Some("es")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/es_VE.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-es")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ES_VE)]
 /** word list.
@@ -4246,15 +5089,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ES_VE: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-et"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-et",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ET_EE, metadata : crate
-    ::WordListMetadata::new("libreoffice_et_ee", None, Some("et")), bytes :
+    ::WordListMetadata::new("libreoffice_et_ee", Some("Latn"), Some("et")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/et_EE.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-et")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-et",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ET_EE)]
 /** word list.
@@ -4262,15 +5123,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ET_EE: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-fa"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-arab",
+            feature = "lang-fa",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_FA_IR, metadata : crate
-    ::WordListMetadata::new("libreoffice_fa_ir", None, Some("fa")), bytes :
+    ::WordListMetadata::new("libreoffice_fa_ir", Some("Arab"), Some("fa")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/fa-IR.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-fa")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-arab",
+            feature = "lang-fa",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_FA_IR)]
 /** word list.
@@ -4278,15 +5157,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_FA_IR: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-fr"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-fr",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_FR, metadata : crate ::WordListMetadata::new("libreoffice_fr",
-    None, Some("fr")), bytes :
+    Some("Latn"), Some("fr")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/fr.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-fr")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-fr",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_FR)]
 /** word list.
@@ -4294,15 +5191,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_FR: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-gd"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-gd",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_GD_GB, metadata : crate
-    ::WordListMetadata::new("libreoffice_gd_gb", None, Some("gd")), bytes :
+    ::WordListMetadata::new("libreoffice_gd_gb", Some("Latn"), Some("gd")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/gd_GB.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-gd")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-gd",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_GD_GB)]
 /** word list.
@@ -4310,15 +5225,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_GD_GB: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-gl"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-gl",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_GL_ES, metadata : crate
-    ::WordListMetadata::new("libreoffice_gl_es", None, Some("gl")), bytes :
+    ::WordListMetadata::new("libreoffice_gl_es", Some("Latn"), Some("gl")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/gl_ES.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-gl")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-gl",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_GL_ES)]
 /** word list.
@@ -4326,28 +5259,54 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_GL_ES: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-gu"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-gujr",
+            feature = "lang-gu",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_GU_IN, metadata : crate
-    ::WordListMetadata::new("libreoffice_gu_in", None, Some("gu")), bytes :
+    ::WordListMetadata::new("libreoffice_gu_in", Some("Gujr"), Some("gu")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/gu_IN.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-gu")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-gujr",
+            feature = "lang-gu",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_GU_IN)]
 /** word list.
 
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_GU_IN: crate::WordList = crate::WordList::stub();
-#[cfg(all(not(docsrs), any(feature = "all", feature = "libreoffice")))]
+#[cfg(
+    all(
+        not(docsrs),
+        any(feature = "all", feature = "libreoffice", feature = "script-latn")
+    )
+)]
 word_list! {
     ident : LIBREOFFICE_GUG, metadata : crate ::WordListMetadata::new("libreoffice_gug",
-    None, None), bytes : ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"),
-    '/', "libreoffice/gug.txt", ".br")),
+    Some("Latn"), None), bytes :
+    ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
+    "libreoffice/gug.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice")))]
+#[cfg(
+    all(docsrs, any(feature = "all", feature = "libreoffice", feature = "script-latn"))
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_GUG)]
 /** word list.
@@ -4355,15 +5314,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_GUG: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-he"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-hebr",
+            feature = "lang-he",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_HE_IL, metadata : crate
-    ::WordListMetadata::new("libreoffice_he_il", None, Some("he")), bytes :
+    ::WordListMetadata::new("libreoffice_he_il", Some("Hebr"), Some("he")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/he_IL.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-he")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-hebr",
+            feature = "lang-he",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_HE_IL)]
 /** word list.
@@ -4371,15 +5348,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_HE_IL: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-hi"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-deva",
+            feature = "lang-hi",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_HI_IN, metadata : crate
-    ::WordListMetadata::new("libreoffice_hi_in", None, Some("hi")), bytes :
+    ::WordListMetadata::new("libreoffice_hi_in", Some("Deva"), Some("hi")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/hi_IN.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-hi")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-deva",
+            feature = "lang-hi",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_HI_IN)]
 /** word list.
@@ -4387,15 +5382,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_HI_IN: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-hr"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-hr",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_HR_HR, metadata : crate
-    ::WordListMetadata::new("libreoffice_hr_hr", None, Some("hr")), bytes :
+    ::WordListMetadata::new("libreoffice_hr_hr", Some("Latn"), Some("hr")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/hr_HR.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-hr")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-hr",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_HR_HR)]
 /** word list.
@@ -4403,15 +5416,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_HR_HR: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-id"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-id",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_ID_ID, metadata : crate
-    ::WordListMetadata::new("libreoffice_id_id", None, Some("id")), bytes :
+    ::WordListMetadata::new("libreoffice_id_id", Some("Latn"), Some("id")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/id_ID.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-id")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-id",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_ID_ID)]
 /** word list.
@@ -4419,15 +5450,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_ID_ID: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-is"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-is",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_IS, metadata : crate ::WordListMetadata::new("libreoffice_is",
-    None, Some("is")), bytes :
+    Some("Latn"), Some("is")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/is.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-is")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-is",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_IS)]
 /** word list.
@@ -4435,15 +5484,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_IS: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-it"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-it",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_IT_IT, metadata : crate
-    ::WordListMetadata::new("libreoffice_it_it", None, Some("it")), bytes :
+    ::WordListMetadata::new("libreoffice_it_it", Some("Latn"), Some("it")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/it_IT.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-it")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-it",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_IT_IT)]
 /** word list.
@@ -4472,15 +5539,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_KMR_LATN: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-kn"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-knda",
+            feature = "lang-kn",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_KN_IN, metadata : crate
-    ::WordListMetadata::new("libreoffice_kn_in", None, Some("kn")), bytes :
+    ::WordListMetadata::new("libreoffice_kn_in", Some("Knda"), Some("kn")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/kn_IN.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-kn")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-knda",
+            feature = "lang-kn",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_KN_IN)]
 /** word list.
@@ -4488,15 +5573,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_KN_IN: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-lo"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-laoo",
+            feature = "lang-lo",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_LO_LA, metadata : crate
-    ::WordListMetadata::new("libreoffice_lo_la", None, Some("lo")), bytes :
+    ::WordListMetadata::new("libreoffice_lo_la", Some("Laoo"), Some("lo")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/lo_LA.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-lo")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-laoo",
+            feature = "lang-lo",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_LO_LA)]
 /** word list.
@@ -4504,15 +5607,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_LO_LA: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-lt"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-lt",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_LT, metadata : crate ::WordListMetadata::new("libreoffice_lt",
-    None, Some("lt")), bytes :
+    Some("Latn"), Some("lt")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/lt.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-lt")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-lt",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_LT)]
 /** word list.
@@ -4520,15 +5641,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_LT: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-lv"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-lv",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_LV_LV, metadata : crate
-    ::WordListMetadata::new("libreoffice_lv_lv", None, Some("lv")), bytes :
+    ::WordListMetadata::new("libreoffice_lv_lv", Some("Latn"), Some("lv")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/lv_LV.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-lv")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-lv",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_LV_LV)]
 /** word list.
@@ -4536,15 +5675,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_LV_LV: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-mr"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-deva",
+            feature = "lang-mr",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_MR_IN, metadata : crate
-    ::WordListMetadata::new("libreoffice_mr_in", None, Some("mr")), bytes :
+    ::WordListMetadata::new("libreoffice_mr_in", Some("Deva"), Some("mr")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/mr_IN.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-mr")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-deva",
+            feature = "lang-mr",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_MR_IN)]
 /** word list.
@@ -4552,15 +5709,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_MR_IN: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-nb"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-nb",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_NB_NO, metadata : crate
-    ::WordListMetadata::new("libreoffice_nb_no", None, Some("nb")), bytes :
+    ::WordListMetadata::new("libreoffice_nb_no", Some("Latn"), Some("nb")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/nb_NO.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-nb")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-nb",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_NB_NO)]
 /** word list.
@@ -4568,15 +5743,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_NB_NO: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-ne"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-deva",
+            feature = "lang-ne",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_NE_NP, metadata : crate
-    ::WordListMetadata::new("libreoffice_ne_np", None, Some("ne")), bytes :
+    ::WordListMetadata::new("libreoffice_ne_np", Some("Deva"), Some("ne")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/ne_NP.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-ne")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-deva",
+            feature = "lang-ne",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_NE_NP)]
 /** word list.
@@ -4584,15 +5777,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_NE_NP: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-nl"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-nl",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_NL_NL, metadata : crate
-    ::WordListMetadata::new("libreoffice_nl_nl", None, Some("nl")), bytes :
+    ::WordListMetadata::new("libreoffice_nl_nl", Some("Latn"), Some("nl")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/nl_NL.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-nl")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-nl",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_NL_NL)]
 /** word list.
@@ -4600,15 +5811,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_NL_NL: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-nn"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-nn",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_NN_NO, metadata : crate
-    ::WordListMetadata::new("libreoffice_nn_no", None, Some("nn")), bytes :
+    ::WordListMetadata::new("libreoffice_nn_no", Some("Latn"), Some("nn")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/nn_NO.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-nn")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-nn",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_NN_NO)]
 /** word list.
@@ -4616,15 +5845,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_NN_NO: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-oc"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-oc",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_OC_FR, metadata : crate
-    ::WordListMetadata::new("libreoffice_oc_fr", None, Some("oc")), bytes :
+    ::WordListMetadata::new("libreoffice_oc_fr", Some("Latn"), Some("oc")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/oc_FR.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-oc")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-oc",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_OC_FR)]
 /** word list.
@@ -4632,15 +5879,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_OC_FR: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-or"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-orya",
+            feature = "lang-or",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_OR_IN, metadata : crate
-    ::WordListMetadata::new("libreoffice_or_in", None, Some("or")), bytes :
+    ::WordListMetadata::new("libreoffice_or_in", Some("Orya"), Some("or")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/or_IN.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-or")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-orya",
+            feature = "lang-or",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_OR_IN)]
 /** word list.
@@ -4648,15 +5913,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_OR_IN: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-pa"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-guru",
+            feature = "lang-pa",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_PA_IN, metadata : crate
-    ::WordListMetadata::new("libreoffice_pa_in", None, Some("pa")), bytes :
+    ::WordListMetadata::new("libreoffice_pa_in", Some("Guru"), Some("pa")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/pa_IN.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-pa")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-guru",
+            feature = "lang-pa",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_PA_IN)]
 /** word list.
@@ -4664,15 +5947,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_PA_IN: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-pl"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-pl",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_PL_PL, metadata : crate
-    ::WordListMetadata::new("libreoffice_pl_pl", None, Some("pl")), bytes :
+    ::WordListMetadata::new("libreoffice_pl_pl", Some("Latn"), Some("pl")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/pl_PL.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-pl")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-pl",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_PL_PL)]
 /** word list.
@@ -4680,15 +5981,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_PL_PL: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-pt"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-pt",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_PT_BR, metadata : crate
-    ::WordListMetadata::new("libreoffice_pt_br", None, Some("pt")), bytes :
+    ::WordListMetadata::new("libreoffice_pt_br", Some("Latn"), Some("pt")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/pt_BR.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-pt")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-pt",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_PT_BR)]
 /** word list.
@@ -4696,15 +6015,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_PT_BR: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-pt"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-pt",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_PT_PT, metadata : crate
-    ::WordListMetadata::new("libreoffice_pt_pt", None, Some("pt")), bytes :
+    ::WordListMetadata::new("libreoffice_pt_pt", Some("Latn"), Some("pt")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/pt_PT.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-pt")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-pt",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_PT_PT)]
 /** word list.
@@ -4712,15 +6049,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_PT_PT: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-ro"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-ro",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_RO_RO, metadata : crate
-    ::WordListMetadata::new("libreoffice_ro_ro", None, Some("ro")), bytes :
+    ::WordListMetadata::new("libreoffice_ro_ro", Some("Latn"), Some("ro")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/ro_RO.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-ro")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-ro",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_RO_RO)]
 /** word list.
@@ -4728,15 +6083,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_RO_RO: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-ru"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-cyrl",
+            feature = "lang-ru",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_RU_RU, metadata : crate
-    ::WordListMetadata::new("libreoffice_ru_ru", None, Some("ru")), bytes :
+    ::WordListMetadata::new("libreoffice_ru_ru", Some("Cyrl"), Some("ru")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/ru_RU.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-ru")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-cyrl",
+            feature = "lang-ru",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_RU_RU)]
 /** word list.
@@ -4744,15 +6117,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_RU_RU: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-sa"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-deva",
+            feature = "lang-sa",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_SA_IN, metadata : crate
-    ::WordListMetadata::new("libreoffice_sa_in", None, Some("sa")), bytes :
+    ::WordListMetadata::new("libreoffice_sa_in", Some("Deva"), Some("sa")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/sa_IN.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-sa")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-deva",
+            feature = "lang-sa",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_SA_IN)]
 /** word list.
@@ -4760,15 +6151,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_SA_IN: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-si"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-sinh",
+            feature = "lang-si",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_SI_LK, metadata : crate
-    ::WordListMetadata::new("libreoffice_si_lk", None, Some("si")), bytes :
+    ::WordListMetadata::new("libreoffice_si_lk", Some("Sinh"), Some("si")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/si_LK.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-si")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-sinh",
+            feature = "lang-si",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_SI_LK)]
 /** word list.
@@ -4776,15 +6185,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_SI_LK: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-sk"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sk",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_SK_SK, metadata : crate
-    ::WordListMetadata::new("libreoffice_sk_sk", None, Some("sk")), bytes :
+    ::WordListMetadata::new("libreoffice_sk_sk", Some("Latn"), Some("sk")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/sk_SK.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-sk")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sk",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_SK_SK)]
 /** word list.
@@ -4792,15 +6219,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_SK_SK: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-sl"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sl",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_SL_SI, metadata : crate
-    ::WordListMetadata::new("libreoffice_sl_si", None, Some("sl")), bytes :
+    ::WordListMetadata::new("libreoffice_sl_si", Some("Latn"), Some("sl")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/sl_SI.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-sl")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sl",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_SL_SI)]
 /** word list.
@@ -4808,15 +6253,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_SL_SI: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-sq"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sq",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_SQ_AL, metadata : crate
-    ::WordListMetadata::new("libreoffice_sq_al", None, Some("sq")), bytes :
+    ::WordListMetadata::new("libreoffice_sq_al", Some("Latn"), Some("sq")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/sq_AL.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-sq")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sq",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_SQ_AL)]
 /** word list.
@@ -4858,15 +6321,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_SR_LATN: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-sr"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-cyrl",
+            feature = "lang-sr",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_SR, metadata : crate ::WordListMetadata::new("libreoffice_sr",
-    None, Some("sr")), bytes :
+    Some("Cyrl"), Some("sr")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/sr.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-sr")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-cyrl",
+            feature = "lang-sr",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_SR)]
 /** word list.
@@ -4874,15 +6355,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_SR: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-sv"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sv",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_SV_FI, metadata : crate
-    ::WordListMetadata::new("libreoffice_sv_fi", None, Some("sv")), bytes :
+    ::WordListMetadata::new("libreoffice_sv_fi", Some("Latn"), Some("sv")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/sv_FI.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-sv")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sv",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_SV_FI)]
 /** word list.
@@ -4890,15 +6389,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_SV_FI: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-sv"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sv",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_SV_SE, metadata : crate
-    ::WordListMetadata::new("libreoffice_sv_se", None, Some("sv")), bytes :
+    ::WordListMetadata::new("libreoffice_sv_se", Some("Latn"), Some("sv")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/sv_SE.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-sv")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sv",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_SV_SE)]
 /** word list.
@@ -4906,15 +6423,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_SV_SE: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-sw"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sw",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_SW_TZ, metadata : crate
-    ::WordListMetadata::new("libreoffice_sw_tz", None, Some("sw")), bytes :
+    ::WordListMetadata::new("libreoffice_sw_tz", Some("Latn"), Some("sw")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/sw_TZ.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-sw")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sw",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_SW_TZ)]
 /** word list.
@@ -4922,15 +6457,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_SW_TZ: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-ta"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-taml",
+            feature = "lang-ta",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_TA_IN, metadata : crate
-    ::WordListMetadata::new("libreoffice_ta_in", None, Some("ta")), bytes :
+    ::WordListMetadata::new("libreoffice_ta_in", Some("Taml"), Some("ta")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/ta_IN.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-ta")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-taml",
+            feature = "lang-ta",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_TA_IN)]
 /** word list.
@@ -4938,15 +6491,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_TA_IN: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-te"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-telu",
+            feature = "lang-te",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_TE_IN, metadata : crate
-    ::WordListMetadata::new("libreoffice_te_in", None, Some("te")), bytes :
+    ::WordListMetadata::new("libreoffice_te_in", Some("Telu"), Some("te")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/te_IN.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-te")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-telu",
+            feature = "lang-te",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_TE_IN)]
 /** word list.
@@ -4954,15 +6525,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_TE_IN: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-th"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-thai",
+            feature = "lang-th",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_TH_TH, metadata : crate
-    ::WordListMetadata::new("libreoffice_th_th", None, Some("th")), bytes :
+    ::WordListMetadata::new("libreoffice_th_th", Some("Thai"), Some("th")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/th_TH.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-th")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-thai",
+            feature = "lang-th",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_TH_TH)]
 /** word list.
@@ -4970,15 +6559,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_TH_TH: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-tr"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-tr",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_TR_TR, metadata : crate
-    ::WordListMetadata::new("libreoffice_tr_tr", None, Some("tr")), bytes :
+    ::WordListMetadata::new("libreoffice_tr_tr", Some("Latn"), Some("tr")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/tr_TR.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-tr")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-tr",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_TR_TR)]
 /** word list.
@@ -4986,15 +6593,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_TR_TR: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-uk"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-cyrl",
+            feature = "lang-uk",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_UK_UA, metadata : crate
-    ::WordListMetadata::new("libreoffice_uk_ua", None, Some("uk")), bytes :
+    ::WordListMetadata::new("libreoffice_uk_ua", Some("Cyrl"), Some("uk")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/uk_UA.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-uk")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-cyrl",
+            feature = "lang-uk",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_UK_UA)]
 /** word list.
@@ -5002,15 +6627,33 @@ word_list! {
 Compiled into the binary compressed with Brotli, decompressed at runtime.*/
 pub static LIBREOFFICE_UK_UA: crate::WordList = crate::WordList::stub();
 #[cfg(
-    all(not(docsrs), any(feature = "all", feature = "libreoffice", feature = "lang-vi"))
+    all(
+        not(docsrs),
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-vi",
+        )
+    )
 )]
 word_list! {
     ident : LIBREOFFICE_VI_VN, metadata : crate
-    ::WordListMetadata::new("libreoffice_vi_vn", None, Some("vi")), bytes :
+    ::WordListMetadata::new("libreoffice_vi_vn", Some("Latn"), Some("vi")), bytes :
     ::std::include_bytes!(::std::concat!(::std::env!("OUT_DIR"), '/',
     "libreoffice/vi_VN.txt", ".br")),
 }
-#[cfg(all(docsrs, any(feature = "all", feature = "libreoffice", feature = "lang-vi")))]
+#[cfg(
+    all(
+        docsrs,
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-vi",
+        )
+    )
+)]
 ///The
 #[doc = ::std::stringify!(LIBREOFFICE_VI_VN)]
 /** word list.
@@ -5838,173 +7481,733 @@ pub static ALL_WORD_LISTS: &[&crate::WordList] = &[
     &DIFFENATOR_TIFINAGH,
     #[cfg(any(feature = "all", feature = "diffenator", feature = "script-vaii"))]
     &DIFFENATOR_VAI,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-af"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-af",
+        )
+    )]
     &LIBREOFFICE_AF_ZA,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-an"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-an",
+        )
+    )]
     &LIBREOFFICE_AN_ES,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-ar"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-arab",
+            feature = "lang-ar",
+        )
+    )]
     &LIBREOFFICE_AR,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-as"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-beng",
+            feature = "lang-as",
+        )
+    )]
     &LIBREOFFICE_AS_IN,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-be"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-cyrl",
+            feature = "lang-be",
+        )
+    )]
     &LIBREOFFICE_BE_OFFICIAL,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-bg"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-cyrl",
+            feature = "lang-bg",
+        )
+    )]
     &LIBREOFFICE_BG_BG,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-bn"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-beng",
+            feature = "lang-bn",
+        )
+    )]
     &LIBREOFFICE_BN_BD,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-bo"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-tibt",
+            feature = "lang-bo",
+        )
+    )]
     &LIBREOFFICE_BO,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-br"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-br",
+        )
+    )]
     &LIBREOFFICE_BR_FR,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-bs"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-bs",
+        )
+    )]
     &LIBREOFFICE_BS_BA,
-    #[cfg(any(feature = "all", feature = "libreoffice"))]
+    #[cfg(any(feature = "all", feature = "libreoffice", feature = "script-latn"))]
     &LIBREOFFICE_CA_VALENCIA,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-ca"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-ca",
+        )
+    )]
     &LIBREOFFICE_CA,
-    #[cfg(any(feature = "all", feature = "libreoffice"))]
+    #[cfg(any(feature = "all", feature = "libreoffice", feature = "script-arab"))]
     &LIBREOFFICE_CKB,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-cs"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-cs",
+        )
+    )]
     &LIBREOFFICE_CS_CZ,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-da"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-da",
+        )
+    )]
     &LIBREOFFICE_DA_DK,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-de"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-de",
+        )
+    )]
     &LIBREOFFICE_DE_AT_FRAMI,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-de"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-de",
+        )
+    )]
     &LIBREOFFICE_DE_CH_FRAMI,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-de"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-de",
+        )
+    )]
     &LIBREOFFICE_DE_DE_FRAMI,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-el"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-grek",
+            feature = "lang-el",
+        )
+    )]
     &LIBREOFFICE_EL_GR,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-en"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-en",
+        )
+    )]
     &LIBREOFFICE_EN_AU,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-en"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-en",
+        )
+    )]
     &LIBREOFFICE_EN_CA,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-en"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-en",
+        )
+    )]
     &LIBREOFFICE_EN_GB,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-en"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-en",
+        )
+    )]
     &LIBREOFFICE_EN_US,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-en"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-en",
+        )
+    )]
     &LIBREOFFICE_EN_ZA,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-eo"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-eo",
+        )
+    )]
     &LIBREOFFICE_EO,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_AR,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_BO,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_CL,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_CO,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_CR,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_CU,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_DO,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_EC,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_ES,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_GQ,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_GT,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_HN,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_MX,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_NI,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_PA,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_PE,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_PH,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_PR,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_PY,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_SV,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_US,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_UY,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-es"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-es",
+        )
+    )]
     &LIBREOFFICE_ES_VE,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-et"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-et",
+        )
+    )]
     &LIBREOFFICE_ET_EE,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-fa"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-arab",
+            feature = "lang-fa",
+        )
+    )]
     &LIBREOFFICE_FA_IR,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-fr"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-fr",
+        )
+    )]
     &LIBREOFFICE_FR,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-gd"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-gd",
+        )
+    )]
     &LIBREOFFICE_GD_GB,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-gl"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-gl",
+        )
+    )]
     &LIBREOFFICE_GL_ES,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-gu"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-gujr",
+            feature = "lang-gu",
+        )
+    )]
     &LIBREOFFICE_GU_IN,
-    #[cfg(any(feature = "all", feature = "libreoffice"))]
+    #[cfg(any(feature = "all", feature = "libreoffice", feature = "script-latn"))]
     &LIBREOFFICE_GUG,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-he"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-hebr",
+            feature = "lang-he",
+        )
+    )]
     &LIBREOFFICE_HE_IL,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-hi"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-deva",
+            feature = "lang-hi",
+        )
+    )]
     &LIBREOFFICE_HI_IN,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-hr"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-hr",
+        )
+    )]
     &LIBREOFFICE_HR_HR,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-id"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-id",
+        )
+    )]
     &LIBREOFFICE_ID_ID,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-is"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-is",
+        )
+    )]
     &LIBREOFFICE_IS,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-it"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-it",
+        )
+    )]
     &LIBREOFFICE_IT_IT,
     #[cfg(any(feature = "all", feature = "libreoffice", feature = "script-latn"))]
     &LIBREOFFICE_KMR_LATN,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-kn"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-knda",
+            feature = "lang-kn",
+        )
+    )]
     &LIBREOFFICE_KN_IN,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-lo"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-laoo",
+            feature = "lang-lo",
+        )
+    )]
     &LIBREOFFICE_LO_LA,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-lt"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-lt",
+        )
+    )]
     &LIBREOFFICE_LT,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-lv"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-lv",
+        )
+    )]
     &LIBREOFFICE_LV_LV,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-mr"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-deva",
+            feature = "lang-mr",
+        )
+    )]
     &LIBREOFFICE_MR_IN,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-nb"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-nb",
+        )
+    )]
     &LIBREOFFICE_NB_NO,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-ne"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-deva",
+            feature = "lang-ne",
+        )
+    )]
     &LIBREOFFICE_NE_NP,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-nl"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-nl",
+        )
+    )]
     &LIBREOFFICE_NL_NL,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-nn"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-nn",
+        )
+    )]
     &LIBREOFFICE_NN_NO,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-oc"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-oc",
+        )
+    )]
     &LIBREOFFICE_OC_FR,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-or"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-orya",
+            feature = "lang-or",
+        )
+    )]
     &LIBREOFFICE_OR_IN,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-pa"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-guru",
+            feature = "lang-pa",
+        )
+    )]
     &LIBREOFFICE_PA_IN,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-pl"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-pl",
+        )
+    )]
     &LIBREOFFICE_PL_PL,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-pt"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-pt",
+        )
+    )]
     &LIBREOFFICE_PT_BR,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-pt"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-pt",
+        )
+    )]
     &LIBREOFFICE_PT_PT,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-ro"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-ro",
+        )
+    )]
     &LIBREOFFICE_RO_RO,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-ru"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-cyrl",
+            feature = "lang-ru",
+        )
+    )]
     &LIBREOFFICE_RU_RU,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-sa"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-deva",
+            feature = "lang-sa",
+        )
+    )]
     &LIBREOFFICE_SA_IN,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-si"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-sinh",
+            feature = "lang-si",
+        )
+    )]
     &LIBREOFFICE_SI_LK,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-sk"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sk",
+        )
+    )]
     &LIBREOFFICE_SK_SK,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-sl"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sl",
+        )
+    )]
     &LIBREOFFICE_SL_SI,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-sq"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sq",
+        )
+    )]
     &LIBREOFFICE_SQ_AL,
     #[cfg(
         any(
@@ -6015,25 +8218,95 @@ pub static ALL_WORD_LISTS: &[&crate::WordList] = &[
         )
     )]
     &LIBREOFFICE_SR_LATN,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-sr"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-cyrl",
+            feature = "lang-sr",
+        )
+    )]
     &LIBREOFFICE_SR,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-sv"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sv",
+        )
+    )]
     &LIBREOFFICE_SV_FI,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-sv"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sv",
+        )
+    )]
     &LIBREOFFICE_SV_SE,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-sw"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-sw",
+        )
+    )]
     &LIBREOFFICE_SW_TZ,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-ta"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-taml",
+            feature = "lang-ta",
+        )
+    )]
     &LIBREOFFICE_TA_IN,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-te"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-telu",
+            feature = "lang-te",
+        )
+    )]
     &LIBREOFFICE_TE_IN,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-th"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-thai",
+            feature = "lang-th",
+        )
+    )]
     &LIBREOFFICE_TH_TH,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-tr"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-tr",
+        )
+    )]
     &LIBREOFFICE_TR_TR,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-uk"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-cyrl",
+            feature = "lang-uk",
+        )
+    )]
     &LIBREOFFICE_UK_UA,
-    #[cfg(any(feature = "all", feature = "libreoffice", feature = "lang-vi"))]
+    #[cfg(
+        any(
+            feature = "all",
+            feature = "libreoffice",
+            feature = "script-latn",
+            feature = "lang-vi",
+        )
+    )]
     &LIBREOFFICE_VI_VN,
     #[cfg(any(feature = "all", feature = "ucd", feature = "script-zyyy"))]
     &UCD_EMOJI_ALL,

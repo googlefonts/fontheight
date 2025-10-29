@@ -1,4 +1,5 @@
 #![allow(missing_docs)] // FIXME: remove this
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
 use std::str::FromStr;
 

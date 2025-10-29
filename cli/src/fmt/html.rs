@@ -71,7 +71,7 @@ ul.drawn {
 }";
 
 // Percentage (0..=1) of UPM to pad SVG by
-const SVG_PAD_SCALE: f32 = 0.25;
+const SVG_PAD_SCALE: f32 = 0.15;
 
 struct RenderUsingDebug<T: fmt::Debug>(T);
 

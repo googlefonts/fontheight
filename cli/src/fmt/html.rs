@@ -329,11 +329,13 @@ fn draw_svg<'a>(
         .shaper(font_cache.font)
         .instance(Some(&location_cache.shaper_instance))
         .build();
+    // This word has already been shaped by main, so we should encounter no
+    // errors here; unwrapping is fine
     let shaping_meta = word_list
         .script()
         .map(|script| ShapingMeta::new(script, word_list.language(), &shaper))
         .transpose()
-        .unwrap(); // TODO: error handling
+        .unwrap();
 
     // Default features are still included by default
     let glyph_buffer = match &shaping_meta {

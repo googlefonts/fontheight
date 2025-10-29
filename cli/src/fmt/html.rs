@@ -25,7 +25,7 @@ use skrifa::{
     raw::TableProvider,
 };
 use static_lang_word_lists::WordList;
-use svg::node::element::{Line, Path, SVG};
+use svg::node::element::{Group, Line, Path, SVG};
 
 static CSS: &str = "\
 body {
@@ -66,9 +66,12 @@ ul.drawn {
 }
 
 .drawn svg {
-    height: 150px;
+    height: 175px;
     border: 1px grey dashed;
 }";
+
+// Percentage (0..=1) of UPM to pad SVG by
+const SVG_PAD_SCALE: f32 = 0.25;
 
 struct RenderUsingDebug<T: fmt::Debug>(T);
 
@@ -146,6 +149,7 @@ struct FontCache<'a> {
     const_metrics: Vec<(NotNan<f32>, &'static str)>,
     initial_highest: NotNan<f32>,
     initial_lowest: NotNan<f32>,
+    upm: NotNan<f32>,
 }
 
 impl<'a> FontCache<'a> {
@@ -187,6 +191,7 @@ impl<'a> FontCache<'a> {
             const_metrics,
             initial_highest,
             initial_lowest,
+            upm,
         })
     }
 
@@ -309,6 +314,40 @@ impl<'a> FontCache<'a> {
     }
 }
 
+#[derive(Debug)]
+struct ShapingAccumulator {
+    /// Where to position the next glyph relative to
+    x_origin: f32,
+    /// Where to position the next glyph relative to
+    y_origin: f32,
+    /// All the glyphs in the current word
+    glyph_svgs: Vec<Path>,
+}
+
+impl ShapingAccumulator {
+    fn new(word: &str) -> Self {
+        Self {
+            x_origin: 0f32,
+            y_origin: 0f32,
+            glyph_svgs: Vec::with_capacity(word.len()),
+        }
+    }
+
+    fn next(self, x_advance: i32, y_advance: i32, glyph_svg: Path) -> Self {
+        let ShapingAccumulator {
+            x_origin,
+            y_origin,
+            mut glyph_svgs,
+        } = self;
+        glyph_svgs.push(glyph_svg);
+        Self {
+            x_origin: x_origin + x_advance as f32,
+            y_origin: y_origin + y_advance as f32,
+            glyph_svgs,
+        }
+    }
+}
+
 fn draw_svg<'a>(
     font_cache: Rc<RefCell<FontCache<'a>>>,
     location_cache: Rc<RefCell<LocationCache>>,
@@ -359,27 +398,25 @@ fn draw_svg<'a>(
         }
     }
 
+    let svg_pad = font_cache.upm * SVG_PAD_SCALE;
     let outlines = font_cache.font.outline_glyphs();
-    let mut svg_pen = SvgPen::new();
-    let (x_max, _) = glyph_buffer
+    let ShapingAccumulator {
+        x_origin: end_width,
+        glyph_svgs,
+        ..
+    } = glyph_buffer
         .glyph_infos()
         .iter()
         .zip(glyph_buffer.glyph_positions())
         .fold(
-            (0f32, 0f32),
-            |(advance_width, advance_height), (glyph_info, position)| {
+            ShapingAccumulator::new(word),
+            |acc, (glyph_info, position)| {
                 let glyph = outlines.get(glyph_info.glyph_id.into()).unwrap();
 
                 // Draw the glyph
-                let offset_x = advance_width + position.x_offset as f32;
+                let mut svg_pen = SvgPen::new();
                 let mut flipped_svg_pen = VerticalFlipPen {
-                    height: highest,
                     inner: &mut svg_pen,
-                };
-                let mut flipped_offset_svg_pen = OffsetPen {
-                    offset_x,
-                    offset_y: position.y_offset as f32,
-                    inner: &mut flipped_svg_pen,
                 };
                 glyph
                     .draw(
@@ -387,9 +424,20 @@ fn draw_svg<'a>(
                             Size::unscaled(),
                             &location_cache.skrifa_location,
                         ),
-                        &mut flipped_offset_svg_pen,
+                        &mut flipped_svg_pen,
                     )
                     .unwrap();
+
+                let glyph_svg = Path::new()
+                    .set(
+                        "transform",
+                        format!(
+                            "translate({x}, {y})",
+                            x = acc.x_origin + position.x_offset as f32,
+                            y = acc.y_origin + position.y_offset as f32
+                        ),
+                    )
+                    .set("d", svg_pen.to_string());
 
                 // Look at the bounds and update highest/lowest as needed
                 let extrema = location_cache.get_extremes(&glyph);
@@ -398,45 +446,52 @@ fn draw_svg<'a>(
                 lowest =
                     lowest.min(NotNan::new(extrema.lowest() as f32).unwrap());
 
-                // Return position for next glyph to be relative to
-                (
-                    advance_width + position.x_advance as f32,
-                    advance_height + position.y_advance as f32,
-                )
+                acc.next(position.x_advance, position.y_advance, glyph_svg)
             },
         );
     location_cache.buffer = Some(glyph_buffer.clear());
 
-    let word_svg = Path::new().set("d", svg_pen.to_string());
+    let word_svg = glyph_svgs
+        .into_iter()
+        .fold(Group::new(), |group, path| group.add(path))
+        .set(
+            "transform",
+            format!("translate({x}, {y})", x = svg_pad, y = highest + svg_pad),
+        );
 
-    let x_min = 0.;
-    let height = highest;
+    let x_min = -svg_pad;
+    let x_max = end_width + svg_pad;
+    let y_min = lowest - svg_pad;
+    let y_max = highest + svg_pad;
 
-    let line = |y: NotNan<f32>, colour: &str| {
-        let y = y.into_inner();
-        Line::new()
-            .set("x1", x_min)
-            .set("y1", height - y)
-            .set("x2", x_max)
-            .set("y2", height - y)
-            .set("stroke-width", 10)
-            .set("stroke", colour)
-    };
-
-    font_cache
+    let word_and_lines_svg = font_cache
         .const_metrics
         .iter()
         .copied()
         .chain(maybe_base.into_iter().flat_map(|base| base.line_iter()))
-        .fold(SVG::new(), |svg, (value, colour)| {
-            svg.add(line(value, colour))
-        })
+        .fold(word_svg, |group, (line_y, colour)| {
+            let y = line_y.into_inner();
+            let line = Line::new()
+                .set("x1", x_min)
+                .set("y1", -y)
+                .set("x2", x_max)
+                .set("y2", -y)
+                .set("stroke-width", 10)
+                .set("stroke", colour);
+            group.add(line)
+        });
+
+    SVG::new()
         .set(
             "viewBox",
-            format!("{x_min} 0 {} {}", x_max - x_min, highest - lowest),
+            format!(
+                "0 0 {width} {height}",
+                width = x_max - x_min,
+                height = y_max - y_min
+            ),
         )
         .set("preserveAspectRatio", "meet")
-        .add(word_svg)
+        .add(word_and_lines_svg)
 }
 
 fn draw_exemplar<'a>(
@@ -565,7 +620,6 @@ pub fn format_all_reports(
 }
 
 struct VerticalFlipPen<'p, P> {
-    height: NotNan<f32>,
     inner: &'p mut P,
 }
 
@@ -574,19 +628,15 @@ where
     P: OutlinePen,
 {
     fn move_to(&mut self, x: f32, y: f32) {
-        debug_assert!(y <= self.height.into_inner());
-        self.inner.move_to(x, self.height - y);
+        self.inner.move_to(x, -y);
     }
 
     fn line_to(&mut self, x: f32, y: f32) {
-        debug_assert!(y <= self.height.into_inner());
-        self.inner.line_to(x, self.height - y);
+        self.inner.line_to(x, -y);
     }
 
     fn quad_to(&mut self, cx0: f32, cy0: f32, x: f32, y: f32) {
-        debug_assert!(y <= self.height.into_inner());
-        self.inner
-            .quad_to(cx0, self.height - cy0, x, self.height - y);
+        self.inner.quad_to(cx0, -cy0, x, -y);
     }
 
     fn curve_to(
@@ -598,69 +648,10 @@ where
         x: f32,
         y: f32,
     ) {
-        debug_assert!(y <= self.height.into_inner());
-        self.inner.curve_to(
-            cx0,
-            self.height - cy0,
-            cx1,
-            self.height - cy1,
-            x,
-            self.height - y,
-        );
+        self.inner.curve_to(cx0, -cy0, cx1, -cy1, x, -y);
     }
 
     fn close(&mut self) {
         self.inner.close()
-    }
-}
-
-struct OffsetPen<'p, P> {
-    offset_x: f32,
-    offset_y: f32,
-    inner: &'p mut P,
-}
-
-impl<P> OutlinePen for OffsetPen<'_, P>
-where
-    P: OutlinePen,
-{
-    fn move_to(&mut self, x: f32, y: f32) {
-        self.inner.move_to(x + self.offset_x, y + self.offset_y);
-    }
-
-    fn line_to(&mut self, x: f32, y: f32) {
-        self.inner.line_to(x + self.offset_x, y + self.offset_y);
-    }
-
-    fn quad_to(&mut self, cx0: f32, cy0: f32, x: f32, y: f32) {
-        self.inner.quad_to(
-            cx0 + self.offset_x,
-            cy0 + self.offset_y,
-            x + self.offset_x,
-            y + self.offset_y,
-        );
-    }
-
-    fn curve_to(
-        &mut self,
-        cx0: f32,
-        cy0: f32,
-        cx1: f32,
-        cy1: f32,
-        x: f32,
-        y: f32,
-    ) {
-        self.inner.curve_to(
-            cx0 + self.offset_x,
-            cy0 + self.offset_y,
-            cx1 + self.offset_x,
-            cy1 + self.offset_y,
-            x + self.offset_x,
-            y + self.offset_y,
-        );
-    }
-
-    fn close(&mut self) {
-        self.inner.close();
     }
 }

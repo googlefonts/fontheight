@@ -65,6 +65,7 @@ def guess_script(words: Iterable[str]) -> str | None:
     most_common = script_counter.most_common(2)
     # If there isn't a clear winner, give up
     if len(most_common) > 2 and most_common[0][1] < 2 * most_common[1][1]:
+        print(f"warning: couldn't decide script ({most_common})")
         return None
     else:
         return most_common[0][0]

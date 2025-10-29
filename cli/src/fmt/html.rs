@@ -145,7 +145,7 @@ struct FontCache<'a> {
     shaper_data: ShaperData,
     //                    (script , language       )
     base_entries: HashMap<(&'a str, Option<&'a str>), Option<SimpleBase>>,
-    //                 (y  , colour      )
+    //                 (y          , colour      )
     const_metrics: Vec<(NotNan<f32>, &'static str)>,
     initial_highest: NotNan<f32>,
     initial_lowest: NotNan<f32>,
@@ -453,18 +453,18 @@ fn draw_svg<'a>(
         );
     location_cache.buffer = Some(glyph_buffer.clear());
 
+    let x_min = -svg_pad;
+    let x_max = end_width + svg_pad;
+    let y_min = lowest - svg_pad;
+    let y_max = highest + svg_pad;
+
     let word_svg = glyph_svgs
         .into_iter()
         .fold(Group::new(), |group, path| group.add(path))
         .set(
             "transform",
-            format!("translate({x}, {y})", x = svg_pad, y = highest + svg_pad),
+            format!("translate({x}, {y})", x = svg_pad, y = y_max),
         );
-
-    let x_min = -svg_pad;
-    let x_max = end_width + svg_pad;
-    let y_min = lowest - svg_pad;
-    let y_max = highest + svg_pad;
 
     let word_and_lines_svg = font_cache
         .const_metrics

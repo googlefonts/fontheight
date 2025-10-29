@@ -159,6 +159,8 @@ impl<'a> FontCache<'a> {
         let upm = NotNan::<f32>::from(head.units_per_em());
 
         let const_metrics = vec![
+            // Baseline
+            (NotNan::default(), "grey"),
             // Highs
             (os2.s_typo_ascender().into(), "red"),
             (os2.us_win_ascent().into(), "blue"),
@@ -590,24 +592,27 @@ pub fn format_all_reports(
             }
             body {
                 h1 { "Tall Glyphs" }
+                h3 { "Lines legend" }
                 p {
-                    "Lines legend:" br;
+                    span style="color: grey" {
+                        "Grey: baseline"
+                    } br;
                     span style="color: green" {
-                        "green: [head.yMax, head.yMin]"
+                        "Green: [head.yMax, head.yMin]"
                     } br;
                     span style="color: blue" {
-                        "blue: [os2.usWinAscent, -os2.usWinDescent]"
+                        "Blue: [os2.usWinAscent, -os2.usWinDescent]"
                     } br;
                     span style="color: red" {
-                        "red: [os2.sTypoAscender, os2.sTypoDescender] "
+                        "Red: [os2.sTypoAscender, os2.sTypoDescender] "
                         "= clipping limit for Android"
                     } br;
                     span style="color: pink" {
-                        (PreEscaped("pink: [1900&frasl;2048&times;upem, "))
+                        (PreEscaped("Pink: [1900&frasl;2048&times;upem, "))
                         (PreEscaped("&minus;500&frasl;2048&times;upem]"))
                     } br;
                     span style="color: cyan" {
-                        "cyan: BASE table entry for script (if present)"
+                        "Cyan: BASE table entry for script/language (if present)"
                     } br;
                 }
                 @for (script, reports) in script_exemplars {

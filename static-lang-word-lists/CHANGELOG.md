@@ -1,5 +1,11 @@
 # `static-lang-word-lists` changelog
 
+## v0.4.1 - 2025/10/29
+
+### Changes
+
+- Added script metadata to all LibreOffice word lists
+
 ## v0.4.0 - 2025/10/27
 
 **Breaking changes**: not all word lists are included by default (only diffenator word lists). `LOOKUP_TABLE` has been removed.

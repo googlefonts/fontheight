@@ -1,11 +1,12 @@
-use kurbo::Shape;
-pub use kurbo::{BezPath, PathEl, Point, Rect};
+use ::kurbo::Shape;
 use skrifa::outline::OutlinePen;
+
+use crate::kurbo;
 
 // Adapted from https://github.com/googlefonts/fontations/blob/57715f39/skrifa/src/outline/mod.rs#L1159-L1184 (same license)
 #[derive(Debug, Default)]
 pub struct BoundsPen {
-    path: BezPath,
+    path: kurbo::BezPath,
 }
 
 impl BoundsPen {
@@ -15,12 +16,12 @@ impl BoundsPen {
     }
 
     #[must_use]
-    pub const fn path(&self) -> &BezPath {
+    pub const fn path(&self) -> &kurbo::BezPath {
         &self.path
     }
 
     #[must_use]
-    pub fn bounding_box(&self) -> Rect {
+    pub fn bounding_box(&self) -> kurbo::Rect {
         self.path.bounding_box()
     }
 }

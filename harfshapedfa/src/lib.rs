@@ -19,6 +19,11 @@ mod location;
 pub mod pens;
 pub mod utils;
 
+#[cfg(feature = "pens")]
+pub mod kurbo {
+    pub use kurbo::{BezPath, PathEl, Point, Rect};
+}
+
 pub struct ShapingMeta {
     shaping_plan: ShapePlan,
     script: Script,

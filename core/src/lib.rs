@@ -520,7 +520,7 @@ impl InstanceExtremes {
                     )
                     .map_err(|err| SkrifaDrawError(id, err))?;
 
-                let harfshapedfa::pens::Rect { y0, y1, .. } = bounds_pen.bounding_box();
+                let harfshapedfa::kurbo::Rect { y0, y1, .. } = bounds_pen.bounding_box();
                 Ok((u32::from(id), VerticalExtremes {
                     lowest: NotNan::new(y0).expect("bounding box with NaN y0"),
                     highest: NotNan::new(y1).expect("bounding box with NaN y1"),

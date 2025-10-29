@@ -130,7 +130,7 @@ impl LocationCache {
                         &mut bounds_pen,
                     )
                     .unwrap();
-                let harfshapedfa::pens::Rect { y0, y1, .. } =
+                let harfshapedfa::kurbo::Rect { y0, y1, .. } =
                     bounds_pen.bounding_box();
                 VerticalExtremes::new(y0, y1)
             })

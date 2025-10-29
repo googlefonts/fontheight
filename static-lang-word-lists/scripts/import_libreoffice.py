@@ -3,6 +3,7 @@
 # requires-python = ">=3.11"
 # dependencies = [
 #     "babelfish>=0.6",
+#     "fonttools>=4.60,<5",
 #     "pyahocorasick>=2.2,<3",
 #     "tomli-w",
 # ]
@@ -21,6 +22,7 @@ https://github.com/streetsidesoftware/cspell/tree/main/packages/hunspell-reader#
 import re
 import subprocess
 from argparse import ArgumentParser, Namespace
+from collections import Counter
 from pathlib import Path
 from time import time
 from typing import Collection, Iterable, Iterator
@@ -29,6 +31,7 @@ import ahocorasick
 import tomli_w
 from babelfish import Language, Script
 from babelfish.exceptions import LanguageConvertError
+from fontTools import unicodedata
 
 DATA = Path(__file__).parent.parent / "data"
 OUTPUT = DATA / "libreoffice"
@@ -42,7 +45,32 @@ OUTPUT = DATA / "libreoffice"
 INFEASIBLE = ("hu_HU", "ko_KR", "mn_MN")
 
 
-def write_metadata(dic_path: Path, metadata_dest: Path) -> None:
+# Adapted from https://github.com/googlefonts/gftools/blob/d4c06f5d88e0a849fabf7089d80835a96dc42f30/Lib/gftools/utils.py#L600-L622
+def guess_script(words: Iterable[str]) -> str | None:
+    IGNORE = ("Zinh", "Zyyy", "Zzzz")
+
+    script_counter: Counter[str] = Counter(
+        script
+        for word in words
+        for char in word
+        for script in unicodedata.script_extension(char)
+    )
+
+    for key in IGNORE:
+        try:
+            del script_counter[key]
+        except KeyError:
+            pass
+
+    most_common = script_counter.most_common(2)
+    # If there isn't a clear winner, give up
+    if len(most_common) > 2 and most_common[0][1] < 2 * most_common[1][1]:
+        return None
+    else:
+        return most_common[0][0]
+
+
+def write_metadata(dic_path: Path, metadata_dest: Path, script: str | None) -> None:
     """
     As will become abundantly clear, there's a fair amount of guesswork &
     fudging involved to get anything usable here.
@@ -77,6 +105,9 @@ def write_metadata(dic_path: Path, metadata_dest: Path) -> None:
         language = None
     else:
         raise ValueError(f"{dic_path}: don't know how to decide language")
+
+    if "script" not in doc and script is not None:
+        doc["script"] = script
 
     if language is not None:
         try:
@@ -204,7 +235,12 @@ def main(args: Namespace) -> None:
 
         output_path.write_text("\n".join(sorted(r2_words)) + "\n", encoding="utf-8")
         print(f"wrote {output_path.relative_to(DATA)} (took {time() - start:.1f}s)")
-        write_metadata(dic_path, output_path.with_suffix(".toml"))
+
+        write_metadata(
+            dic_path,
+            output_path.with_suffix(".toml"),
+            guess_script(r2_words),
+        )
 
 
 if __name__ == "__main__":

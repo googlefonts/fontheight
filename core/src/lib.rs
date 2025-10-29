@@ -1,4 +1,4 @@
-#![cfg_attr(docsrs, feature(doc_auto_cfg))]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 // Copied from the top of the repo README with minor edits
 //! Font Height is a tool that provides recommendations on setting font
 //! vertical metrics based on **shaped words**.

@@ -1,3 +1,5 @@
+#![cfg_attr(docsrs, feature(doc_cfg))]
+
 //! # `static-lang-word-lists`
 //!
 //! A collection of word lists for various scripts, compressed at build time

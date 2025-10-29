@@ -163,10 +163,13 @@ fn _main() -> anyhow::Result<()> {
                     })
                     .context("failed to write to output")?;
             } else {
+                info!("generating HTML report");
+                let start = Instant::now();
                 let html = fmt::html::format_all_reports(
                     &reports,
                     reporter.fontref(),
                 )?;
+                info!("took {:?}", start.elapsed());
                 output
                     .write_all(html.as_bytes())
                     .context("failed to write to output")?;

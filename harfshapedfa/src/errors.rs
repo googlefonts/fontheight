@@ -9,13 +9,6 @@ use thiserror::Error;
 /// ahead-of-time about the text you're going to give it, telling it things like
 /// the direction, script, and language of the text. You can read more about
 /// this [here](https://harfbuzz.github.io/shaping-plans-and-caching.html).
-// TODO: re-home these docs back in Font Height somewhere
-// # If it's just an optimisation technique, why is this a fatal error for Font
-// Height?
-//
-// This error will only occur if the [`WordList`](crate::WordList) has
-// metadata and it's unable to be used. [`WordList`](crate::WordList)s without
-// metadata will not cause this error.
 #[derive(Debug, Error)]
 pub enum ShapingPlanError {
     /// The script metadata value was

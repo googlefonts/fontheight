@@ -12,8 +12,8 @@ use fontheight::{Location, Report, VerticalExtremes};
 use harfrust::{ShaperData, ShaperInstance, UnicodeBuffer};
 use harfshapedfa::{
     HarfRustShaperExt, ShapingMeta,
+    convert::{iso639_to_opentype, iso15924_to_opentype},
     pens::BoundsPen,
-    utils::{iso639_to_opentype, iso15924_to_opentype},
 };
 use log::{debug, error};
 use maud::{DOCTYPE, Escaper, Markup, PreEscaped, Render, html};
@@ -134,7 +134,7 @@ impl LocationCache {
                     )
                     .unwrap();
                 let harfshapedfa::kurbo::Rect { y0, y1, .. } =
-                    bounds_pen.bounding_box();
+                    bounds_pen.bounds();
                 VerticalExtremes::new(y0, y1)
             })
     }

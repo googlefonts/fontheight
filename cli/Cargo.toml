@@ -1,7 +1,7 @@
 [package]
 name = "fontheight-cli"
 description = "Find out the vertical extents your font reaches on shaped words"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 authors = [
     "Dalton Maag <sd@daltonmaag.com>",
@@ -19,7 +19,7 @@ path = "src/main.rs"
 [dependencies]
 anyhow = "1"
 clap-verbosity-flag = { version = "3", features = ["log"] }
-fontheight = { version = "0.1.5", path = "../core" }
+fontheight = { version = "0.2", path = "../core" }
 harfrust.workspace = true
 harfshapedfa.workspace = true
 log.workspace = true

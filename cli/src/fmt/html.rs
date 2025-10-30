@@ -82,6 +82,7 @@ impl<T: fmt::Debug> Render for RenderUsingDebug<T> {
     }
 }
 
+/// What a BASE min/max record is when you *really* boil it down
 #[derive(Debug, Copy, Clone)]
 struct SimpleBase {
     min: Option<i16>,
@@ -97,6 +98,8 @@ impl SimpleBase {
     }
 }
 
+// Think InstanceExtremes, but lazy instead of ahead-of-time. Also holds the
+// buffer so it can be re-used between words.
 #[derive(Debug)]
 struct LocationCache {
     skrifa_location: skrifa::instance::Location,
@@ -140,6 +143,7 @@ impl LocationCache {
     }
 }
 
+// Any information that only needs to be computed once
 struct FontCache<'a> {
     font: &'a FontRef<'a>,
     shaper_data: ShaperData,
@@ -316,6 +320,7 @@ impl<'a> FontCache<'a> {
     }
 }
 
+/// Everything we need to keep track of while shaping a word
 #[derive(Debug)]
 struct ShapingAccumulator {
     /// Where to position the next glyph relative to
@@ -335,6 +340,8 @@ impl ShapingAccumulator {
         }
     }
 
+    // Taking self and returning a new one makes this easier to use with
+    // Iterator::fold (i.e. the whole point of this struct)
     fn next(self, x_advance: i32, y_advance: i32, glyph_svg: Path) -> Self {
         let ShapingAccumulator {
             x_origin,
@@ -356,6 +363,8 @@ fn draw_svg<'a>(
     word: &str,
     word_list: &'a WordList,
 ) -> SVG {
+    // We only ever process one SVG at a time, so we can just borrow mutably for
+    // the duration of this function for simplicity's sake
     let mut font_cache = font_cache.borrow_mut();
     let mut location_cache = location_cache.borrow_mut();
 
@@ -370,7 +379,7 @@ fn draw_svg<'a>(
         .shaper(font_cache.font)
         .instance(Some(&location_cache.shaper_instance))
         .build();
-    // This word has already been shaped by main, so we should encounter no
+    // This word has already been shaped by main so we should encounter no
     // errors here; unwrapping is fine
     let shaping_meta = word_list
         .script()
@@ -387,6 +396,7 @@ fn draw_svg<'a>(
         },
     };
 
+    // These values do not factor in padding
     let mut highest = font_cache.initial_highest;
     let mut lowest = font_cache.initial_lowest;
 
@@ -415,7 +425,8 @@ fn draw_svg<'a>(
             |acc, (glyph_info, position)| {
                 let glyph = outlines.get(glyph_info.glyph_id.into()).unwrap();
 
-                // Draw the glyph
+                // Draw the glyph, flipped because SVG space has y=0 at the top,
+                // unlike fonts
                 let mut svg_pen = SvgPen::new();
                 let mut flipped_svg_pen = VerticalFlipPen {
                     inner: &mut svg_pen,
@@ -430,6 +441,7 @@ fn draw_svg<'a>(
                     )
                     .unwrap();
 
+                // Pull the SVG path out of the pen and position it correctly
                 let glyph_svg = Path::new()
                     .set(
                         "transform",
@@ -453,6 +465,7 @@ fn draw_svg<'a>(
         );
     location_cache.buffer = Some(glyph_buffer.clear());
 
+    // From this point on, padding is factored in
     let x_min = -svg_pad;
     let x_max = end_width + svg_pad;
     let y_min = lowest - svg_pad;
@@ -463,6 +476,8 @@ fn draw_svg<'a>(
         .fold(Group::new(), |group, path| group.add(path))
         .set(
             "transform",
+            // Move the word down now to complete the move from font-land to
+            // SVG-land, coordinates-wise
             format!("translate({x}, {y})", x = svg_pad, y = y_max),
         );
 
@@ -473,6 +488,7 @@ fn draw_svg<'a>(
         .chain(maybe_base.into_iter().flat_map(|base| base.line_iter()))
         .fold(word_svg, |group, (line_y, colour)| {
             let y = line_y.into_inner();
+            // Draw the lines the full width of the box
             let line = Line::new()
                 .set("x1", x_min)
                 .set("y1", -y)
@@ -511,6 +527,7 @@ fn draw_exemplar<'a>(
                 (PreEscaped(svg))
                 figcaption {
                     "\"" (exemplar) "\" (from " (source.name()) ")" br;
+                    // TODO: give instance name if it is a named instance?
                     (RenderUsingDebug(location))
                 }
             }
@@ -575,7 +592,7 @@ pub fn format_all_reports(
                         &report_a.location,
                         &report_b.location,
                     )
-                    .expect("fontheight generated unsortable locations")
+                    .expect("fontheight produced unsortable locations")
                 })
         });
     });

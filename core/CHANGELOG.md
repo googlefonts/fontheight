@@ -1,5 +1,24 @@
 # `fontheight` library crate changelog
 
+## v0.2.0
+
+**Breaking change**: the `Location` type and several errors now reside in [`harfshapedfa`](../harfshapedfa/README.md) instead of this crate. Error types of some functions have changed.
+
+### Removed
+
+All now live in [`harfshapedfa`](../harfshapedfa/README.md).
+Other changes have been made to the `Location` API/behaviour.
+
+- `Location`
+- `ShapingPlanError`
+- `HarfRustUnknownLanguageError`
+- `MismatchedAxesError`
+- `InvalidTagError`
+
+### Added
+
+- `WordListShapingPlanError`
+
 ## v0.1.8 - 2025/10/27
 
 ### Changes

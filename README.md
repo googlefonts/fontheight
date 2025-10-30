@@ -55,6 +55,8 @@ Options:
   -k, --words <WORDS_PER_LIST>  The number of words from each list to test [default: all words]
   -v, --verbose...              Increase logging verbosity
   -q, --quiet...                Decrease logging verbosity
+  -o, --output <OUTPUT_PATH>    Write the reports into the given path. Will print to stdout if not specified
+      --html                    Output all the reports into a single HTML file
   -h, --help                    Print help
   -V, --version                 Print version
 ```

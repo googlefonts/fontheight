@@ -8,7 +8,15 @@ name: Generate docs
 
 # Make sure CI fails on all warnings, and pretend we're docs.rs
 env:
-  RUSTFLAGS: "-Dwarnings --cfg docsrs"
+  RUSTFLAGS: "-Dwarnings -Adead-code -Aunused-imports -Aunused-macros"
+  # FIXME: in future, use the below to better match docs.rs. At the time of
+  #        writing (2025/10/30), a very common documentation-related nightly
+  #        feature attribute (doc_auto_cfg) has been renamed (to doc_cfg) which
+  #        is resulting in the pipeline failing due to transient dependencies
+  #        using the removed feature (even though I specify --no-deps). Not
+  #        fully matching docs.rs also causes some warnings to get emitted
+  #        while building SLWL, so allow those for now.
+  # RUSTFLAGS: "-Dwarnings --cfg docsrs"
 
 jobs:
   generate-docs:

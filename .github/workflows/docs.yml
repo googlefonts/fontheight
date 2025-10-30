@@ -1,0 +1,34 @@
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+name: Generate docs
+
+# Make sure CI fails on all warnings, and pretend we're docs.rs
+env:
+  RUSTFLAGS: "-Dwarnings --cfg docsrs"
+
+jobs:
+  generate-docs:
+    name: ${{ matrix.crate }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        crate:
+          - fontheight
+          - harfshapedfa
+          - static-lang-word-lists
+    steps:
+      # docs.rs uses nightly rust
+      - name: Setup nightly Rust
+        uses: dtolnay/rust-toolchain@nightly
+      - name: Checkout ${{ github.head_ref || github.ref_name }}
+        uses: actions/checkout@v4
+      - name: Document
+        shell: bash
+        run: cargo +nightly doc --all-features --no-deps --package ${{ matrix.crate }}
+      # TODO: could we deploy this to GitHub pages somehow?
+      #       https://github.com/actions/upload-pages-artifact
+      #       https://github.com/actions/deploy-pages

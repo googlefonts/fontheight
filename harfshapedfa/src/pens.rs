@@ -3,6 +3,11 @@ use skrifa::outline::OutlinePen;
 
 use crate::kurbo;
 
+/// Pen to calculate the bounds of a shape.
+///
+/// Has the functionality of both Python's [`BoundsPen`](https://fonttools.readthedocs.io/en/latest/pens/boundsPen.html#fontTools.pens.boundsPen.BoundsPen)
+/// and [`ControlBoundsPen`](https://fonttools.readthedocs.io/en/latest/pens/boundsPen.html#fontTools.pens.boundsPen.ControlBoundsPen),
+/// but is powered by [`kurbo`].
 // Adapted from https://github.com/googlefonts/fontations/blob/57715f39/skrifa/src/outline/mod.rs#L1159-L1184 (same license)
 #[derive(Debug, Default)]
 pub struct BoundsPen {
@@ -10,19 +15,41 @@ pub struct BoundsPen {
 }
 
 impl BoundsPen {
+    /// Create a new `BoundsPen`.
     #[must_use]
     pub fn new() -> Self {
         Default::default()
     }
 
+    /// Get out the drawn [`kurbo::BezPath`]
     #[must_use]
     pub const fn path(&self) -> &kurbo::BezPath {
         &self.path
     }
 
+    /// Calculate the bounds of a shape.
+    ///
+    /// It calculates the correct bounds even when the shape contains curves
+    /// that don’t have points on their extremes.
+    ///
+    /// This is somewhat slower to compute than the
+    /// [`BoundsPen::control_bounds`].
     #[must_use]
-    pub fn bounding_box(&self) -> kurbo::Rect {
+    pub fn bounds(&self) -> kurbo::Rect {
         self.path.bounding_box()
+    }
+
+    /// Calculate the "control bounds" of a shape.
+    ///
+    /// This is the bounding box of all control points, so may be larger than
+    /// the actual bounding box if there are curves that don’t have points on
+    /// their extremes.
+    ///
+    /// Faster to compute than [`BoundsPen::bounds`], but not always what you
+    /// want.
+    #[must_use]
+    pub fn control_bounds(&self) -> kurbo::Rect {
+        self.path.control_box()
     }
 }
 

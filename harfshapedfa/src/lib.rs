@@ -1,5 +1,5 @@
-#![allow(missing_docs)] // FIXME: remove this
 #![cfg_attr(docsrs, feature(doc_cfg))]
+#![doc = include_str!("../README.md")]
 
 use std::str::FromStr;
 
@@ -10,21 +10,42 @@ use harfrust::{
 pub use location::*;
 
 use crate::{
+    convert::direction_from_script,
     errors::{HarfRustUnknownLanguageError, InvalidTagError, ShapingPlanError},
-    utils::direction_from_script,
 };
 
+/// Helper functions for converting between differing standards.
+pub mod convert;
+/// Something went wrong!
 pub mod errors;
 mod location;
+/// Pens, used to transform or calculate information about glyph outlines.
+///
+/// A pen is a kind of object that standardizes the way how to "draw" outlines:
+/// it is a middle man between an outline and a drawing. In other words: it is
+/// an abstraction for drawing outlines, making sure that outline objects don’t
+/// need to know the details about how and where they’re being drawn, and that
+/// drawings don’t need to know the details of how outlines are stored.
+// ^ re-used from: https://fonttools.readthedocs.io/en/latest/pens/basePen.html
 #[cfg(feature = "pens")]
 pub mod pens;
-pub mod utils;
 
+/// Re-exports from [`kurbo`](::kurbo)
+///
+/// This should cover the API surface that [`pens`] exposes.
 #[cfg(feature = "pens")]
 pub mod kurbo {
     pub use kurbo::{BezPath, PathEl, Point, Rect};
 }
 
+/// Metadata related to shaping.
+///
+/// Stores information on script, language, direction, and the resultant
+/// [`harfrust::ShapePlan`] that this produces.
+///
+/// See [`Shaper::shape_with_meta`](HarfRustShaperExt::shape_with_meta) &
+/// [`UnicodeBuffer::configure_with_meta`](HarfRustBufferExt::configure_with_meta)
+/// for usage.
 pub struct ShapingMeta {
     shaping_plan: ShapePlan,
     script: Script,
@@ -33,6 +54,9 @@ pub struct ShapingMeta {
 }
 
 impl ShapingMeta {
+    /// Create a new `ShapingMeta`.
+    ///
+    /// Errors if `script` or `language` are invalid/unrecognised.
     pub fn new(
         script: &str,
         language: Option<&str>,
@@ -71,13 +95,17 @@ impl ShapingMeta {
         })
     }
 
+    /// Get access to the inner [`ShapePlan`].
     #[must_use]
     pub const fn shaping_plan(&self) -> &ShapePlan {
         &self.shaping_plan
     }
 }
 
+/// Extension trait for [`harfrust::UnicodeBuffer`].
 pub trait HarfRustBufferExt: private::Sealed {
+    /// Configures the buffer with script/language/direction information from
+    /// [`ShapingMeta`].
     fn configure_with_meta(&mut self, meta: &ShapingMeta);
 }
 
@@ -91,7 +119,16 @@ impl HarfRustBufferExt for UnicodeBuffer {
     }
 }
 
+/// Extension trait for [`harfrust::Shaper`].
 pub trait HarfRustShaperExt: private::Sealed {
+    /// A convenience method that configures the buffer and then shapes it.
+    ///
+    /// Equivalent to:
+    // TODO: make this code sample compile & run
+    /// ```ignore
+    /// buffer.configure_with_meta(meta);
+    /// shaper.shape_with_plan(meta.shaping_plan(), buffer, features)
+    /// ```
     fn shape_with_meta(
         &self,
         meta: &ShapingMeta,

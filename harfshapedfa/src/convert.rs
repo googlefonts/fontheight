@@ -2,6 +2,7 @@ use harfrust::{Direction, Script, Tag, script};
 
 use crate::errors::InvalidTagError;
 
+/// Returns the text direction for the given [`harfrust::Script`], if known
 #[must_use]
 pub const fn direction_from_script(script: Script) -> Option<Direction> {
     // Copied from harfrust (internal API)
@@ -88,11 +89,12 @@ pub const fn direction_from_script(script: Script) -> Option<Direction> {
     }
 }
 
+/// Converts an [ISO 15924](https://en.wikipedia.org/wiki/ISO_15924)
+/// capitalised script to to an [OpenType script tag](https://learn.microsoft.com/en-us/typography/opentype/spec/scripttags).
 // https://github.com/simoncozens/autobase/blob/9887854fd7436d034c15bf5875686b7583536e76/autobase/src/utils.rs#L223-L248
 pub fn iso15924_to_opentype(script: &str) -> Result<Tag, InvalidTagError> {
     match script {
         // Special cases: https://github.com/fonttools/fonttools/blob/3c1822544d608f87c41fc8fb9ba41ea129257aa8/Lib/fontTools/unicodedata/OTTags.py
-        // Relevant specification: https://learn.microsoft.com/en-us/typography/opentype/spec/scripttags
         // SCRIPT_EXCEPTIONS
         "Hira" => Ok(Tag::new(b"kana")),
         "Hrkt" => Ok(Tag::new(b"kana")),
@@ -117,18 +119,21 @@ pub fn iso15924_to_opentype(script: &str) -> Result<Tag, InvalidTagError> {
     }
 }
 
+/// Converts an [ISO 639](https://en.wikipedia.org/wiki/ISO_639) two-or-tree
+/// letter language code to an [OpenType language tag](https://learn.microsoft.com/en-us/typography/opentype/spec/languagetags).
 // Adapted from https://github.com/simoncozens/autobase/blob/a9523ad4e4763339af47fdfb9846dda9edde7a05/autobase/src/utils.rs#L264-L1924
 #[must_use]
+#[rustfmt::skip]
 pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
     let tag = match language {
         "aa" => Tag::new(b"AFR "),  // Afar
         "aae" => Tag::new(b"SQI "), // Arbëreshë Albanian -> Albanian
         "aao" => Tag::new(b"ARA "), // Algerian Saharan Arabic -> Arabic
-        // "aaq" => 	tag: Tag::new(b"AAQ "), // Eastern Abnaki -> Eastern
+        // "aaq" => Tag::new(b"AAQ "), // Eastern Abnaki -> Eastern
         // Abenaki
         "aat" => Tag::new(b"SQI "), // Arvanitika Albanian -> Albanian
         "ab" => Tag::new(b"ABK "),  // Abkhazian
-        "aba" => Tag::new(&[0; 4]), // Abé != Abaza
+        // "aba" => Tag::new(&[0; 4]), // Abé != Abaza
         "abh" => Tag::new(b"ARA "), // Tajiki Arabic -> Arabic
         "abq" => Tag::new(b"ABA "), // Abaza
         "abs" => Tag::new(b"CPP "), // Ambonese Malay -> Creoles
@@ -136,7 +141,7 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "acf" => Tag::new(b"FAN "), /* Saint Lucian Creole French -> French
                                       * Antillean */
         // "acf" => Tag::new(b"CPP "), // Saint Lucian Creole French -> Creoles
-        // "ach" => 	tag: Tag::new(b"ACH "), // Acoli -> Acholi
+        // "ach" => Tag::new(b"ACH "), // Acoli -> Acholi
         "acm" => Tag::new(b"ARA "), // Mesopotamian Arabic -> Arabic
         "acq" => Tag::new(b"ARA "), // Ta'izzi-Adeni Arabic -> Arabic
         "acr" => Tag::new(b"ACR "), // Achi
@@ -148,22 +153,22 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "ada" => Tag::new(b"DNG "), // Adangme -> Dangme
         "adf" => Tag::new(b"ARA "), // Dhofari Arabic -> Arabic
         "adp" => Tag::new(b"DZN "), // Adap(retired code) -> Dzongkha
-        // "ady" => 	tag: Tag::new(b"ADY "), // Adyghe
+        // "ady" => Tag::new(b"ADY "), // Adyghe
         "aeb" => Tag::new(b"ARA "), // Tunisian Arabic -> Arabic
         "aec" => Tag::new(b"ARA "), // Saidi Arabic -> Arabic
         "af" => Tag::new(b"AFK "),  // Afrikaans
         "afb" => Tag::new(b"ARA "), // Gulf Arabic -> Arabic
-        "afk" => Tag::new(&[0; 4]), // Nanubae != Afrikaans
+        // "afk" => Tag::new(&[0; 4]), // Nanubae != Afrikaans
         "afs" => Tag::new(b"CPP "), // Afro-Seminole Creole -> Creoles
         "agu" => Tag::new(b"MYN "), // Aguacateco -> Mayan
-        "agw" => Tag::new(&[0; 4]), // Kahua != Agaw
+        // "agw" => Tag::new(&[0; 4]), // Kahua != Agaw
         "ahg" => Tag::new(b"AGW "), // Qimant -> Agaw
         "aht" => Tag::new(b"ATH "), // Ahtena -> Athapaskan
         "aig" => Tag::new(b"CPP "), /* Antigua and Barbuda Creole English ->
                                       * Creoles */
         "aii" => Tag::new(b"SWA "), // Assyrian Neo-Aramaic -> Swadaya Aramaic
         // "aii" => Tag::new(b"SYR "), // Assyrian Neo-Aramaic -> Syriac
-        // "aio" => 	tag: Tag::new(b"AIO "), // Aiton
+        // "aio" => Tag::new(b"AIO "), // Aiton
         "aiw" => Tag::new(b"ARI "), // Aari
         "ajp" => Tag::new(b"ARA "), /* South Levantine Arabic(retired code)
                                       * -> Arabic */
@@ -174,12 +179,12 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         // "akb" => Tag::new(b"BTK "), // Batak Angkola -> Batak
         "aln" => Tag::new(b"SQI "), // Gheg Albanian -> Albanian
         "als" => Tag::new(b"SQI "), // Tosk Albanian -> Albanian
-        // "alt" => 	tag: Tag::new(b"ALT "), // Southern Altai -> Altai
+        // "alt" => Tag::new(b"ALT "), // Southern Altai -> Altai
         "am" => Tag::new(b"AMH "),  // Amharic
         "amf" => Tag::new(b"HBN "), // Hamer-Banna -> Hammer-Banna
         "amw" => Tag::new(b"SYR "), // Western Neo-Aramaic -> Syriac
         "an" => Tag::new(b"ARG "),  // Aragonese
-        // "ang" => 	tag: Tag::new(b"ANG "), // Old English (ca. 450-1100) ->
+        // "ang" => Tag::new(b"ANG "), // Old English (ca. 450-1100) ->
         // Anglo-Saxon
         "aoa" => Tag::new(b"CPP "), // Angolar -> Creoles
         "apa" => Tag::new(b"ATH "), // Apache  [collection] -> Athapaskan
@@ -193,8 +198,8 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "apw" => Tag::new(b"ATH "), // Western Apache -> Athapaskan
         "ar" => Tag::new(b"ARA "),  // Arabic [macrolanguage]
         "arb" => Tag::new(b"ARA "), // Standard Arabic -> Arabic
-        "ari" => Tag::new(&[0; 4]), // Arikara != Aari
-        "ark" => Tag::new(&[0; 4]), // Arikapú != Rakhine
+        // "ari" => Tag::new(&[0; 4]), // Arikara != Aari
+        // "ark" => Tag::new(&[0; 4]), // Arikapú != Rakhine
         "arn" => Tag::new(b"MAP "), // Mapudungun
         "arq" => Tag::new(b"ARA "), // Algerian Arabic -> Arabic
         "ars" => Tag::new(b"ARA "), // Najdi Arabic -> Arabic
@@ -202,18 +207,18 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         // "ary" => Tag::new(b"ARA "), // Moroccan Arabic -> Arabic
         "arz" => Tag::new(b"ARA "), // Egyptian Arabic -> Arabic
         "as" => Tag::new(b"ASM "),  // Assamese
-        // "ast" => 	tag: Tag::new(b"AST "), // Asturian
-        // "ath" => 	tag: Tag::new(b"ATH "), // Athapascan  [collection] ->
+        // "ast" => Tag::new(b"AST "), // Asturian
+        // "ath" => Tag::new(b"ATH "), // Athapascan  [collection] ->
         // Athapaskan
         "atj" => Tag::new(b"RCR "), // Atikamekw -> R-Cree
-        // "ats" => 	tag: Tag::new(b"ATS "), // Gros Ventre (Atsina)
+        // "ats" => Tag::new(b"ATS "), // Gros Ventre (Atsina)
         "atv" => Tag::new(b"ALT "), // Northern Altai -> Altai
         "auj" => Tag::new(b"BBR "), // Awjilah -> Berber
         "auz" => Tag::new(b"ARA "), // Uzbeki Arabic -> Arabic
         "av" => Tag::new(b"AVR "),  // Avaric -> Avar
         "avl" => Tag::new(b"ARA "), // Eastern Egyptian Bedawi Arabic -> Arabic
-        // "avn" => 	tag: Tag::new(b"AVN "), // Avatime
-        // "awa" => 	tag: Tag::new(b"AWA "), // Awadhi
+        // "avn" => Tag::new(b"AVN "), // Avatime
+        // "awa" => Tag::new(b"AWA "), // Awadhi
         "ay" => Tag::new(b"AYM "), // Aymara [macrolanguage]
         "ayc" => Tag::new(b"AYM "), // Southern Aymara -> Aymara
         "ayh" => Tag::new(b"ARA "), // Hadrami Arabic -> Arabic
@@ -230,32 +235,32 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "azz" => Tag::new(b"NAH "), // Highland Puebla Nahuatl -> Nahuatl
         "ba" => Tag::new(b"BSH "),  // Bashkir
         "bad" => Tag::new(b"BAD0"), // Banda  [collection]
-        "bag" => Tag::new(&[0; 4]), // Tuki != Baghelkhandi
+        // "bag" => Tag::new(&[0; 4]), // Tuki != Baghelkhandi
         "bah" => Tag::new(b"CPP "), // Bahamas Creole English -> Creoles
         "bai" => Tag::new(b"BML "), // Bamileke  [collection]
         "bal" => Tag::new(b"BLI "), // Baluchi [macrolanguage]
-        // "ban" => 	tag: Tag::new(b"BAN "), // Balinese
-        // "bar" => 	tag: Tag::new(b"BAR "), // Bavarian
-        "bau" => Tag::new(&[0; 4]), // Bada (Nigeria) != Baulé
+        // "ban" => Tag::new(b"BAN "), // Balinese
+        // "bar" => Tag::new(b"BAR "), // Bavarian
+        // "bau" => Tag::new(&[0; 4]), // Bada (Nigeria) != Baulé
         "bbc" => Tag::new(b"BBC "), // Batak Toba
         // "bbc" => Tag::new(b"BTK "), // Batak Toba -> Batak
         "bbj" => Tag::new(b"BML "), // Ghomálá' -> Bamileke
         "bbp" => Tag::new(b"BAD0"), // West Central Banda -> Banda
-        "bbr" => Tag::new(&[0; 4]), // Girawa != Berber
+        // "bbr" => Tag::new(&[0; 4]), // Girawa != Berber
         "bbz" => Tag::new(b"ARA "), /* Babalia Creole Arabic(retired code)
                                       * -> Arabic */
         "bcc" => Tag::new(b"BLI "), // Southern Balochi -> Baluchi
-        "bch" => Tag::new(&[0; 4]), // Bariai != Bench
+        // "bch" => Tag::new(&[0; 4]), // Bariai != Bench
         "bci" => Tag::new(b"BAU "), // Baoulé -> Baulé
         "bcl" => Tag::new(b"BIK "), // Central Bikol -> Bikol
         "bcq" => Tag::new(b"BCH "), // Bench
         "bcr" => Tag::new(b"ATH "), // Babine -> Athapaskan
-        // "bdc" => 	tag: Tag::new(b"BDC "), // Emberá-Baudó
-        // "bdy" => 	tag: Tag::new(b"BDY "), // Bandjalang
+        // "bdc" => Tag::new(b"BDC "), // Emberá-Baudó
+        // "bdy" => Tag::new(b"BDY "), // Bandjalang
         "be" => Tag::new(b"BEL "),  // Belarusian
         "bea" => Tag::new(b"ATH "), // Beaver -> Athapaskan
         "beb" => Tag::new(b"BTI "), // Bebele -> Beti
-        // "bem" => 	tag: Tag::new(b"BEM "), // Bemba (Zambia)
+        // "bem" => Tag::new(b"BEM "), // Bemba (Zambia)
         "ber" => Tag::new(b"BBR "), // Berber  [collection]
         "bew" => Tag::new(b"CPP "), // Betawi -> Creoles
         "bfl" => Tag::new(b"BAD0"), // Banda-Ndélé -> Banda
@@ -264,43 +269,43 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "bfu" => Tag::new(b"LAH "), // Gahri -> Lahuli
         "bfy" => Tag::new(b"BAG "), // Bagheli -> Baghelkhandi
         "bg" => Tag::new(b"BGR "),  // Bulgarian
-        // "bgc" => 	tag: Tag::new(b"BGC "), // Haryanvi
+        // "bgc" => Tag::new(b"BGC "), // Haryanvi
         "bgn" => Tag::new(b"BLI "), // Western Balochi -> Baluchi
         "bgp" => Tag::new(b"BLI "), // Eastern Balochi -> Baluchi
         "bgq" => Tag::new(b"BGQ "), // Bagri
         // "bgq" => Tag::new(b"RAJ "), // Bagri -> Rajasthani
         "bgr" => Tag::new(b"QIN "), // Bawm Chin -> Chin
         "bhb" => Tag::new(b"BHI "), // Bhili
-        // "bhi" => 	tag: Tag::new(b"BHI "), // Bhilali -> Bhili
+        // "bhi" => Tag::new(b"BHI "), // Bhilali -> Bhili
         "bhk" => Tag::new(b"BIK "), // Albay Bicolano(retired code) -> Bikol
-        // "bho" => 	tag: Tag::new(b"BHO "), // Bhojpuri
+        // "bho" => Tag::new(b"BHO "), // Bhojpuri
         "bhr" => Tag::new(b"MLG "), // Bara Malagasy -> Malagasy
         "bi" => Tag::new(b"BIS "),  // Bislama
         // "bi" => Tag::new(b"CPP "),  // Bislama -> Creoles
-        // "bik" => 	tag: Tag::new(b"BIK "), // Bikol [macrolanguage]
-        "bil" => Tag::new(&[0; 4]), // Bile != Bilen
+        // "bik" => Tag::new(b"BIK "), // Bikol [macrolanguage]
+        // "bil" => Tag::new(&[0; 4]), // Bile != Bilen
         "bin" => Tag::new(b"EDO "), // Edo
         "biu" => Tag::new(b"QIN "), // Biete -> Chin
-        // "bjj" => 	tag: Tag::new(b"BJJ "), // Kanauji
+        // "bjj" => Tag::new(b"BJJ "), // Kanauji
         "bjn" => Tag::new(b"MLY "), // Banjar -> Malay
         "bjo" => Tag::new(b"BAD0"), // Mid-Southern Banda -> Banda
         "bjq" => Tag::new(b"MLG "), /* Southern Betsimisaraka
                                       * Malagasy(retired code) -> Malagasy */
         "bjs" => Tag::new(b"CPP "), // Bajan -> Creoles
         "bjt" => Tag::new(b"BLN "), // Balanta-Ganja -> Balante
-        "bkf" => Tag::new(&[0; 4]), // Beeke != Blackfoot
+        // "bkf" => Tag::new(&[0; 4]), // Beeke != Blackfoot
         "bko" => Tag::new(b"BML "), // Kwa' -> Bamileke
         "bla" => Tag::new(b"BKF "), // Siksika -> Blackfoot
         "ble" => Tag::new(b"BLN "), // Balanta-Kentohe -> Balante
         "blg" => Tag::new(b"IBA "), // Balau(retired code) -> Iban
-        "bli" => Tag::new(&[0; 4]), // Bolia != Baluchi
+        // "bli" => Tag::new(&[0; 4]), // Bolia != Baluchi
         "blk" => Tag::new(b"BLK "), // Pa’o Karen
         // "blk" => Tag::new(b"KRN "), // Pa'o Karen -> Karen
         "bln" => Tag::new(b"BIK "), // Southern Catanduanes Bikol -> Bikol
-        "blt" => Tag::new(&[0; 4]), // Tai Dam != Balti
+        // "blt" => Tag::new(&[0; 4]), // Tai Dam != Balti
         "bm" => Tag::new(b"BMB "),  // Bambara (Bamanankan)
-        "bmb" => Tag::new(&[0; 4]), // Bembe != Bambara (Bamanankan)
-        "bml" => Tag::new(&[0; 4]), // Bomboli != Bamileke
+        // "bmb" => Tag::new(&[0; 4]), // Bembe != Bambara (Bamanankan)
+        // "bml" => Tag::new(&[0; 4]), // Bomboli != Bamileke
         "bmm" => Tag::new(b"MLG "), /* Northern Betsimisaraka Malagasy ->
                                       * Malagasy */
         "bn" => Tag::new(b"BEN "),  // Bangla
@@ -308,26 +313,26 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "bpd" => Tag::new(b"BAD0"), // Banda-Banda -> Banda
         "bpl" => Tag::new(b"CPP "), // Broome Pearling Lugger Pidgin -> Creoles
         "bpq" => Tag::new(b"CPP "), // Banda Malay -> Creoles
-        // "bpy" => 	tag: Tag::new(b"BPY "), // Bishnupriya -> Bishnupriya
+        // "bpy" => Tag::new(b"BPY "), // Bishnupriya -> Bishnupriya
         // Manipuri
         "bqi" => Tag::new(b"LRC "), // Bakhtiari -> Luri
         "bqk" => Tag::new(b"BAD0"), // Banda-Mbrès -> Banda
         "br" => Tag::new(b"BRE "),  // Breton
         "bra" => Tag::new(b"BRI "), // Braj -> Braj Bhasha
         "brc" => Tag::new(b"CPP "), // Berbice Creole Dutch -> Creoles
-        // "brh" => 	tag: Tag::new(b"BRH "), // Brahui
-        "bri" => Tag::new(&[0; 4]), // Mokpwe != Braj Bhasha
-        "brm" => Tag::new(&[0; 4]), // Barambu != Burmese
-        // "brx" => 	tag: Tag::new(b"BRX "), // Bodo (India)
+        // "brh" => Tag::new(b"BRH "), // Brahui
+        // "bri" => Tag::new(&[0; 4]), // Mokpwe != Braj Bhasha
+        // "brm" => Tag::new(&[0; 4]), // Barambu != Burmese
+        // "brx" => Tag::new(b"BRX "), // Bodo (India)
         "bs" => Tag::new(b"BOS "),  // Bosnian
-        "bsh" => Tag::new(&[0; 4]), // Kati != Bashkir
-        // "bsk" => 	tag: Tag::new(b"BSK "), // Burushaski
+        // "bsh" => Tag::new(&[0; 4]), // Kati != Bashkir
+        // "bsk" => Tag::new(b"BSK "), // Burushaski
         "btb" => Tag::new(b"BTI "), // Beti (Cameroon)(retired code)
         "btd" => Tag::new(b"BTD "), // Batak Dairi (Pakpak)
         // "btd" => Tag::new(b"BTK "), // Batak Dairi -> Batak
-        "bti" => Tag::new(&[0; 4]), // Burate != Beti
+        // "bti" => Tag::new(&[0; 4]), // Burate != Beti
         "btj" => Tag::new(b"MLY "), // Bacanese Malay -> Malay
-        // "btk" => 	tag: Tag::new(b"BTK "), // Batak  [collection]
+        // "btk" => Tag::new(b"BTK "), // Batak  [collection]
         "btm" => Tag::new(b"BTM "), // Batak Mandailing
         // "btm" => Tag::new(b"BTK "), // Batak Mandailing -> Batak
         "bto" => Tag::new(b"BIK "), // Rinconada Bikol -> Bikol
@@ -337,7 +342,7 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         // "btx" => Tag::new(b"BTK "), // Batak Karo -> Batak
         "btz" => Tag::new(b"BTZ "), // Batak Alas-Kluet
         // "btz" => Tag::new(b"BTK "), // Batak Alas-Kluet -> Batak
-        // "bug" => 	tag: Tag::new(b"BUG "), // Buginese -> Bugis
+        // "bug" => Tag::new(b"BUG "), // Buginese -> Bugis
         "bum" => Tag::new(b"BTI "), // Bulu (Cameroon) -> Beti
         "bve" => Tag::new(b"MLY "), // Berau Malay -> Malay
         "bvu" => Tag::new(b"MLY "), // Bukit Malay -> Malay
@@ -360,8 +365,8 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         // "caf" => Tag::new(b"ATH "), // Southern Carrier -> Athapaskan
         "cak" => Tag::new(b"CAK "), // Kaqchikel
         // "cak" => Tag::new(b"MYN "), // Kaqchikel -> Mayan
-        // "cay" => 	tag: Tag::new(b"CAY "), // Cayuga
-        // "cbg" => 	tag: Tag::new(b"CBG "), // Chimila
+        // "cay" => Tag::new(b"CAY "), // Cayuga
+        // "cbg" => Tag::new(b"CBG "), // Chimila
         "cbk" => Tag::new(b"CBK "), // Chavacano -> Zamboanga Chavacano
         // "cbk" => Tag::new(b"CPP "), // Chavacano -> Creoles
         "cbl" => Tag::new(b"QIN "), // Bualkhaw Chin -> Chin
@@ -371,16 +376,16 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "ccq" => Tag::new(b"ARK "), // Chaungtha(retired code) -> Rakhine
         "cdo" => Tag::new(b"ZHS "), // Min Dong Chinese -> Chinese, Simplified
         "ce" => Tag::new(b"CHE "),  // Chechen
-        // "ceb" => 	tag: Tag::new(b"CEB "), // Cebuano
+        // "ceb" => Tag::new(b"CEB "), // Cebuano
         "cek" => Tag::new(b"QIN "), // Eastern Khumi Chin -> Chin
         "cey" => Tag::new(b"QIN "), // Ekai Chin -> Chin
         "cfm" => Tag::new(b"HAL "), // Halam (Falam Chin)
         // "cfm" => Tag::new(b"QIN "), // Falam Chin -> Chin
-        // "cgg" => 	tag: Tag::new(b"CGG "), // Chiga
+        // "cgg" => Tag::new(b"CGG "), // Chiga
         "ch" => Tag::new(b"CHA "),  // Chamorro
         "chf" => Tag::new(b"MYN "), // Tabasco Chontal -> Mayan
-        "chg" => Tag::new(&[0; 4]), // Chagatai != Chaha Gurage
-        "chh" => Tag::new(&[0; 4]), // Chinook != Chattisgarhi
+        // "chg" => Tag::new(&[0; 4]), // Chagatai != Chaha Gurage
+        // "chh" => Tag::new(&[0; 4]), // Chinook != Chattisgarhi
         "chj" => Tag::new(b"CCHN"), // Ojitlán Chinantec -> Chinantec
         "chk" => Tag::new(b"CHK0"), // Chuukese
         "chm" => Tag::new(b"HMA "), /* Mari (Russia) [macrolanguage] -> High
@@ -388,17 +393,17 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         // "chm" => Tag::new(b"LMA "), // Mari (Russia) [macrolanguage] -> Low
         // Mari
         "chn" => Tag::new(b"CPP "), // Chinook jargon -> Creoles
-        // "cho" => 	tag: Tag::new(b"CHO "), // Choctaw
+        // "cho" => Tag::new(b"CHO "), // Choctaw
         "chp" => Tag::new(b"CHP "), // Chipewyan
         // "chp" => Tag::new(b"SAY "), // Chipewyan -> Sayisi
         // "chp" => Tag::new(b"ATH "), // Chipewyan -> Athapaskan
         "chq" => Tag::new(b"CCHN"), // Quiotepec Chinantec -> Chinantec
-        // "chr" => 	tag: Tag::new(b"CHR "), // Cherokee
-        // "chy" => 	tag: Tag::new(b"CHY "), // Cheyenne
+        // "chr" => Tag::new(b"CHR "), // Cherokee
+        // "chy" => Tag::new(b"CHY "), // Cheyenne
         "chz" => Tag::new(b"CCHN"), // Ozumacín Chinantec -> Chinantec
         "ciw" => Tag::new(b"OJB "), // Chippewa -> Ojibway
-        // "cja" => 	tag: Tag::new(b"CJA "), // Western Cham
-        // "cjm" => 	tag: Tag::new(b"CJM "), // Eastern Cham
+        // "cja" => Tag::new(b"CJA "), // Western Cham
+        // "cjm" => Tag::new(b"CJM "), // Eastern Cham
         "cjy" => Tag::new(b"ZHS "), // Jinyu Chinese -> Chinese, Simplified
         "cka" => Tag::new(b"QIN "), // Khumi Awa Chin(retired code) -> Chin
         "ckb" => Tag::new(b"KUR "), // Central Kurdish -> Kurdish
@@ -413,7 +418,7 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "clj" => Tag::new(b"QIN "), // Laitu Chin -> Chin
         "cls" => Tag::new(b"SAN "), // Classical Sanskrit -> Sanskrit
         "clt" => Tag::new(b"QIN "), // Lautu Chin -> Chin
-        // "cmi" => 	tag: Tag::new(b"CMI "), // Emberá-Chamí
+        // "cmi" => Tag::new(b"CMI "), // Emberá-Chamí
         "cmn" => Tag::new(b"ZHS "), // Mandarin Chinese -> Chinese, Simplified
         "cmr" => Tag::new(b"QIN "), // Mro-Khimi Chin -> Chin
         "cnb" => Tag::new(b"QIN "), // Chinbon Chin -> Chin
@@ -429,8 +434,8 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "co" => Tag::new(b"COS "),  // Corsican
         "coa" => Tag::new(b"MLY "), // Cocos Islands Malay -> Malay
         "cob" => Tag::new(b"MYN "), // Chicomuceltec -> Mayan
-        // "coo" => 	tag: Tag::new(b"COO "), // Comox
-        // "cop" => 	tag: Tag::new(b"COP "), // Coptic
+        // "coo" => Tag::new(b"COO "), // Comox
+        // "cop" => Tag::new(b"COP "), // Coptic
         "coq" => Tag::new(b"ATH "), // Coquille -> Athapaskan
         "cpa" => Tag::new(b"CCHN"), // Palantla Chinantec -> Chinantec
         "cpe" => Tag::new(b"CPP "), /* English-based creoles and pidgins
@@ -438,7 +443,7 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "cpf" => Tag::new(b"CPP "), /* French-based creoles and pidgins
                                       * [collection] -> Creoles */
         "cpi" => Tag::new(b"CPP "), // Chinese Pidgin English -> Creoles
-        // "cpp" => 	tag: Tag::new(b"CPP "), // Portuguese-based creoles and
+        // "cpp" => Tag::new(b"CPP "), // Portuguese-based creoles and
         // pidgins [collection] -> Creoles
         "cpx" => Tag::new(b"ZHS "), // Pu-Xian Chinese -> Chinese, Simplified
         "cqd" => Tag::new(b"HMN "), // Chuanqiandian Cluster Miao -> Hmong
@@ -463,17 +468,17 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         // "crm" => Tag::new(b"CRE "), // Moose Cree -> Cree
         "crp" => Tag::new(b"CPP "), /* Creoles and pidgins [collection] ->
                                       * Creoles */
-        "crr" => Tag::new(&[0; 4]), // Carolina Algonquian != Carrier
+        // "crr" => Tag::new(&[0; 4]), // Carolina Algonquian != Carrier
         "crs" => Tag::new(b"CPP "), // Seselwa Creole French -> Creoles
-        "crt" => Tag::new(&[0; 4]), // Iyojwa'ja Chorote != Crimean Tatar
+        // "crt" => Tag::new(&[0; 4]), // Iyojwa'ja Chorote != Crimean Tatar
         "crx" => Tag::new(b"CRR "), // Carrier
         // "crx" => Tag::new(b"ATH "), // Carrier -> Athapaskan
         "cs" => Tag::new(b"CSY "),  // Czech
         "csa" => Tag::new(b"CCHN"), // Chiltepec Chinantec -> Chinantec
-        // "csb" => 	tag: Tag::new(b"CSB "), // Kashubian
+        // "csb" => Tag::new(b"CSB "), // Kashubian
         "csh" => Tag::new(b"QIN "), // Asho Chin -> Chin
         "csj" => Tag::new(b"QIN "), // Songlai Chin -> Chin
-        "csl" => Tag::new(&[0; 4]), // Chinese Sign Language != Church Slavonic
+        // "csl" => Tag::new(&[0; 4]), // Chinese Sign Language != Church Slavonic
         "cso" => Tag::new(b"CCHN"), // Sochiapam Chinantec -> Chinantec
         "csp" => Tag::new(b"ZHS "), /* Southern Ping Chinese -> Chinese,
                                       * Simplified */
@@ -485,16 +490,16 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "ctc" => Tag::new(b"ATH "), // Chetco -> Athapaskan
         "ctd" => Tag::new(b"QIN "), // Tedim Chin -> Chin
         "cte" => Tag::new(b"CCHN"), // Tepinapa Chinantec -> Chinantec
-        // "ctg" => 	tag: Tag::new(b"CTG "), // Chittagonian
+        // "ctg" => Tag::new(b"CTG "), // Chittagonian
         "cth" => Tag::new(b"QIN "), // Thaiphum Chin -> Chin
         "ctl" => Tag::new(b"CCHN"), // Tlacoatzintepec Chinantec -> Chinantec
-        // "cto" => 	tag: Tag::new(b"CTO "), // Emberá-Catío
+        // "cto" => Tag::new(b"CTO "), // Emberá-Catío
         "cts" => Tag::new(b"BIK "), // Northern Catanduanes Bikol -> Bikol
-        // "ctt" => 	tag: Tag::new(b"CTT "), // Wayanad Chetti
+        // "ctt" => Tag::new(b"CTT "), // Wayanad Chetti
         "ctu" => Tag::new(b"MYN "), // Chol -> Mayan
         "cu" => Tag::new(b"CSL "),  // Church Slavonic
         "cuc" => Tag::new(b"CCHN"), // Usila Chinantec -> Chinantec
-        // "cuk" => 	tag: Tag::new(b"CUK "), // San Blas Kuna
+        // "cuk" => Tag::new(b"CUK "), // San Blas Kuna
         "cv" => Tag::new(b"CHU "),  // Chuvash
         "cvn" => Tag::new(b"CCHN"), // Valle Nacional Chinantec -> Chinantec
         "cwd" => Tag::new(b"DCR "), // Woods Cree
@@ -505,11 +510,11 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "czo" => Tag::new(b"ZHS "), // Min Zhong Chinese -> Chinese, Simplified
         "czt" => Tag::new(b"QIN "), // Zotung Chin -> Chin
         "da" => Tag::new(b"DAN "),  // Danish
-        // "dag" => 	tag: Tag::new(b"DAG "), // Dagbani
+        // "dag" => Tag::new(b"DAG "), // Dagbani
         "dao" => Tag::new(b"QIN "), // Daai Chin -> Chin
         "dap" => Tag::new(b"NIS "), // Nisi (India)(retired code)
-        // "dar" => 	tag: Tag::new(b"DAR "), // Dargwa
-        // "dax" => 	tag: Tag::new(b"DAX "), // Dayi
+        // "dar" => Tag::new(b"DAR "), // Dargwa
+        // "dax" => Tag::new(b"DAX "), // Dayi
         "dcr" => Tag::new(b"CPP "), // Negerhollands -> Creoles
         "de" => Tag::new(b"DEU "),  // German
         "den" => Tag::new(b"SLA "), /* Slave (Athapascan) [macrolanguage] ->
@@ -521,9 +526,8 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         // "dgo" => Tag::new(b"DGR "), // Dogri (macrolanguage)
         "dgr" => Tag::new(b"ATH "), // Tlicho -> Athapaskan
         "dhd" => Tag::new(b"MAW "), // Dhundari -> Marwari
-        // "dhg" => 	tag: Tag::new(b"DHG "), // Dhangu
-        "dhv" => Tag::new(&[0; 4]), /* Dehu != Divehi (Dhivehi, Maldivian)
-                                      * (deprecated) */
+        // "dhg" => Tag::new(b"DHG "), // Dhangu
+        // "dhv" => Tag::new(&[0; 4]), // Dehu != Divehi (Dhivehi, Maldivian) (deprecated)
         "dib" => Tag::new(b"DNK "), // South Central Dinka -> Dinka
         "dik" => Tag::new(b"DNK "), // Southwestern Dinka -> Dinka
         "din" => Tag::new(b"DNK "), // Dinka [macrolanguage]
@@ -536,17 +540,17 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "djr" => Tag::new(b"DJR0"), // Djambarrpuyngu
         "dks" => Tag::new(b"DNK "), // Southeastern Dinka -> Dinka
         "dng" => Tag::new(b"DUN "), // Dungan
-        // "dnj" => 	tag: Tag::new(b"DNJ "), // Dan
-        "dnk" => Tag::new(&[0; 4]), // Dengka != Dinka
+        // "dnj" => Tag::new(b"DNJ "), // Dan
+        // "dnk" => Tag::new(&[0; 4]), // Dengka != Dinka
         "doi" => Tag::new(b"DGR "), // Dogri (macrolanguage) [macrolanguage]
         "drh" => Tag::new(b"MNG "), // Darkhat(retired code) -> Mongolian
-        "dri" => Tag::new(&[0; 4]), // C'Lela != Dari
+        // "dri" => Tag::new(&[0; 4]), // C'Lela != Dari
         "drw" => Tag::new(b"DRI "), // Darwazi(retired code) -> Dari
         // "drw" => Tag::new(b"FAR "), // Darwazi(retired code) -> Persian
         "dsb" => Tag::new(b"LSB "), // Lower Sorbian
         "dty" => Tag::new(b"NEP "), // Dotyali -> Nepali
-        // "duj" => 	tag: Tag::new(b"DUJ "), // Dhuwal(retired code)
-        "dun" => Tag::new(&[0; 4]), // Dusun Deyah != Dungan
+        // "duj" => Tag::new(b"DUJ "), // Dhuwal(retired code)
+        // "dun" => Tag::new(&[0; 4]), // Dusun Deyah != Dungan
         "dup" => Tag::new(b"MLY "), // Duano -> Malay
         "dv" => Tag::new(b"DIV "),  // Divehi (Dhivehi, Maldivian)
         // "dv" => Tag::new(b"DHV "),  // Divehi (Dhivehi, Maldivian)
@@ -556,16 +560,16 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "dwy" => Tag::new(b"DUJ "), // Dhuwaya -> Dhuwal
         "dyu" => Tag::new(b"JUL "), // Dyula -> Jula
         "dz" => Tag::new(b"DZN "),  // Dzongkha
-        "dzn" => Tag::new(&[0; 4]), // Dzando != Dzongkha
-        "ecr" => Tag::new(&[0; 4]), // Eteocretan != Eastern Cree
+        // "dzn" => Tag::new(&[0; 4]), // Dzando != Dzongkha
+        // "ecr" => Tag::new(&[0; 4]), // Eteocretan != Eastern Cree
         "ee" => Tag::new(b"EWE "),  // Ewe
-        // "efi" => 	tag: Tag::new(b"EFI "), // Efik
+        // "efi" => Tag::new(b"EFI "), // Efik
         "ekk" => Tag::new(b"ETI "), // Standard Estonian -> Estonian
         "eky" => Tag::new(b"KRN "), // Eastern Kayah -> Karen
         "el" => Tag::new(b"ELL "),  // Modern Greek (1453-) -> Greek
         "emk" => Tag::new(b"EMK "), // Eastern Maninkakan
         // "emk" => Tag::new(b"MNK "), // Eastern Maninkakan -> Maninka
-        // "emp" => 	tag: Tag::new(b"EMP "), // Northern Emberá
+        // "emp" => Tag::new(b"EMP "), // Northern Emberá
         "emy" => Tag::new(b"MYN "), // Epigraphic Mayan -> Mayan
         "en" => Tag::new(b"ENG "),  // English
         "enb" => Tag::new(b"KAL "), // Markweeta -> Kalenjin
@@ -576,11 +580,11 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "esg" => Tag::new(b"GON "), // Aheri Gondi -> Gondi
         "esi" => Tag::new(b"IPK "), // North Alaskan Inupiatun -> Inupiat
         "esk" => Tag::new(b"IPK "), // Northwest Alaska Inupiatun -> Inupiat
-        // "esu" => 	tag: Tag::new(b"ESU "), // Central Yupik
+        // "esu" => Tag::new(b"ESU "), // Central Yupik
         "et" => Tag::new(b"ETI "), // Estonian [macrolanguage]
         "eto" => Tag::new(b"BTI "), // Eton (Cameroon) -> Beti
         "eu" => Tag::new(b"EUQ "), // Basque
-        "euq" => Tag::new(&[0; 4]), // Basque  [collection] != Basque
+        // "euq" => Tag::new(&[0; 4]), // Basque  [collection] != Basque
         "eve" => Tag::new(b"EVN "), // Even
         "evn" => Tag::new(b"EVK "), // Evenki
         "ewo" => Tag::new(b"BTI "), // Ewondo -> Beti
@@ -589,7 +593,7 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "fab" => Tag::new(b"CPP "), // Fa d'Ambu -> Creoles
         "fan" => Tag::new(b"FAN0"), // Fang (Equatorial Guinea)
         // "fan" => Tag::new(b"BTI "), // Fang (Equatorial Guinea) -> Beti
-        "far" => Tag::new(&[0; 4]), // Fataleka != Persian
+        // "far" => Tag::new(&[0; 4]), // Fataleka != Persian
         "fat" => Tag::new(b"FAT "), // Fanti
         // "fat" => Tag::new(b"AKA "), // Fanti -> Akan
         "fbl" => Tag::new(b"BIK "), // West Albay Bikol -> Bikol
@@ -604,12 +608,12 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         // "fmp" => Tag::new(b"BML "), // Fe'fe' -> Bamileke
         "fng" => Tag::new(b"CPP "), // Fanagalo -> Creoles
         "fo" => Tag::new(b"FOS "),  // Faroese
-        // "fon" => 	tag: Tag::new(b"FON "), // Fon
-        "fos" => Tag::new(&[0; 4]), // Siraya != Faroese
+        // "fon" => Tag::new(b"FON "), // Fon
+        // "fos" => Tag::new(&[0; 4]), // Siraya != Faroese
         "fpe" => Tag::new(b"CPP "), // Fernando Po Creole English -> Creoles
         "fr" => Tag::new(b"FRA "),  // French
-        // "frc" => 	tag: Tag::new(b"FRC "), // Cajun French
-        // "frp" => 	tag: Tag::new(b"FRP "), // Arpitan
+        // "frc" => Tag::new(b"FRC "), // Cajun French
+        // "frp" => Tag::new(b"FRP "), // Arpitan
         "fub" => Tag::new(b"FUL "), // Adamawa Fulfulde -> Fulah
         "fuc" => Tag::new(b"FUL "), // Pulaar -> Fulah
         "fue" => Tag::new(b"FUL "), // Borgu Fulfulde -> Fulah
@@ -626,13 +630,13 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         // "ga" => Tag::new(b"IRT "),  // Irish -> Irish Traditional
         "gaa" => Tag::new(b"GAD "), // Ga
         "gac" => Tag::new(b"CPP "), // Mixed Great Andamanese -> Creoles
-        "gad" => Tag::new(&[0; 4]), // Gaddang != Ga
-        "gae" => Tag::new(&[0; 4]), // Guarequena != Scottish Gaelic
-        // "gag" => 	tag: Tag::new(b"GAG "), // Gagauz
-        "gal" => Tag::new(&[0; 4]), // Galolen != Galician
+        // "gad" => Tag::new(&[0; 4]), // Gaddang != Ga
+        // "gae" => Tag::new(&[0; 4]), // Guarequena != Scottish Gaelic
+        // "gag" => Tag::new(b"GAG "), // Gagauz
+        // "gal" => Tag::new(&[0; 4]), // Galolen != Galician
         "gan" => Tag::new(b"ZHS "), // Gan Chinese -> Chinese, Simplified
-        "gar" => Tag::new(&[0; 4]), // Galeya != Garshuni
-        "gaw" => Tag::new(&[0; 4]), // Nobonob != Garhwali
+        // "gar" => Tag::new(&[0; 4]), // Galeya != Garshuni
+        // "gaw" => Tag::new(&[0; 4]), // Nobonob != Garhwali
         "gax" => Tag::new(b"ORO "), // Borana-Arsi-Guji Oromo -> Oromo
         "gaz" => Tag::new(b"ORO "), // West Central Oromo -> Oromo
         "gbm" => Tag::new(b"GAW "), // Garhwali
@@ -642,7 +646,7 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "gcr" => Tag::new(b"CPP "), // Guianese Creole French -> Creoles
         "gd" => Tag::new(b"GAE "),  // Scottish Gaelic
         "gda" => Tag::new(b"RAJ "), // Gade Lohar -> Rajasthani
-        // "gez" => 	tag: Tag::new(b"GEZ "), // Geez
+        // "gez" => Tag::new(b"GEZ "), // Geez
         "ggo" => Tag::new(b"GON "), // Southern Gondi(retired code) -> Gondi
         "gha" => Tag::new(b"BBR "), // Ghadamès -> Berber
         "ghc" => Tag::new(b"IRT "), /* Hiberno-Scottish Gaelic -> Irish
@@ -650,41 +654,41 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "ghk" => Tag::new(b"KRN "), // Geko Karen -> Karen
         "gho" => Tag::new(b"BBR "), // Ghomara -> Berber
         "gib" => Tag::new(b"CPP "), // Gibanawa -> Creoles
-        // "gih" => 	tag: Tag::new(b"GIH "), // Githabul
+        // "gih" => Tag::new(b"GIH "), // Githabul
         "gil" => Tag::new(b"GIL0"), // Kiribati (Gilbertese)
         "gju" => Tag::new(b"RAJ "), // Gujari -> Rajasthani
         "gkp" => Tag::new(b"GKP "), // Guinea Kpelle -> Kpelle (Guinea)
         // "gkp" => Tag::new(b"KPL "), // Guinea Kpelle -> Kpelle
         "gl" => Tag::new(b"GAL "),  // Galician
         "gld" => Tag::new(b"NAN "), // Nanai
-        // "glk" => 	tag: Tag::new(b"GLK "), // Gilaki
-        "gmz" => Tag::new(&[0; 4]), // Mgbolizhia != Gumuz
+        // "glk" => Tag::new(b"GLK "), // Gilaki
+        // "gmz" => Tag::new(&[0; 4]), // Mgbolizhia != Gumuz
         "gn" => Tag::new(b"GUA "),  // Guarani [macrolanguage]
         "gnb" => Tag::new(b"QIN "), // Gangte -> Chin
-        // "gnn" => 	tag: Tag::new(b"GNN "), // Gumatj
+        // "gnn" => Tag::new(b"GNN "), // Gumatj
         "gno" => Tag::new(b"GON "), // Northern Gondi -> Gondi
         "gnw" => Tag::new(b"GUA "), // Western Bolivian Guaraní -> Guarani
-        // "gog" => 	tag: Tag::new(b"GOG "), // Gogo
+        // "gog" => Tag::new(b"GOG "), // Gogo
         "gom" => Tag::new(b"KOK "), // Goan Konkani -> Konkani
-        // "gon" => 	tag: Tag::new(b"GON "), // Gondi [macrolanguage]
+        // "gon" => Tag::new(b"GON "), // Gondi [macrolanguage]
         "goq" => Tag::new(b"CPP "), // Gorap -> Creoles
         "gox" => Tag::new(b"BAD0"), // Gobu -> Banda
         "gpe" => Tag::new(b"CPP "), // Ghanaian Pidgin English -> Creoles
-        "gro" => Tag::new(&[0; 4]), // Groma != Garo
+        // "gro" => Tag::new(&[0; 4]), // Groma != Garo
         "grr" => Tag::new(b"BBR "), // Taznatit -> Berber
         "grt" => Tag::new(b"GRO "), // Garo
         "gru" => Tag::new(b"SOG "), // Kistane -> Sodo Gurage
         "gsw" => Tag::new(b"ALS "), // Alsatian
         "gu" => Tag::new(b"GUJ "),  // Gujarati
-        "gua" => Tag::new(&[0; 4]), // Shiki != Guarani
-        // "guc" => 	tag: Tag::new(b"GUC "), // Wayuu
-        // "guf" => 	tag: Tag::new(b"GUF "), // Gupapuyngu
+        // "gua" => Tag::new(&[0; 4]), // Shiki != Guarani
+        // "guc" => Tag::new(b"GUC "), // Wayuu
+        // "guf" => Tag::new(b"GUF "), // Gupapuyngu
         "gug" => Tag::new(b"GUA "), // Paraguayan Guaraní -> Guarani
         "gui" => Tag::new(b"GUA "), // Eastern Bolivian Guaraní -> Guarani
         "guk" => Tag::new(b"GMZ "), // Gumuz
         "gul" => Tag::new(b"CPP "), // Sea Island Creole English -> Creoles
         "gun" => Tag::new(b"GUA "), // Mbyá Guaraní -> Guarani
-        // "guz" => 	tag: Tag::new(b"GUZ "), // Gusii
+        // "guz" => Tag::new(b"GUZ "), // Gusii
         "gv" => Tag::new(b"MNX "),  // Manx
         "gwi" => Tag::new(b"ATH "), // Gwichʼin -> Athapaskan
         "gyn" => Tag::new(b"CPP "), // Guyanese Creole English -> Creoles
@@ -693,20 +697,20 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "hae" => Tag::new(b"ORO "), // Eastern Oromo -> Oromo
         "hai" => Tag::new(b"HAI0"), // Haida [macrolanguage]
         "hak" => Tag::new(b"ZHS "), // Hakka Chinese -> Chinese, Simplified
-        "hal" => Tag::new(&[0; 4]), // Halang != Halam (Falam Chin)
+        // "hal" => Tag::new(&[0; 4]), // Halang != Halam (Falam Chin)
         "har" => Tag::new(b"HRI "), // Harari
-        // "haw" => 	tag: Tag::new(b"HAW "), // Hawaiian
+        // "haw" => Tag::new(b"HAW "), // Hawaiian
         "hax" => Tag::new(b"HAI0"), // Southern Haida -> Haida
-        // "hay" => 	tag: Tag::new(b"HAY "), // Haya
-        // "haz" => 	tag: Tag::new(b"HAZ "), // Hazaragi
-        "hbn" => Tag::new(&[0; 4]), // Heiban != Hammer-Banna
+        // "hay" => Tag::new(b"HAY "), // Haya
+        // "haz" => Tag::new(b"HAZ "), // Hazaragi
+        // "hbn" => Tag::new(&[0; 4]), // Heiban != Hammer-Banna
         "hca" => Tag::new(b"CPP "), // Andaman Creole Hindi -> Creoles
         "hdn" => Tag::new(b"HAI0"), // Northern Haida -> Haida
         "he" => Tag::new(b"IWR "),  // Hebrew
         "hea" => Tag::new(b"HMN "), // Northern Qiandong Miao -> Hmong
-        // "hei" => 	tag: Tag::new(b"HEI "), // Heiltsuk
+        // "hei" => Tag::new(b"HEI "), // Heiltsuk
         "hi" => Tag::new(b"HIN "), // Hindi
-        // "hil" => 	tag: Tag::new(b"HIL "), // Hiligaynon
+        // "hil" => Tag::new(b"HIL "), // Hiligaynon
         "hji" => Tag::new(b"MLY "), // Haji -> Malay
         "hlt" => Tag::new(b"QIN "), // Matu Chin -> Chin
         "hma" => Tag::new(b"HMN "), // Southern Mashan Hmong -> Hmong
@@ -720,7 +724,7 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "hmj" => Tag::new(b"HMN "), // Ge -> Hmong
         "hml" => Tag::new(b"HMN "), // Luopohe Hmong -> Hmong
         "hmm" => Tag::new(b"HMN "), // Central Mashan Hmong -> Hmong
-        // "hmn" => 	tag: Tag::new(b"HMN "), // Hmong [macrolanguage]
+        // "hmn" => Tag::new(b"HMN "), // Hmong [macrolanguage]
         "hmp" => Tag::new(b"HMN "), // Northern Mashan Hmong -> Hmong
         "hmq" => Tag::new(b"HMN "), // Eastern Qiandong Miao -> Hmong
         "hmr" => Tag::new(b"QIN "), // Hmar -> Chin
@@ -729,7 +733,7 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "hmy" => Tag::new(b"HMN "), // Southern Guiyang Hmong -> Hmong
         "hmz" => Tag::new(b"HMZ "), // Hmong Shua -> Hmong Shuat
         // "hmz" => Tag::new(b"HMN "), // Hmong Shua -> Hmong
-        // "hnd" => 	tag: Tag::new(b"HND "), // Southern Hindko -> Hindko
+        // "hnd" => Tag::new(b"HND "), // Southern Hindko -> Hindko
         "hne" => Tag::new(b"CHH "), // Chhattisgarhi -> Chattisgarhi
         "hnj" => Tag::new(b"HMN "), // Hmong Njua -> Hmong
         "hnm" => Tag::new(b"ZHS "), // Hainanese -> Chinese, Simplified
@@ -750,7 +754,7 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "hu" => Tag::new(b"HUN "),  // Hungarian
         "huj" => Tag::new(b"HMN "), // Northern Guiyang Hmong -> Hmong
         "hup" => Tag::new(b"ATH "), // Hupa -> Athapaskan
-        // "hur" => 	tag: Tag::new(b"HUR "), // Halkomelem
+        // "hur" => Tag::new(b"HUR "), // Halkomelem
         "hus" => Tag::new(b"MYN "), // Huastec -> Mayan
         "hwc" => Tag::new(b"CPP "), // Hawai'i Creole English -> Creoles
         "hy" => Tag::new(b"HYE0"),  // Armenian -> Armenian East
@@ -759,8 +763,8 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "hz" => Tag::new(b"HER "),  // Herero
         "ia" => Tag::new(b"INA "),  /* Interlingua (International Auxiliary
                                       * Language Association) */
-        // "iba" => 	tag: Tag::new(b"IBA "), // Iban
-        // "ibb" => 	tag: Tag::new(b"IBB "), // Ibibio
+        // "iba" => Tag::new(b"IBA "), // Iban
+        // "ibb" => Tag::new(b"IBB "), // Ibibio
         "iby" => Tag::new(b"IJO "), // Ibani -> Ijo
         "icr" => Tag::new(b"CPP "), // Islander Creole English -> Creoles
         "id" => Tag::new(b"IND "),  // Indonesian
@@ -775,23 +779,23 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "ijc" => Tag::new(b"IJO "), // Izon -> Ijo
         "ije" => Tag::new(b"IJO "), // Biseni -> Ijo
         "ijn" => Tag::new(b"IJO "), // Kalabari -> Ijo
-        // "ijo" => 	tag: Tag::new(b"IJO "), // Ijo  [collection]
+        // "ijo" => Tag::new(b"IJO "), // Ijo  [collection]
         "ijs" => Tag::new(b"IJO "), // Southeast Ijo -> Ijo
         "ik" => Tag::new(b"IPK "),  // Inupiaq [macrolanguage] -> Inupiat
         "ike" => Tag::new(b"INU "), // Eastern Canadian Inuktitut -> Inuktitut
         // "ike" => Tag::new(b"INUK"), // Eastern Canadian Inuktitut -> Nunavik
         // Inuktitut
         "ikt" => Tag::new(b"INU "), // Inuinnaqtun -> Inuktitut
-        // "ilo" => 	tag: Tag::new(b"ILO "), // Iloko -> Ilokano
+        // "ilo" => Tag::new(b"ILO "), // Iloko -> Ilokano
         "in" => Tag::new(b"IND "), // Indonesian(retired code)
         // "in" => Tag::new(b"MLY "),  // Indonesian(retired code) -> Malay
         "ing" => Tag::new(b"ATH "), // Degexit'an -> Athapaskan
         "inh" => Tag::new(b"ING "), // Ingush
         "io" => Tag::new(b"IDO "),  // Ido
-        "iri" => Tag::new(&[0; 4]), // Rigwe != Irish
-        // "iru" => 	tag: Tag::new(b"IRU "), // Irula
+        // "iri" => Tag::new(&[0; 4]), // Rigwe != Irish
+        // "iru" => Tag::new(b"IRU "), // Irula
         "is" => Tag::new(b"ISL "),  // Icelandic
-        "ism" => Tag::new(&[0; 4]), // Masimasi != Inari Sami
+        // "ism" => Tag::new(&[0; 4]), // Masimasi != Inari Sami
         "it" => Tag::new(b"ITA "),  // Italian
         "itz" => Tag::new(b"MYN "), // Itzá -> Mayan
         "iu" => Tag::new(b"INU "),  // Inuktitut [macrolanguage]
@@ -805,20 +809,20 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "jam" => Tag::new(b"JAM "), /* Jamaican Creole English -> Jamaican
                                      * Creole */
         // "jam" => Tag::new(b"CPP "), // Jamaican Creole English -> Creoles
-        "jan" => Tag::new(&[0; 4]), // Jandai != Japanese
+        // "jan" => Tag::new(&[0; 4]), // Jandai != Japanese
         "jax" => Tag::new(b"MLY "), // Jambi Malay -> Malay
         "jbe" => Tag::new(b"BBR "), // Judeo-Berber -> Berber
         "jbn" => Tag::new(b"BBR "), // Nafusi -> Berber
-        // "jbo" => 	tag: Tag::new(b"JBO "), // Lojban
-        // "jct" => 	tag: Tag::new(b"JCT "), // Krymchak
-        // "jdt" => 	tag: Tag::new(b"JDT "), // Judeo-Tat
+        // "jbo" => Tag::new(b"JBO "), // Lojban
+        // "jct" => Tag::new(b"JCT "), // Krymchak
+        // "jdt" => Tag::new(b"JDT "), // Judeo-Tat
         "jgo" => Tag::new(b"BML "), // Ngomba -> Bamileke
         "ji" => Tag::new(b"JII "),  // Yiddish(retired code)
-        "jii" => Tag::new(&[0; 4]), // Jiiddu != Yiddish
+        // "jii" => Tag::new(&[0; 4]), // Jiiddu != Yiddish
         "jkm" => Tag::new(b"KRN "), // Mobwa Karen -> Karen
         "jkp" => Tag::new(b"KRN "), // Paku Karen -> Karen
-        "jud" => Tag::new(&[0; 4]), // Worodougou != Ladino
-        "jul" => Tag::new(&[0; 4]), // Jirel != Jula
+        // "jud" => Tag::new(&[0; 4]), // Worodougou != Ladino
+        // "jul" => Tag::new(&[0; 4]), // Jirel != Jula
         "jv" => Tag::new(b"JAV "),  // Javanese
         "jvd" => Tag::new(b"CPP "), // Javindo -> Creoles
         "jw" => Tag::new(b"JAV "),  // Javanese(retired code)
@@ -826,23 +830,23 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "kaa" => Tag::new(b"KRK "), // Karakalpak
         "kab" => Tag::new(b"KAB0"), // Kabyle
         // "kab" => Tag::new(b"BBR "), // Kabyle -> Berber
-        "kac" => Tag::new(&[0; 4]), // Kachin != Kachchi
+        // "kac" => Tag::new(&[0; 4]), // Kachin != Kachchi
         "kam" => Tag::new(b"KMB "), // Kamba (Kenya)
         "kar" => Tag::new(b"KRN "), // Karen  [collection]
-        // "kaw" => 	tag: Tag::new(b"KAW "), // Kawi (Old Javanese)
-        // "kbc" => 	tag: Tag::new(b"KBC "), // Kadiwéu
+        // "kaw" => Tag::new(b"KAW "), // Kawi (Old Javanese)
+        // "kbc" => Tag::new(b"KBC "), // Kadiwéu
         "kbd" => Tag::new(b"KAB "), // Kabardian
         "kby" => Tag::new(b"KNR "), // Manga Kanuri -> Kanuri
         "kca" => Tag::new(b"KHK "), // Khanty -> Khanty-Kazim
         // "kca" => Tag::new(b"KHS "), // Khanty -> Khanty-Shurishkar
         // "kca" => Tag::new(b"KHV "), // Khanty -> Khanty-Vakhi
         "kcn" => Tag::new(b"CPP "), // Nubi -> Creoles
-        // "kde" => 	tag: Tag::new(b"KDE "), // Makonde
+        // "kde" => Tag::new(b"KDE "), // Makonde
         "kdr" => Tag::new(b"KRM "), // Karaim
         "kdt" => Tag::new(b"KUY "), // Kuy
         "kea" => Tag::new(b"KEA "), // Kabuverdianu (Crioulo)
         // "kea" => Tag::new(b"CPP "), // Kabuverdianu -> Creoles
-        "keb" => Tag::new(&[0; 4]), // Kélé != Kebena
+        // "keb" => Tag::new(&[0; 4]), // Kélé != Kebena
         "kek" => Tag::new(b"KEK "), // Kekchi
         // "kek" => Tag::new(b"MYN "), // Kekchí -> Mayan
         "kex" => Tag::new(b"KKN "), // Kukna -> Kokni
@@ -851,64 +855,64 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "kfx" => Tag::new(b"KUL "), // Kullu Pahari -> Kulvi
         "kfy" => Tag::new(b"KMN "), // Kumaoni
         "kg" => Tag::new(b"KON0"),  // Kongo [macrolanguage]
-        "kge" => Tag::new(&[0; 4]), // Komering != Khutsuri Georgian
-        // "kgf" => 	tag: Tag::new(b"KGF "), // Kube
+        // "kge" => Tag::new(&[0; 4]), // Komering != Khutsuri Georgian
+        // "kgf" => Tag::new(b"KGF "), // Kube
         "kha" => Tag::new(b"KSI "), // Khasi
         "khb" => Tag::new(b"XBD "), // Lü
         "khk" => Tag::new(b"MNG "), // Halh Mongolian -> Mongolian
-        "khn" => Tag::new(&[0; 4]), // Khandesi != Khamti Shan(Microsoft fonts)
-        "khs" => Tag::new(&[0; 4]), // Kasua != Khanty-Shurishkar
+        // "khn" => Tag::new(&[0; 4]), // Khandesi != Khamti Shan(Microsoft fonts)
+        // "khs" => Tag::new(&[0; 4]), // Kasua != Khanty-Shurishkar
         "kht" => Tag::new(b"KHT "), // Khamti -> Khamti Shan
         // "kht" => Tag::new(b"KHN "), // Khamti -> Khamti Shan(Microsoft fonts)
-        "khv" => Tag::new(&[0; 4]), // Khvarshi != Khanty-Vakhi
-        // "khw" => 	tag: Tag::new(b"KHW "), // Khowar
+        // "khv" => Tag::new(&[0; 4]), // Khvarshi != Khanty-Vakhi
+        // "khw" => Tag::new(b"KHW "), // Khowar
         "ki" => Tag::new(b"KIK "),  // Kikuyu (Gikuyu)
-        "kis" => Tag::new(&[0; 4]), // Kis != Kisii
+        // "kis" => Tag::new(&[0; 4]), // Kis != Kisii
         "kiu" => Tag::new(b"KIU "), // Kirmanjki
         // "kiu" => Tag::new(b"ZZA "), // Kirmanjki  -> Zazaki
         "kj" => Tag::new(b"KUA "),  // Kuanyama
         "kjb" => Tag::new(b"MYN "), // Q'anjob'al -> Mayan
-        // "kjd" => 	tag: Tag::new(b"KJD "), // Southern Kiwai
+        // "kjd" => Tag::new(b"KJD "), // Southern Kiwai
         "kjh" => Tag::new(b"KHA "), // Khakas -> Khakass
-        // "kjj" => 	tag: Tag::new(b"KJJ "), // Khinalugh -> Khinalug
+        // "kjj" => Tag::new(b"KJJ "), // Khinalugh -> Khinalug
         "kjp" => Tag::new(b"KJP "), // Pwo Eastern Karen -> Eastern Pwo Karen
         // "kjp" => Tag::new(b"KRN "), // Pwo Eastern Karen -> Karen
         "kjt" => Tag::new(b"KRN "), // Phrae Pwo Karen -> Karen
-        // "kjz" => 	tag: Tag::new(b"KJZ "), // Bumthangkha
+        // "kjz" => Tag::new(b"KJZ "), // Bumthangkha
         "kk" => Tag::new(b"KAZ "),  // Kazakh
-        "kkn" => Tag::new(&[0; 4]), // Kon Keu != Kokni
+        // "kkn" => Tag::new(&[0; 4]), // Kon Keu != Kokni
         "kkz" => Tag::new(b"ATH "), // Kaska -> Athapaskan
         "kl" => Tag::new(b"GRN "),  // Greenlandic
-        "klm" => Tag::new(&[0; 4]), // Migum != Kalmyk
+        // "klm" => Tag::new(&[0; 4]), // Migum != Kalmyk
         "kln" => Tag::new(b"KAL "), // Kalenjin [macrolanguage]
         "km" => Tag::new(b"KHM "),  // Khmer
         "kmb" => Tag::new(b"MBN "), // Kimbundu -> Mbundu
-        // "kmg" => 	tag: Tag::new(b"KMG "), // Kâte
-        "kmn" => Tag::new(&[0; 4]), // Awtuw != Kumaoni
-        "kmo" => Tag::new(&[0; 4]), // Kwoma != Komo
+        // "kmg" => Tag::new(b"KMG "), // Kâte
+        // "kmn" => Tag::new(&[0; 4]), // Awtuw != Kumaoni
+        // "kmo" => Tag::new(&[0; 4]), // Kwoma != Komo
         "kmr" => Tag::new(b"KUR "), // Northern Kurdish -> Kurdish
-        "kms" => Tag::new(&[0; 4]), // Kamasau != Komso
+        // "kms" => Tag::new(&[0; 4]), // Kamasau != Komso
         "kmv" => Tag::new(b"CPP "), // Karipúna Creole French -> Creoles
         "kmw" => Tag::new(b"KMO "), // Komo (Democratic Republic of Congo)
-        // "kmz" => 	tag: Tag::new(b"KMZ "), // Khorasani Turkish -> Khorasani
+        // "kmz" => Tag::new(b"KMZ "), // Khorasani Turkish -> Khorasani
         // Turkic
         "kn" => Tag::new(b"KAN "),  // Kannada
         "knc" => Tag::new(b"KNR "), // Central Kanuri -> Kanuri
         "kng" => Tag::new(b"KON0"), // Koongo -> Kongo
         "knj" => Tag::new(b"MYN "), // Western Kanjobal -> Mayan
         "knn" => Tag::new(b"KOK "), // Konkani
-        "knr" => Tag::new(&[0; 4]), // Kaningra != Kanuri
+        // "knr" => Tag::new(&[0; 4]), // Kaningra != Kanuri
         "ko" => Tag::new(b"KOR "),  // Korean
-        "kod" => Tag::new(&[0; 4]), // Kodi != Kodagu
-        "koh" => Tag::new(&[0; 4]), // Koyo != Korean Old Hangul
+        // "kod" => Tag::new(&[0; 4]), // Kodi != Kodagu
+        // "koh" => Tag::new(&[0; 4]), // Koyo != Korean Old Hangul
         "koi" => Tag::new(b"KOP "), // Komi-Permyak
-        // "kok" => 	tag: Tag::new(b"KOK "), // Konkani  [macrolanguage]
-        "kop" => Tag::new(&[0; 4]), // Waube != Komi-Permyak
-        // "kos" => 	tag: Tag::new(b"KOS "), // Kosraean
+        // "kok" => Tag::new(b"KOK "), // Konkani  [macrolanguage]
+        // "kop" => Tag::new(&[0; 4]), // Waube != Komi-Permyak
+        // "kos" => Tag::new(b"KOS "), // Kosraean
         "koy" => Tag::new(b"ATH "), // Koyukon -> Athapaskan
-        "koz" => Tag::new(&[0; 4]), // Korak != Komi-Zyrian
+        // "koz" => Tag::new(&[0; 4]), // Korak != Komi-Zyrian
         "kpe" => Tag::new(b"KPL "), // Kpelle [macrolanguage]
-        "kpl" => Tag::new(&[0; 4]), // Kpala != Kpelle
+        // "kpl" => Tag::new(&[0; 4]), // Kpala != Kpelle
         "kpp" => Tag::new(b"KRN "), // Paku Karen(retired code) -> Karen
         "kpv" => Tag::new(b"KOZ "), // Komi-Zyrian
         "kpy" => Tag::new(b"KYK "), // Koryak
@@ -917,18 +921,18 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "kr" => Tag::new(b"KNR "),  // Kanuri [macrolanguage]
         "krc" => Tag::new(b"KAR "), // Karachay-Balkar -> Karachay
         "kri" => Tag::new(b"KRI "), // Krio
-        "krk" => Tag::new(&[0; 4]), // Kerek != Karakalpak
-        // "krl" => 	tag: Tag::new(b"KRL "), // Karelian
-        "krm" => Tag::new(&[0; 4]), // Krim(retired code) != Karaim
-        "krn" => Tag::new(&[0; 4]), // Sapo != Karen
+        // "krk" => Tag::new(&[0; 4]), // Kerek != Karakalpak
+        // "krl" => Tag::new(b"KRL "), // Karelian
+        // "krm" => Tag::new(&[0; 4]), // Krim(retired code) != Karaim
+        // "krn" => Tag::new(&[0; 4]), // Sapo != Karen
         "krt" => Tag::new(b"KNR "), // Tumari Kanuri -> Kanuri
         "kru" => Tag::new(b"KUU "), // Kurukh
         "ks" => Tag::new(b"KSH "),  // Kashmiri
         "ksh" => Tag::new(b"KSH0"), // Kölsch -> Ripuarian
-        "ksi" => Tag::new(&[0; 4]), // Krisa != Khasi
-        "ksm" => Tag::new(&[0; 4]), // Kumba != Kildin Sami
+        // "ksi" => Tag::new(&[0; 4]), // Krisa != Khasi
+        // "ksm" => Tag::new(&[0; 4]), // Kumba != Kildin Sami
         "kss" => Tag::new(b"KIS "), // Southern Kisi -> Kisii
-        // "ksu" => 	tag: Tag::new(b"KSU "), // Khamyang
+        // "ksu" => Tag::new(b"KSU "), // Khamyang
         "ksw" => Tag::new(b"KSW "), // S’gaw Karen
         // "ksw" => Tag::new(b"KRN "), // S'gaw Karen -> Karen
         "ktb" => Tag::new(b"KEB "), // Kambaata -> Kebena
@@ -936,12 +940,12 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
                                       * -> Kikongo */
         "ktw" => Tag::new(b"ATH "), // Kato -> Athapaskan
         "ku" => Tag::new(b"KUR "),  // Kurdish [macrolanguage]
-        "kui" => Tag::new(&[0; 4]), // Kuikúro-Kalapálo != Kui
-        "kul" => Tag::new(&[0; 4]), // Kulere != Kulvi
-        // "kum" => 	tag: Tag::new(b"KUM "), // Kumyk
+        // "kui" => Tag::new(&[0; 4]), // Kuikúro-Kalapálo != Kui
+        // "kul" => Tag::new(&[0; 4]), // Kulere != Kulvi
+        // "kum" => Tag::new(b"KUM "), // Kumyk
         "kuu" => Tag::new(b"ATH "), // Upper Kuskokwim -> Athapaskan
         "kuw" => Tag::new(b"BAD0"), // Kpagua -> Banda
-        "kuy" => Tag::new(&[0; 4]), // Kuuku-Ya'u != Kuy
+        // "kuy" => Tag::new(&[0; 4]), // Kuuku-Ya'u != Kuy
         "kv" => Tag::new(b"KOM "),  // Komi [macrolanguage]
         "kvb" => Tag::new(b"MLY "), // Kubu -> Malay
         "kvl" => Tag::new(b"KRN "), // Kayaw -> Karen
@@ -952,7 +956,7 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "kvu" => Tag::new(b"KRN "), // Yinbaw Karen -> Karen
         "kvy" => Tag::new(b"KRN "), // Yintale Karen -> Karen
         "kw" => Tag::new(b"COR "),  // Cornish
-        // "kwk" => 	tag: Tag::new(b"KWK "), // Kwak'wala -> Kwakʼwala
+        // "kwk" => Tag::new(b"KWK "), // Kwak'wala -> Kwakʼwala
         "kww" => Tag::new(b"CPP "), // Kwinti -> Creoles
         "kwy" => Tag::new(b"KON0"), // San Salvador Kongo -> Kongo
         "kxc" => Tag::new(b"KMS "), // Konso -> Komso
@@ -962,16 +966,16 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "kxl" => Tag::new(b"KUU "), // Nepali Kurux(retired code) -> Kurukh
         "kxu" => Tag::new(b"KUI "), // Kui (India)(retired code)
         "ky" => Tag::new(b"KIR "),  // Kirghiz (Kyrgyz)
-        "kyk" => Tag::new(&[0; 4]), // Kamayo != Koryak
+        // "kyk" => Tag::new(&[0; 4]), // Kamayo != Koryak
         "kyu" => Tag::new(b"KYU "), // Western Kayah
         // "kyu" => Tag::new(b"KRN "), // Western Kayah -> Karen
         "la" => Tag::new(b"LAT "),  // Latin
         "lac" => Tag::new(b"MYN "), // Lacandon -> Mayan
         "lad" => Tag::new(b"JUD "), // Ladino
-        "lah" => Tag::new(&[0; 4]), // Lahnda [macrolanguage] != Lahuli
-        "lak" => Tag::new(&[0; 4]), // Laka (Nigeria)(retired code) != Lak
-        "lam" => Tag::new(&[0; 4]), // Lamba != Lambani
-        "laz" => Tag::new(&[0; 4]), // Aribwatsa != Laz
+        // "lah" => Tag::new(&[0; 4]), // Lahnda [macrolanguage] != Lahuli
+        // "lak" => Tag::new(&[0; 4]), // Laka (Nigeria)(retired code) != Lak
+        // "lam" => Tag::new(&[0; 4]), // Lamba != Lambani
+        // "laz" => Tag::new(&[0; 4]), // Aribwatsa != Laz
         "lb" => Tag::new(b"LTZ "),  // Luxembourgish
         "lbe" => Tag::new(b"LAK "), // Lak
         "lbj" => Tag::new(b"LDK "), // Ladakhi
@@ -979,89 +983,89 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "lce" => Tag::new(b"MLY "), // Loncong -> Malay
         "lcf" => Tag::new(b"MLY "), // Lubu -> Malay
         "ldi" => Tag::new(b"KON0"), // Laari -> Kongo
-        "ldk" => Tag::new(&[0; 4]), // Leelau != Ladakhi
-        // "lef" => 	tag: Tag::new(b"LEF "), // Lelemi
-        // "lez" => 	tag: Tag::new(b"LEZ "), // Lezghian -> Lezgi
+        // "ldk" => Tag::new(&[0; 4]), // Leelau != Ladakhi
+        // "lef" => Tag::new(b"LEF "), // Lelemi
+        // "lez" => Tag::new(b"LEZ "), // Lezghian -> Lezgi
         "lg" => Tag::new(b"LUG "),  // Ganda
         "li" => Tag::new(b"LIM "),  // Limburgish
         "lif" => Tag::new(b"LMB "), // Limbu
-        // "lij" => 	tag: Tag::new(b"LIJ "), // Ligurian
+        // "lij" => Tag::new(b"LIJ "), // Ligurian
         "lir" => Tag::new(b"CPP "), // Liberian English -> Creoles
-        // "lis" => 	tag: Tag::new(b"LIS "), // Lisu
-        // "liv" => 	tag: Tag::new(b"LIV "), // Liv
+        // "lis" => Tag::new(b"LIS "), // Lisu
+        // "liv" => Tag::new(b"LIV "), // Liv
         "liw" => Tag::new(b"MLY "), // Col -> Malay
         "liy" => Tag::new(b"BAD0"), // Banda-Bambari -> Banda
-        // "ljp" => 	tag: Tag::new(b"LJP "), // Lampung Api -> Lampung
+        // "ljp" => Tag::new(b"LJP "), // Lampung Api -> Lampung
         "lkb" => Tag::new(b"LUH "), // Kabras -> Luyia
-        // "lki" => 	tag: Tag::new(b"LKI "), // Laki
+        // "lki" => Tag::new(b"LKI "), // Laki
         "lko" => Tag::new(b"LUH "), // Khayo -> Luyia
         "lks" => Tag::new(b"LUH "), // Kisa -> Luyia
         "lld" => Tag::new(b"LAD "), // Ladin
-        "lma" => Tag::new(&[0; 4]), // East Limba != Low Mari
-        "lmb" => Tag::new(&[0; 4]), // Merei != Limbu
+        // "lma" => Tag::new(&[0; 4]), // East Limba != Low Mari
+        // "lmb" => Tag::new(&[0; 4]), // Merei != Limbu
         "lmn" => Tag::new(b"LAM "), // Lambadi -> Lambani
-        // "lmo" => 	tag: Tag::new(b"LMO "), // Lombard
-        "lmw" => Tag::new(&[0; 4]), // Lake Miwok != Lomwe
+        // "lmo" => Tag::new(b"LMO "), // Lombard
+        // "lmw" => Tag::new(&[0; 4]), // Lake Miwok != Lomwe
         "ln" => Tag::new(b"LIN "),  // Lingala
         "lna" => Tag::new(b"BAD0"), // Langbashe -> Banda
         "lnl" => Tag::new(b"BAD0"), // South Central Banda -> Banda
         "lo" => Tag::new(b"LAO "),  // Lao
-        // "lom" => 	tag: Tag::new(b"LOM "), // Loma (Liberia)
+        // "lom" => Tag::new(b"LOM "), // Loma (Liberia)
         "lou" => Tag::new(b"CPP "), // Louisiana Creole -> Creoles
-        // "lpo" => 	tag: Tag::new(b"LPO "), // Lipo
-        // "lrc" => 	tag: Tag::new(b"LRC "), // Northern Luri -> Luri
+        // "lpo" => Tag::new(b"LPO "), // Lipo
+        // "lrc" => Tag::new(b"LRC "), // Northern Luri -> Luri
         "lri" => Tag::new(b"LUH "), // Marachi -> Luyia
         "lrm" => Tag::new(b"LUH "), // Marama -> Luyia
         "lrt" => Tag::new(b"CPP "), // Larantuka Malay -> Creoles
-        "lsb" => Tag::new(&[0; 4]), // Burundian Sign Language != Lower Sorbian
+        // "lsb" => Tag::new(&[0; 4]), // Burundian Sign Language != Lower Sorbian
         "lsm" => Tag::new(b"LUH "), // Saamia -> Luyia
         "lt" => Tag::new(b"LTH "),  // Lithuanian
         "ltg" => Tag::new(b"LVI "), // Latgalian -> Latvian
-        "lth" => Tag::new(&[0; 4]), // Thur != Lithuanian
+        // "lth" => Tag::new(&[0; 4]), // Thur != Lithuanian
         "lto" => Tag::new(b"LUH "), // Tsotso -> Luyia
         "lts" => Tag::new(b"LUH "), // Tachoni -> Luyia
         "lu" => Tag::new(b"LUB "),  // Luba-Katanga
-        // "lua" => 	tag: Tag::new(b"LUA "), // Luba-Lulua
+        // "lua" => Tag::new(b"LUA "), // Luba-Lulua
         "luh" => Tag::new(b"ZHS "), // Leizhou Chinese -> Chinese, Simplified
-        // "luo" => 	tag: Tag::new(b"LUO "), // Luo (Kenya and Tanzania)
+        // "luo" => Tag::new(b"LUO "), // Luo (Kenya and Tanzania)
         "lus" => Tag::new(b"MIZ "), // Lushai -> Mizo
         // "lus" => Tag::new(b"QIN "), // Lushai -> Chin
-        // "lut" => 	tag: Tag::new(b"LUT "), // Lushootseed
+        // "lut" => Tag::new(b"LUT "), // Lushootseed
         "luy" => Tag::new(b"LUH "), // Luyia [macrolanguage]
         "luz" => Tag::new(b"LRC "), // Southern Luri -> Luri
         "lv" => Tag::new(b"LVI "),  // Latvian [macrolanguage]
-        "lvi" => Tag::new(&[0; 4]), // Lavi != Latvian
+        // "lvi" => Tag::new(&[0; 4]), // Lavi != Latvian
         "lvs" => Tag::new(b"LVI "), // Standard Latvian -> Latvian
         "lwg" => Tag::new(b"LUH "), // Wanga -> Luyia
         "lzh" => Tag::new(b"ZHT "), // Literary Chinese -> Chinese, Traditional
         "lzz" => Tag::new(b"LAZ "), // Laz
-        // "mad" => 	tag: Tag::new(b"MAD "), // Madurese -> Madura
-        // "mag" => 	tag: Tag::new(b"MAG "), // Magahi
+        // "mad" => Tag::new(b"MAD "), // Madurese -> Madura
+        // "mag" => Tag::new(b"MAG "), // Magahi
         "mai" => Tag::new(b"MTH "), // Maithili
-        "maj" => Tag::new(&[0; 4]), // Jalapa De Díaz Mazatec != Majang
+        // "maj" => Tag::new(&[0; 4]), // Jalapa De Díaz Mazatec != Majang
         "mak" => Tag::new(b"MKR "), // Makasar
         "mam" => Tag::new(b"MAM "), // Mam
         // "mam" => Tag::new(b"MYN "), // Mam -> Mayan
         "man" => Tag::new(b"MNK "), // Mandingo [macrolanguage] -> Maninka
-        "map" => Tag::new(&[0; 4]), // Austronesian  [collection] != Mapudungun
-        "maw" => Tag::new(&[0; 4]), // Mampruli != Marwari
+        // "map" => Tag::new(&[0; 4]), // Austronesian  [collection] != Mapudungun
+        // "maw" => Tag::new(&[0; 4]), // Mampruli != Marwari
         "max" => Tag::new(b"MLY "), // North Moluccan Malay -> Malay
         // "max" => Tag::new(b"CPP "), // North Moluccan Malay -> Creoles
         "mbf" => Tag::new(b"CPP "), // Baba Malay -> Creoles
-        "mbn" => Tag::new(&[0; 4]), // Macaguán != Mbundu
-        // "mbo" => 	tag: Tag::new(b"MBO "), // Mbo (Cameroon)
-        "mch" => Tag::new(&[0; 4]), // Maquiritari != Manchu
+        // "mbn" => Tag::new(&[0; 4]), // Macaguán != Mbundu
+        // "mbo" => Tag::new(b"MBO "), // Mbo (Cameroon)
+        // "mch" => Tag::new(&[0; 4]), // Maquiritari != Manchu
         "mcm" => Tag::new(b"CPP "), // Malaccan Creole Portuguese -> Creoles
-        "mcr" => Tag::new(&[0; 4]), // Menya != Moose Cree
+        // "mcr" => Tag::new(&[0; 4]), // Menya != Moose Cree
         "mct" => Tag::new(b"BTI "), // Mengisa -> Beti
-        "mde" => Tag::new(&[0; 4]), // Maba (Chad) != Mende
+        // "mde" => Tag::new(&[0; 4]), // Maba (Chad) != Mende
         "mdf" => Tag::new(b"MOK "), // Moksha
-        // "mdr" => 	tag: Tag::new(b"MDR "), // Mandar
+        // "mdr" => Tag::new(b"MDR "), // Mandar
         "mdy" => Tag::new(b"MLE "), // Male (Ethiopia)
         "men" => Tag::new(b"MDE "), // Mende (Sierra Leone)
         "meo" => Tag::new(b"MLY "), // Kedah Malay -> Malay
-        // "mer" => 	tag: Tag::new(b"MER "), // Meru
-        // "mev" => 	tag: Tag::new(b"MEV "), // Mano
+        // "mer" => Tag::new(b"MER "), // Meru
+        // "mev" => Tag::new(b"MEV "), // Mano
         "mfa" => Tag::new(b"MFA "), // Pattani Malay
         // "mfa" => Tag::new(b"MLY "), // Pattani Malay -> Malay
         "mfb" => Tag::new(b"MLY "), // Bangka -> Malay
@@ -1077,42 +1081,42 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "mi" => Tag::new(b"MRI "),  // Maori
         "min" => Tag::new(b"MIN "), // Minangkabau
         // "min" => Tag::new(b"MLY "), // Minangkabau -> Malay
-        "miz" => Tag::new(&[0; 4]), // Coatzospan Mixtec != Mizo
+        // "miz" => Tag::new(&[0; 4]), // Coatzospan Mixtec != Mizo
         "mk" => Tag::new(b"MKD "),  // Macedonian
         "mkn" => Tag::new(b"CPP "), // Kupang Malay -> Creoles
-        "mkr" => Tag::new(&[0; 4]), // Malas != Makasar
+        // "mkr" => Tag::new(&[0; 4]), // Malas != Makasar
         "mku" => Tag::new(b"MNK "), // Konyanka Maninka -> Maninka
-        // "mkw" => 	tag: Tag::new(b"MKW "), // Kituba (Congo)
+        // "mkw" => Tag::new(b"MKW "), // Kituba (Congo)
         "ml" => Tag::new(b"MAL "), // Malayalam -> Malayalam Traditional
         // "ml" => Tag::new(b"MLR "),  // Malayalam -> Malayalam Reformed
-        "mle" => Tag::new(&[0; 4]), // Manambu != Male
-        "mln" => Tag::new(&[0; 4]), // Malango != Malinke
+        // "mle" => Tag::new(&[0; 4]), // Manambu != Male
+        // "mln" => Tag::new(&[0; 4]), // Malango != Malinke
         "mlq" => Tag::new(b"MLN "), // Western Maninkakan -> Malinke
         // "mlq" => Tag::new(b"MNK "), // Western Maninkakan -> Maninka
-        "mlr" => Tag::new(&[0; 4]), // Vame != Malayalam Reformed
+        // "mlr" => Tag::new(&[0; 4]), // Vame != Malayalam Reformed
         "mmr" => Tag::new(b"HMN "), // Western Xiangxi Miao -> Hmong
         "mn" => Tag::new(b"MNG "),  // Mongolian [macrolanguage]
         "mnc" => Tag::new(b"MCH "), // Manchu
-        "mnd" => Tag::new(&[0; 4]), // Mondé != Mandinka
-        "mng" => Tag::new(&[0; 4]), // Eastern Mnong != Mongolian
+        // "mnd" => Tag::new(&[0; 4]), // Mondé != Mandinka
+        // "mng" => Tag::new(&[0; 4]), // Eastern Mnong != Mongolian
         "mnh" => Tag::new(b"BAD0"), /* Mono (Democratic Republic of Congo)
                                       * -> Banda */
-        // "mni" => 	tag: Tag::new(b"MNI "), // Manipuri
+        // "mni" => Tag::new(b"MNI "), // Manipuri
         "mnk" => Tag::new(b"MND "), // Mandinka
         // "mnk" => Tag::new(b"MNK "), // Mandinka -> Maninka
         "mnp" => Tag::new(b"ZHS "), // Min Bei Chinese -> Chinese, Simplified
         "mns" => Tag::new(b"MAN "), // Mansi
         "mnw" => Tag::new(b"MON "), // Mon
         // "mnw" => Tag::new(b"MONT"), // Mon -> Thailand Mon
-        "mnx" => Tag::new(&[0; 4]), // Manikion != Manx
+        // "mnx" => Tag::new(&[0; 4]), // Manikion != Manx
         "mo" => Tag::new(b"MOL "),  // Moldavian(retired code)
         // "mo" => Tag::new(b"ROM "),  // Moldavian(retired code) -> Romanian
         "mod" => Tag::new(b"CPP "), // Mobilian -> Creoles
-        // "moh" => 	tag: Tag::new(b"MOH "), // Mohawk
-        "mok" => Tag::new(&[0; 4]), // Morori != Moksha
+        // "moh" => Tag::new(b"MOH "), // Mohawk
+        // "mok" => Tag::new(&[0; 4]), // Morori != Moksha
         "mop" => Tag::new(b"MYN "), // Mopán Maya -> Mayan
-        "mor" => Tag::new(&[0; 4]), // Moro != Moroccan
-        // "mos" => 	tag: Tag::new(b"MOS "), // Mossi
+        // "mor" => Tag::new(&[0; 4]), // Moro != Moroccan
+        // "mos" => Tag::new(b"MOS "), // Mossi
         "mpe" => Tag::new(b"MAJ "), // Majang
         "mqg" => Tag::new(b"MLY "), // Kota Bangun Kutai Malay -> Malay
         "mr" => Tag::new(b"MAR "),  // Marathi
@@ -1124,61 +1128,61 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "msi" => Tag::new(b"MLY "), // Sabah Malay -> Malay
         // "msi" => Tag::new(b"CPP "), // Sabah Malay -> Creoles
         "mt" => Tag::new(b"MTS "),  // Maltese
-        "mth" => Tag::new(&[0; 4]), // Munggui != Maithili
+        // "mth" => Tag::new(&[0; 4]), // Munggui != Maithili
         "mtr" => Tag::new(b"MAW "), // Mewari -> Marwari
-        "mts" => Tag::new(&[0; 4]), // Yora != Maltese
+        // "mts" => Tag::new(&[0; 4]), // Yora != Maltese
         "mud" => Tag::new(b"CPP "), // Mednyj Aleut -> Creoles
         "mui" => Tag::new(b"MLY "), // Musi -> Malay
-        "mun" => Tag::new(&[0; 4]), // Munda  [collection] != Mundari
+        // "mun" => Tag::new(&[0; 4]), // Munda  [collection] != Mundari
         "mup" => Tag::new(b"RAJ "), // Malvi -> Rajasthani
         "muq" => Tag::new(b"HMN "), // Eastern Xiangxi Miao -> Hmong
-        // "mus" => 	tag: Tag::new(b"MUS "), // Creek -> Muscogee
+        // "mus" => Tag::new(b"MUS "), // Creek -> Muscogee
         "mvb" => Tag::new(b"ATH "), // Mattole -> Athapaskan
         "mve" => Tag::new(b"MAW "), // Marwari (Pakistan)
         "mvf" => Tag::new(b"MNG "), // Peripheral Mongolian -> Mongolian
         "mwk" => Tag::new(b"MNK "), // Kita Maninkakan -> Maninka
-        // "mwl" => 	tag: Tag::new(b"MWL "), // Mirandese
+        // "mwl" => Tag::new(b"MWL "), // Mirandese
         "mwq" => Tag::new(b"QIN "), // Mün Chin -> Chin
         "mwr" => Tag::new(b"MAW "), // Marwari [macrolanguage]
         "mww" => Tag::new(b"MWW "), // Hmong Daw
         // "mww" => Tag::new(b"HMN "), // Hmong Daw -> Hmong
         "my" => Tag::new(b"BRM "),  // Burmese
         "mym" => Tag::new(b"MEN "), // Me’en
-        // "myn" => 	tag: Tag::new(b"MYN "), // Mayan  [collection]
+        // "myn" => Tag::new(b"MYN "), // Mayan  [collection]
         "myq" => Tag::new(b"MNK "), // Forest Maninka(retired code) -> Maninka
         "myv" => Tag::new(b"ERZ "), // Erzya
         "mzb" => Tag::new(b"BBR "), // Tumzabt -> Berber
-        // "mzn" => 	tag: Tag::new(b"MZN "), // Mazanderani
+        // "mzn" => Tag::new(b"MZN "), // Mazanderani
         "mzs" => Tag::new(b"CPP "), // Macanese -> Creoles
         "na" => Tag::new(b"NAU "),  // Nauru -> Nauruan
         "nag" => Tag::new(b"NAG "), // Naga Pidgin -> Naga-Assamese
         // "nag" => Tag::new(b"CPP "), // Naga Pidgin -> Creoles
-        // "nah" => 	tag: Tag::new(b"NAH "), // Nahuatl  [collection]
+        // "nah" => Tag::new(b"NAH "), // Nahuatl  [collection]
         "nan" => Tag::new(b"ZHS "), // Min Nan Chinese -> Chinese, Simplified
-        // "nap" => 	tag: Tag::new(b"NAP "), // Neapolitan
-        "nas" => Tag::new(&[0; 4]), // Naasioi != Naskapi
+        // "nap" => Tag::new(b"NAP "), // Neapolitan
+        // "nas" => Tag::new(&[0; 4]), // Naasioi != Naskapi
         "naz" => Tag::new(b"NAH "), // Coatepec Nahuatl -> Nahuatl
         "nb" => Tag::new(b"NOR "),  // Norwegian Bokmål -> Norwegian
         "nch" => Tag::new(b"NAH "), // Central Huasteca Nahuatl -> Nahuatl
         "nci" => Tag::new(b"NAH "), // Classical Nahuatl -> Nahuatl
         "ncj" => Tag::new(b"NAH "), // Northern Puebla Nahuatl -> Nahuatl
         "ncl" => Tag::new(b"NAH "), // Michoacán Nahuatl -> Nahuatl
-        "ncr" => Tag::new(&[0; 4]), // Ncane != N-Cree
+        // "ncr" => Tag::new(&[0; 4]), // Ncane != N-Cree
         "ncx" => Tag::new(b"NAH "), // Central Puebla Nahuatl -> Nahuatl
         "nd" => Tag::new(b"NDB "),  // North Ndebele -> Ndebele
-        "ndb" => Tag::new(&[0; 4]), // Kenswei Nsei != Ndebele
-        // "ndc" => 	tag: Tag::new(b"NDC "), // Ndau
-        "ndg" => Tag::new(&[0; 4]), // Ndengereko != Ndonga
-        // "nds" => 	tag: Tag::new(b"NDS "), // Low Saxon
+        // "ndb" => Tag::new(&[0; 4]), // Kenswei Nsei != Ndebele
+        // "ndc" => Tag::new(b"NDC "), // Ndau
+        // "ndg" => Tag::new(&[0; 4]), // Ndengereko != Ndonga
+        // "nds" => Tag::new(b"NDS "), // Low Saxon
         "ne" => Tag::new(b"NEP "), // Nepali  [macrolanguage]
         "nef" => Tag::new(b"CPP "), // Nefamese -> Creoles
-        // "new" => 	tag: Tag::new(b"NEW "), // Newari
+        // "new" => Tag::new(b"NEW "), // Newari
         "ng" => Tag::new(b"NDG "), // Ndonga
-        // "nga" => 	tag: Tag::new(b"NGA "), // Ngbaka
+        // "nga" => Tag::new(b"NGA "), // Ngbaka
         "ngl" => Tag::new(b"LMW "), // Lomwe
         "ngm" => Tag::new(b"CPP "), // Ngatik Men's Creole -> Creoles
         "ngo" => Tag::new(b"SXT "), // Ngoni(retired code) -> Sutu
-        "ngr" => Tag::new(&[0; 4]), // Engdewu != Nagari
+        // "ngr" => Tag::new(&[0; 4]), // Engdewu != Nagari
         "ngu" => Tag::new(b"NAH "), // Guerrero Nahuatl -> Nahuatl
         "nhc" => Tag::new(b"NAH "), // Tabasco Nahuatl -> Nahuatl
         "nhd" => Tag::new(b"GUA "), // Chiripá -> Guarani
@@ -1198,12 +1202,12 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "nhy" => Tag::new(b"NAH "), // Northern Oaxaca Nahuatl -> Nahuatl
         "nhz" => Tag::new(b"NAH "), // Santa María La Alta Nahuatl -> Nahuatl
         "niq" => Tag::new(b"KAL "), // Nandi -> Kalenjin
-        "nis" => Tag::new(&[0; 4]), // Nimi != Nisi
-        // "niu" => 	tag: Tag::new(b"NIU "), // Niuean
+        // "nis" => Tag::new(&[0; 4]), // Nimi != Nisi
+        // "niu" => Tag::new(b"NIU "), // Niuean
         "niv" => Tag::new(b"GIL "), // Gilyak
         "njt" => Tag::new(b"CPP "), // Ndyuka-Trio Pidgin -> Creoles
         "njz" => Tag::new(b"NIS "), // Nyishi -> Nisi
-        "nko" => Tag::new(&[0; 4]), // Nkonya != N’Ko
+        // "nko" => Tag::new(&[0; 4]), // Nkonya != N’Ko
         "nkx" => Tag::new(b"IJO "), // Nkoroo -> Ijo
         "nl" => Tag::new(b"NLD "),  // Dutch
         "nla" => Tag::new(b"BML "), // Ngombale -> Bamileke
@@ -1215,21 +1219,21 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "nnz" => Tag::new(b"BML "), // Nda'nda' -> Bamileke
         "no" => Tag::new(b"NOR "),  // Norwegian [macrolanguage]
         "nod" => Tag::new(b"NTA "), // Northern Thai -> Northern Tai
-        // "noe" => 	tag: Tag::new(b"NOE "), // Nimadi
-        // "nog" => 	tag: Tag::new(b"NOG "), // Nogai
-        // "nop" => 	tag: Tag::new(b"NOP "), // Numanggang
-        // "nov" => 	tag: Tag::new(b"NOV "), // Novial
+        // "noe" => Tag::new(b"NOE "), // Nimadi
+        // "nog" => Tag::new(b"NOG "), // Nogai
+        // "nop" => Tag::new(b"NOP "), // Numanggang
+        // "nov" => Tag::new(b"NOV "), // Novial
         "npi" => Tag::new(b"NEP "), // Nepali
         "npl" => Tag::new(b"NAH "), // Southeastern Puebla Nahuatl -> Nahuatl
         "nqo" => Tag::new(b"NKO "), // N’Ko
         "nr" => Tag::new(b"NDB "),  // South Ndebele -> Ndebele
         "nsk" => Tag::new(b"NAS "), // Naskapi
-        "nsm" => Tag::new(&[0; 4]), // Sumi Naga != Northern Sami
-        // "nso" => 	tag: Tag::new(b"NSO "), // Northern Sotho
+        // "nsm" => Tag::new(&[0; 4]), // Sumi Naga != Northern Sami
+        // "nso" => Tag::new(b"NSO "), // Northern Sotho
         "nsu" => Tag::new(b"NAH "), // Sierra Negra Nahuatl -> Nahuatl
-        "nto" => Tag::new(&[0; 4]), // Ntomba != Esperanto
+        // "nto" => Tag::new(&[0; 4]), // Ntomba != Esperanto
         "nue" => Tag::new(b"BAD0"), // Ngundu -> Banda
-        // "nuk" => 	tag: Tag::new(b"NUK "), // Nuu-chah-nulth
+        // "nuk" => Tag::new(b"NUK "), // Nuu-chah-nulth
         "nuu" => Tag::new(b"BAD0"), // Ngbundu -> Banda
         "nuz" => Tag::new(b"NAH "), // Tlamacazapa Nahuatl -> Nahuatl
         "nv" => Tag::new(b"NAV "),  // Navajo
@@ -1237,12 +1241,12 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "nwe" => Tag::new(b"BML "), // Ngwe -> Bamileke
         "ny" => Tag::new(b"CHI "),  // Chichewa (Chewa, Nyanja)
         "nyd" => Tag::new(b"LUH "), // Nyore -> Luyia
-        // "nym" => 	tag: Tag::new(b"NYM "), // Nyamwezi
+        // "nym" => Tag::new(b"NYM "), // Nyamwezi
         "nyn" => Tag::new(b"NKL "), // Nyankole
-        // "nza" => 	tag: Tag::new(b"NZA "), // Tigon Mbembe -> Mbembe Tigon
+        // "nza" => Tag::new(b"NZA "), // Tigon Mbembe -> Mbembe Tigon
         "oc" => Tag::new(b"OCI "), // Occitan (post 1500)
         "oj" => Tag::new(b"OJB "), // Ojibwa [macrolanguage] -> Ojibway
-        // "ojb" => 	tag: Tag::new(b"OJB "), // Northwestern Ojibwa -> Ojibway
+        // "ojb" => Tag::new(b"OJB "), // Northwestern Ojibwa -> Ojibway
         "ojc" => Tag::new(b"OJB "), // Central Ojibwa -> Ojibway
         "ojg" => Tag::new(b"OJB "), // Eastern Ojibwa -> Ojibway
         "ojs" => Tag::new(b"OCR "), // Severn Ojibwa -> Oji-Cree
@@ -1254,14 +1258,14 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
                                       * Korean Old Hangul */
         "okr" => Tag::new(b"IJO "), // Kirike -> Ijo
         "om" => Tag::new(b"ORO "),  // Oromo [macrolanguage]
-        // "one" => 	tag: Tag::new(b"ONE "), // Oneida
-        // "ono" => 	tag: Tag::new(b"ONO "), // Onondaga
+        // "one" => Tag::new(b"ONE "), // Oneida
+        // "ono" => Tag::new(b"ONO "), // Onondaga
         "onx" => Tag::new(b"CPP "), // Onin Based Pidgin -> Creoles
         "oor" => Tag::new(b"CPP "), // Oorlams -> Creoles
         "or" => Tag::new(b"ORI "),  // Odia  [macrolanguage]
         "orc" => Tag::new(b"ORO "), // Orma -> Oromo
         "orn" => Tag::new(b"MLY "), // Orang Kanaq -> Malay
-        "oro" => Tag::new(&[0; 4]), // Orokolo != Oromo
+        // "oro" => Tag::new(&[0; 4]), // Orokolo != Oromo
         "orr" => Tag::new(b"IJO "), // Oruma -> Ijo
         "ors" => Tag::new(b"MLY "), // Orang Seletar -> Malay
         "ory" => Tag::new(b"ORI "), // Odia
@@ -1269,23 +1273,22 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "otw" => Tag::new(b"OJB "), // Ottawa -> Ojibway
         "oua" => Tag::new(b"BBR "), // Tagargrent -> Berber
         "pa" => Tag::new(b"PAN "),  // Punjabi
-        "paa" => Tag::new(&[0; 4]), /* Papuan  [collection] != Palestinian
-                                      * Aramaic */
-        // "pag" => 	tag: Tag::new(b"PAG "), // Pangasinan
-        "pal" => Tag::new(&[0; 4]), // Pahlavi != Pali
-        // "pam" => 	tag: Tag::new(b"PAM "), // Pampanga -> Pampangan
+        // "paa" => Tag::new(&[0; 4]), // Papuan  [collection] != Palestinian Aramaic
+        // "pag" => Tag::new(b"PAG "), // Pangasinan
+        // "pal" => Tag::new(&[0; 4]), // Pahlavi != Pali
+        // "pam" => Tag::new(b"PAM "), // Pampanga -> Pampangan
         "pap" => Tag::new(b"PAP0"), // Papiamento -> Papiamentu
         // "pap" => Tag::new(b"CPP "), // Papiamento -> Creoles
-        "pas" => Tag::new(&[0; 4]), // Papasena != Pashto
-        // "pau" => 	tag: Tag::new(b"PAU "), // Palauan
+        // "pas" => Tag::new(&[0; 4]), // Papasena != Pashto
+        // "pau" => Tag::new(b"PAU "), // Palauan
         "pbt" => Tag::new(b"PAS "), // Southern Pashto -> Pashto
         "pbu" => Tag::new(b"PAS "), // Northern Pashto -> Pashto
-        // "pcc" => 	tag: Tag::new(b"PCC "), // Bouyei
-        // "pcd" => 	tag: Tag::new(b"PCD "), // Picard
+        // "pcc" => Tag::new(b"PCC "), // Bouyei
+        // "pcd" => Tag::new(b"PCD "), // Picard
         "pce" => Tag::new(b"PLG "), // Ruching Palaung -> Palaung
         "pck" => Tag::new(b"QIN "), // Paite Chin -> Chin
         "pcm" => Tag::new(b"CPP "), // Nigerian Pidgin -> Creoles
-        // "pdc" => 	tag: Tag::new(b"PDC "), // Pennsylvania German
+        // "pdc" => Tag::new(b"PDC "), // Pennsylvania German
         "pdu" => Tag::new(b"KRN "), // Kayan -> Karen
         "pea" => Tag::new(b"CPP "), // Peranakan Indonesian -> Creoles
         "pel" => Tag::new(b"MLY "), // Pekal -> Malay
@@ -1293,33 +1296,33 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "pey" => Tag::new(b"CPP "), // Petjo -> Creoles
         "pga" => Tag::new(b"ARA "), // Sudanese Creole Arabic -> Arabic
         // "pga" => Tag::new(b"CPP "), // Sudanese Creole Arabic -> Creoles
-        // "phk" => 	tag: Tag::new(b"PHK "), // Phake
+        // "phk" => Tag::new(b"PHK "), // Phake
         "pi" => Tag::new(b"PAL "),  // Pali
         "pih" => Tag::new(b"PIH "), // Pitcairn-Norfolk -> Norfolk
         // "pih" => Tag::new(b"CPP "), // Pitcairn-Norfolk -> Creoles
-        "pil" => Tag::new(&[0; 4]), // Yom != Filipino
+        // "pil" => Tag::new(&[0; 4]), // Yom != Filipino
         "pis" => Tag::new(b"CPP "), // Pijin -> Creoles
         "pkh" => Tag::new(b"QIN "), // Pankhu -> Chin
         "pko" => Tag::new(b"KAL "), // Pökoot -> Kalenjin
         "pl" => Tag::new(b"PLK "),  // Polish
         "plg" => Tag::new(b"PLG0"), // Pilagá
-        "plk" => Tag::new(&[0; 4]), // Kohistani Shina != Polish
+        // "plk" => Tag::new(&[0; 4]), // Kohistani Shina != Polish
         "pll" => Tag::new(b"PLG "), // Shwe Palaung -> Palaung
         "pln" => Tag::new(b"CPP "), // Palenquero -> Creoles
         "plp" => Tag::new(b"PAP "), // Palpa(retired code)
         "plt" => Tag::new(b"MLG "), // Plateau Malagasy -> Malagasy
         "pml" => Tag::new(b"CPP "), // Lingua Franca -> Creoles
-        // "pms" => 	tag: Tag::new(b"PMS "), // Piemontese
+        // "pms" => Tag::new(b"PMS "), // Piemontese
         "pmy" => Tag::new(b"CPP "), // Papuan Malay -> Creoles
-        // "pnb" => 	tag: Tag::new(b"PNB "), // Western Panjabi
+        // "pnb" => Tag::new(b"PNB "), // Western Panjabi
         "poc" => Tag::new(b"MYN "), // Poqomam -> Mayan
         "poh" => Tag::new(b"POH "), // Poqomchi' -> Pocomchi
         // "poh" => Tag::new(b"MYN "), // Poqomchi' -> Mayan
-        // "pon" => 	tag: Tag::new(b"PON "), // Pohnpeian
+        // "pon" => Tag::new(b"PON "), // Pohnpeian
         "pov" => Tag::new(b"CPP "), // Upper Guinea Crioulo -> Creoles
         "ppa" => Tag::new(b"BAG "), // Pao(retired code) -> Baghelkhandi
         "pre" => Tag::new(b"CPP "), // Principense -> Creoles
-        // "pro" => 	tag: Tag::new(b"PRO "), // Old Provençal (to 1500) ->
+        // "pro" => Tag::new(b"PRO "), // Old Provençal (to 1500) ->
         // Provençal / Old Provençal
         "prp" => Tag::new(b"GUJ "), // Parsi(retired code) -> Gujarati
         "prs" => Tag::new(b"DRI "), // Dari
@@ -1370,7 +1373,7 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "qux" => Tag::new(b"QWH "), // Yauyos Quechua -> Quechua (Peru)
         // "qux" => Tag::new(b"QUZ "), // Yauyos Quechua -> Quechua
         "quy" => Tag::new(b"QUZ "), // Ayacucho Quechua -> Quechua
-        // "quz" => 	tag: Tag::new(b"QUZ "), // Cusco Quechua -> Quechua
+        // "quz" => Tag::new(b"QUZ "), // Cusco Quechua -> Quechua
         "qva" => Tag::new(b"QWH "), // Ambo-Pasco Quechua -> Quechua (Peru)
         // "qva" => Tag::new(b"QUZ "), // Ambo-Pasco Quechua -> Quechua
         "qvc" => Tag::new(b"QUZ "), // Cajamarca Quechua -> Quechua
@@ -1444,27 +1447,27 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "qxw" => Tag::new(b"QWH "), // Jauja Wanca Quechua -> Quechua (Peru)
         // "qxw" => Tag::new(b"QUZ "), // Jauja Wanca Quechua -> Quechua
         "rag" => Tag::new(b"LUH "), // Logooli -> Luyia
-        // "raj" => 	tag: Tag::new(b"RAJ "), // Rajasthani [macrolanguage]
+        // "raj" => Tag::new(b"RAJ "), // Rajasthani [macrolanguage]
         "ral" => Tag::new(b"QIN "), // Ralte -> Chin
-        // "rar" => 	tag: Tag::new(b"RAR "), // Rarotongan
+        // "rar" => Tag::new(b"RAR "), // Rarotongan
         "rbb" => Tag::new(b"PLG "), // Rumai Palaung -> Palaung
         "rbl" => Tag::new(b"BIK "), // Miraya Bikol -> Bikol
         "rcf" => Tag::new(b"CPP "), // Réunion Creole French -> Creoles
-        // "rej" => 	tag: Tag::new(b"REJ "), // Rejang
-        // "rhg" => 	tag: Tag::new(b"RHG "), // Rohingya
-        // "ria" => 	tag: Tag::new(b"RIA "), // Riang (India)
+        // "rej" => Tag::new(b"REJ "), // Rejang
+        // "rhg" => Tag::new(b"RHG "), // Rohingya
+        // "ria" => Tag::new(b"RIA "), // Riang (India)
         "rif" => Tag::new(b"RIF "), // Tarifit
         // "rif" => Tag::new(b"BBR "), // Tarifit -> Berber
-        // "rit" => 	tag: Tag::new(b"RIT "), // Ritharrngu -> Ritarungo
+        // "rit" => Tag::new(b"RIT "), // Ritharrngu -> Ritarungo
         "rki" => Tag::new(b"ARK "), // Rakhine
-        // "rkw" => 	tag: Tag::new(b"RKW "), // Arakwal
+        // "rkw" => Tag::new(b"RKW "), // Arakwal
         "rm" => Tag::new(b"RMS "),  // Romansh
         "rmc" => Tag::new(b"ROY "), // Carpathian Romani -> Romany
         "rmf" => Tag::new(b"ROY "), // Kalo Finnish Romani -> Romany
         "rml" => Tag::new(b"ROY "), // Baltic Romani -> Romany
         "rmn" => Tag::new(b"ROY "), // Balkan Romani -> Romany
         "rmo" => Tag::new(b"ROY "), // Sinte Romani -> Romany
-        "rms" => Tag::new(&[0; 4]), // Romanian Sign Language != Romansh
+        // "rms" => Tag::new(&[0; 4]), // Romanian Sign Language != Romansh
         "rmw" => Tag::new(b"ROY "), // Welsh Romani -> Romany
         "rmy" => Tag::new(b"RMY "), // Vlax Romani
         // "rmy" => Tag::new(b"ROY "), // Vlax Romani -> Romany
@@ -1474,26 +1477,26 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "rom" => Tag::new(b"ROY "), // Romany [macrolanguage]
         "rop" => Tag::new(b"CPP "), // Kriol -> Creoles
         "rtc" => Tag::new(b"QIN "), // Rungtu Chin -> Chin
-        // "rtm" => 	tag: Tag::new(b"RTM "), // Rotuman
+        // "rtm" => Tag::new(b"RTM "), // Rotuman
         "ru" => Tag::new(b"RUS "),  // Russian
         "rue" => Tag::new(b"RSY "), // Rusyn
-        // "rup" => 	tag: Tag::new(b"RUP "), // Aromanian
+        // "rup" => Tag::new(b"RUP "), // Aromanian
         "rw" => Tag::new(b"RUA "),  // Kinyarwanda
         "rwr" => Tag::new(b"MAW "), // Marwari (India)
         "sa" => Tag::new(b"SAN "),  // Sanskrit [macrolanguage]
-        "sad" => Tag::new(&[0; 4]), // Sandawe != Sadri
+        // "sad" => Tag::new(&[0; 4]), // Sandawe != Sadri
         "sah" => Tag::new(b"YAK "), // Yakut -> Sakha
         "sam" => Tag::new(b"PAA "), // Samaritan Aramaic -> Palestinian Aramaic
-        // "sas" => 	tag: Tag::new(b"SAS "), // Sasak
-        // "sat" => 	tag: Tag::new(b"SAT "), // Santali
-        "say" => Tag::new(&[0; 4]), // Saya != Sayisi
+        // "sas" => Tag::new(b"SAS "), // Sasak
+        // "sat" => Tag::new(b"SAT "), // Santali
+        // "say" => Tag::new(&[0; 4]), // Saya != Sayisi
         "sc" => Tag::new(b"SRD "),  // Sardinian [macrolanguage]
         "scf" => Tag::new(b"CPP "), // San Miguel Creole French -> Creoles
         "sch" => Tag::new(b"QIN "), // Sakachep -> Chin
         "sci" => Tag::new(b"CPP "), // Sri Lankan Creole Malay -> Creoles
         "sck" => Tag::new(b"SAD "), // Sadri
-        // "scn" => 	tag: Tag::new(b"SCN "), // Sicilian
-        // "sco" => 	tag: Tag::new(b"SCO "), // Scots
+        // "scn" => Tag::new(b"SCN "), // Sicilian
+        // "sco" => Tag::new(b"SCO "), // Scots
         "scs" => Tag::new(b"SCS "), // North Slavey
         // "scs" => Tag::new(b"SLA "), // North Slavey -> Slavey
         // "scs" => Tag::new(b"ATH "), // North Slavey -> Athapaskan
@@ -1503,18 +1506,18 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "sdn" => Tag::new(b"SRD "), // Gallurese Sardinian -> Sardinian
         "sds" => Tag::new(b"BBR "), // Sened -> Berber
         "se" => Tag::new(b"NSM "),  // Northern Sami
-        // "see" => 	tag: Tag::new(b"SEE "), // Seneca
+        // "see" => Tag::new(b"SEE "), // Seneca
         "seh" => Tag::new(b"SNA "), // Sena
         "sek" => Tag::new(b"ATH "), // Sekani -> Athapaskan
-        // "sel" => 	tag: Tag::new(b"SEL "), // Selkup
+        // "sel" => Tag::new(b"SEL "), // Selkup
         "sez" => Tag::new(b"QIN "), // Senthang Chin -> Chin
         "sfm" => Tag::new(b"SFM "), // Small Flowery Miao
         // "sfm" => Tag::new(b"HMN "), // Small Flowery Miao -> Hmong
         "sg" => Tag::new(b"SGO "), // Sango
-        // "sga" => 	tag: Tag::new(b"SGA "), // Old Irish (to 900)
+        // "sga" => Tag::new(b"SGA "), // Old Irish (to 900)
         "sgc" => Tag::new(b"KAL "), // Kipsigis -> Kalenjin
-        "sgo" => Tag::new(&[0; 4]), // Songa(retired code) != Sango
-        // "sgs" => 	tag: Tag::new(b"SGS "), // Samogitian
+        // "sgo" => Tag::new(&[0; 4]), // Songa(retired code) != Sango
+        // "sgs" => Tag::new(b"SGS "), // Samogitian
         "sgw" => Tag::new(b"CHG "), // Sebat Bet Gurage -> Chaha Gurage
         "sh" => Tag::new(b"BOS "),  /* Serbo-Croatian [macrolanguage] ->
                                       * Bosnian */
@@ -1524,96 +1527,95 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "shi" => Tag::new(b"SHI "), // Tachelhit
         // "shi" => Tag::new(b"BBR "), // Tachelhit -> Berber
         "shl" => Tag::new(b"QIN "), // Shendu -> Chin
-        // "shn" => 	tag: Tag::new(b"SHN "), // Shan
+        // "shn" => Tag::new(b"SHN "), // Shan
         "shu" => Tag::new(b"ARA "), // Chadian Arabic -> Arabic
         "shy" => Tag::new(b"BBR "), // Tachawit -> Berber
         "si" => Tag::new(b"SNH "),  // Sinhala (Sinhalese)
-        "sib" => Tag::new(&[0; 4]), // Sebop != Sibe
-        // "sid" => 	tag: Tag::new(b"SID "), // Sidamo
-        "sig" => Tag::new(&[0; 4]), // Paasaal != Silte Gurage
+        // "sib" => Tag::new(&[0; 4]), // Sebop != Sibe
+        // "sid" => Tag::new(b"SID "), // Sidamo
+        // "sig" => Tag::new(&[0; 4]), // Paasaal != Silte Gurage
         "siz" => Tag::new(b"BBR "), // Siwi -> Berber
-        // "sja" => 	tag: Tag::new(b"SJA "), // Epena
+        // "sja" => Tag::new(b"SJA "), // Epena
         "sjc" => Tag::new(b"ZHS "), // Shaojiang Chinese -> Chinese, Simplified
         "sjd" => Tag::new(b"KSM "), // Kildin Sami
-        // "sje" => 	tag: Tag::new(b"SJE "), // Pite Sami
+        // "sje" => Tag::new(b"SJE "), // Pite Sami
         "sjo" => Tag::new(b"SIB "), // Xibe -> Sibe
         "sjs" => Tag::new(b"BBR "), // Senhaja De Srair -> Berber
-        // "sju" => 	tag: Tag::new(b"SJU "), // Ume Sami
+        // "sju" => Tag::new(b"SJU "), // Ume Sami
         "sk" => Tag::new(b"SKY "),  // Slovak
         "skg" => Tag::new(b"MLG "), // Sakalava Malagasy -> Malagasy
         "skr" => Tag::new(b"SRK "), // Saraiki
-        "sks" => Tag::new(&[0; 4]), // Maia != Skolt Sami
+        // "sks" => Tag::new(&[0; 4]), // Maia != Skolt Sami
         "skw" => Tag::new(b"CPP "), // Skepi Creole Dutch -> Creoles
-        "sky" => Tag::new(&[0; 4]), // Sikaiana != Slovak
+        // "sky" => Tag::new(&[0; 4]), // Sikaiana != Slovak
         "sl" => Tag::new(b"SLV "),  // Slovenian
-        "sla" => Tag::new(&[0; 4]), // Slavic  [collection] != Slavey
+        // "sla" => Tag::new(&[0; 4]), // Slavic  [collection] != Slavey
         "sm" => Tag::new(b"SMO "),  // Samoan
         "sma" => Tag::new(b"SSM "), // Southern Sami
         "smd" => Tag::new(b"MBN "), // Sama(retired code) -> Mbundu
         "smj" => Tag::new(b"LSM "), // Lule Sami
-        "sml" => Tag::new(&[0; 4]), // Central Sama != Somali
+        // "sml" => Tag::new(&[0; 4]), // Central Sama != Somali
         "smn" => Tag::new(b"ISM "), // Inari Sami
         "sms" => Tag::new(b"SKS "), // Skolt Sami
         "smt" => Tag::new(b"QIN "), // Simte -> Chin
         "sn" => Tag::new(b"SNA0"),  // Shona
         "snb" => Tag::new(b"IBA "), // Sebuyau(retired code) -> Iban
-        "snh" => Tag::new(&[0; 4]), /* Shinabo(retired code) != Sinhala
-                                      * (Sinhalese) */
-        // "snk" => 	tag: Tag::new(b"SNK "), // Soninke
+        // "snh" => Tag::new(&[0; 4]), // Shinabo(retired code) != Sinhala (Sinhalese)
+        // "snk" => Tag::new(b"SNK "), // Soninke
         "so" => Tag::new(b"SML "),  // Somali
-        "sog" => Tag::new(&[0; 4]), // Sogdian != Sodo Gurage
-        // "sop" => 	tag: Tag::new(b"SOP "), // Songe
+        // "sog" => Tag::new(&[0; 4]), // Sogdian != Sodo Gurage
+        // "sop" => Tag::new(b"SOP "), // Songe
         "spv" => Tag::new(b"ORI "), // Sambalpuri -> Odia
         "spy" => Tag::new(b"KAL "), // Sabaot -> Kalenjin
         "sq" => Tag::new(b"SQI "),  // Albanian [macrolanguage]
         "sr" => Tag::new(b"SRB "),  // Serbian
-        "srb" => Tag::new(&[0; 4]), // Sora != Serbian
+        // "srb" => Tag::new(&[0; 4]), // Sora != Serbian
         "src" => Tag::new(b"SRD "), // Logudorese Sardinian -> Sardinian
-        "srk" => Tag::new(&[0; 4]), // Serudung Murut != Saraiki
+        // "srk" => Tag::new(&[0; 4]), // Serudung Murut != Saraiki
         "srm" => Tag::new(b"CPP "), // Saramaccan -> Creoles
         "srn" => Tag::new(b"CPP "), // Sranan Tongo -> Creoles
         "sro" => Tag::new(b"SRD "), // Campidanese Sardinian -> Sardinian
-        // "srr" => 	tag: Tag::new(b"SRR "), // Serer
+        // "srr" => Tag::new(b"SRR "), // Serer
         "srs" => Tag::new(b"ATH "), // Sarsi -> Athapaskan
         "ss" => Tag::new(b"SWZ "),  // Swati
         "ssh" => Tag::new(b"ARA "), // Shihhi Arabic -> Arabic
-        "ssl" => Tag::new(&[0; 4]), // Western Sisaala != South Slavey
-        "ssm" => Tag::new(&[0; 4]), // Semnam != Southern Sami
+        // "ssl" => Tag::new(&[0; 4]), // Western Sisaala != South Slavey
+        // "ssm" => Tag::new(&[0; 4]), // Semnam != Southern Sami
         "st" => Tag::new(b"SOT "),  // Southern Sotho
         "sta" => Tag::new(b"CPP "), // Settla -> Creoles
-        // "stq" => 	tag: Tag::new(b"STQ "), // Saterfriesisch -> Saterland
-        // Frisian "str" => 	tag: Tag::new(b"STR "), // Straits Salish
+        // "stq" => Tag::new(b"STQ "), // Saterfriesisch -> Saterland
+        // Frisian "str" => Tag::new(b"STR "), // Straits Salish
         "stv" => Tag::new(b"SIG "), // Silt'e -> Silte Gurage
         "su" => Tag::new(b"SUN "),  // Sundanese
-        // "suk" => 	tag: Tag::new(b"SUK "), // Sukuma
+        // "suk" => Tag::new(b"SUK "), // Sukuma
         "suq" => Tag::new(b"SUR "), // Suri
-        "sur" => Tag::new(&[0; 4]), // Mwaghavul != Suri
+        // "sur" => Tag::new(&[0; 4]), // Mwaghavul != Suri
         "sv" => Tag::new(b"SVE "),  // Swedish
-        // "sva" => 	tag: Tag::new(b"SVA "), // Svan
+        // "sva" => Tag::new(b"SVA "), // Svan
         "svc" => Tag::new(b"CPP "), // Vincentian Creole English -> Creoles
-        "sve" => Tag::new(&[0; 4]), // Serili != Swedish
+        // "sve" => Tag::new(&[0; 4]), // Serili != Swedish
         "sw" => Tag::new(b"SWK "),  // Swahili  [macrolanguage]
         "swb" => Tag::new(b"CMR "), // Maore Comorian -> Comorian
         "swc" => Tag::new(b"SWK "), // Congo Swahili -> Swahili
         "swh" => Tag::new(b"SWK "), // Swahili
-        "swk" => Tag::new(&[0; 4]), // Malawi Sena != Swahili
+        // "swk" => Tag::new(&[0; 4]), // Malawi Sena != Swahili
         "swn" => Tag::new(b"BBR "), // Sawknah -> Berber
         "swv" => Tag::new(b"MAW "), // Shekhawati -> Marwari
-        // "sxu" => 	tag: Tag::new(b"SXU "), // Upper Saxon
+        // "sxu" => Tag::new(b"SXU "), // Upper Saxon
         "syc" => Tag::new(b"SYR "), // Classical Syriac -> Syriac
-        // "syl" => 	tag: Tag::new(b"SYL "), // Sylheti
-        // "syr" => 	tag: Tag::new(b"SYR "), // Syriac [macrolanguage]
-        // "szl" => 	tag: Tag::new(b"SZL "), // Silesian
+        // "syl" => Tag::new(b"SYL "), // Sylheti
+        // "syr" => Tag::new(b"SYR "), // Syriac [macrolanguage]
+        // "szl" => Tag::new(b"SZL "), // Silesian
         "ta" => Tag::new(b"TAM "),  // Tamil
         "taa" => Tag::new(b"ATH "), // Lower Tanana -> Athapaskan
-        // "tab" => 	tag: Tag::new(b"TAB "), // Tabassaran -> Tabasaran
-        "taj" => Tag::new(&[0; 4]), // Eastern Tamang != Tajiki
+        // "tab" => Tag::new(b"TAB "), // Tabassaran -> Tabasaran
+        // "taj" => Tag::new(&[0; 4]), // Eastern Tamang != Tajiki
         "taq" => Tag::new(b"TAQ "), // Tamasheq
         // "taq" => Tag::new(b"TMH "), // Tamasheq -> Tamashek
         // "taq" => Tag::new(b"BBR "), // Tamasheq -> Berber
         "tas" => Tag::new(b"CPP "), // Tay Boi -> Creoles
         "tau" => Tag::new(b"ATH "), // Upper Tanana -> Athapaskan
-        // "tbv" => 	tag: Tag::new(b"TBV "), // Tobo
+        // "tbv" => Tag::new(b"TBV "), // Tobo
         "tcb" => Tag::new(b"ATH "), // Tanacross -> Athapaskan
         "tce" => Tag::new(b"ATH "), // Southern Tutchone -> Athapaskan
         "tch" => Tag::new(b"CPP "), /* Turks And Caicos Creole English ->
@@ -1622,24 +1624,24 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "tcs" => Tag::new(b"CPP "), // Torres Strait Creole -> Creoles
         "tcy" => Tag::new(b"TUL "), // Tulu
         "tcz" => Tag::new(b"QIN "), // Thado Chin -> Chin
-        // "tdc" => 	tag: Tag::new(b"TDC "), // Emberá-Tadó
-        // "tdd" => 	tag: Tag::new(b"TDD "), // Tai Nüa -> Dehong Dai
+        // "tdc" => Tag::new(b"TDC "), // Emberá-Tadó
+        // "tdd" => Tag::new(b"TDD "), // Tai Nüa -> Dehong Dai
         "tdx" => Tag::new(b"MLG "), // Tandroy-Mahafaly Malagasy -> Malagasy
         "te" => Tag::new(b"TEL "),  // Telugu
         "tec" => Tag::new(b"KAL "), // Terik -> Kalenjin
         "tem" => Tag::new(b"TMN "), // Timne -> Temne
-        // "tet" => 	tag: Tag::new(b"TET "), // Tetum
+        // "tet" => Tag::new(b"TET "), // Tetum
         "tez" => Tag::new(b"BBR "), // Tetserret -> Berber
         "tfn" => Tag::new(b"ATH "), // Tanaina -> Athapaskan
         "tg" => Tag::new(b"TAJ "),  // Tajik -> Tajiki
         "tgh" => Tag::new(b"CPP "), // Tobagonian Creole English -> Creoles
         "tgj" => Tag::new(b"NIS "), // Tagin -> Nisi
-        "tgn" => Tag::new(&[0; 4]), // Tandaganon != Tongan
-        "tgr" => Tag::new(&[0; 4]), // Tareng != Tigre
+        // "tgn" => Tag::new(&[0; 4]), // Tandaganon != Tongan
+        // "tgr" => Tag::new(&[0; 4]), // Tareng != Tigre
         "tgx" => Tag::new(b"ATH "), // Tagish -> Athapaskan
-        "tgy" => Tag::new(&[0; 4]), // Togoyo != Tigrinya
+        // "tgy" => Tag::new(&[0; 4]), // Togoyo != Tigrinya
         "th" => Tag::new(b"THA "),  // Thai
-        // "thp" => 	tag: Tag::new(b"THP "), // Thompson
+        // "thp" => Tag::new(b"THP "), // Thompson
         "tht" => Tag::new(b"ATH "), // Tahltan -> Athapaskan
         "thv" => Tag::new(b"THV "), // Tahaggart Tamahaq
         // "thv" => Tag::new(b"TMH "), // Tahaggart Tamahaq -> Tamashek
@@ -1650,27 +1652,26 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "ti" => Tag::new(b"TGY "),  // Tigrinya
         "tia" => Tag::new(b"BBR "), // Tidikelt Tamazight -> Berber
         "tig" => Tag::new(b"TGR "), // Tigre
-        // "tiv" => 	tag: Tag::new(b"TIV "), // Tiv
-        // "tjl" => 	tag: Tag::new(b"TJL "), // Tai Laing
+        // "tiv" => Tag::new(b"TIV "), // Tiv
+        // "tjl" => Tag::new(b"TJL "), // Tai Laing
         "tjo" => Tag::new(b"BBR "), // Temacine Tamazight -> Berber
         "tk" => Tag::new(b"TKM "),  // Turkmen
         "tkg" => Tag::new(b"MLG "), // Tesaka Malagasy -> Malagasy
-        "tkm" => Tag::new(&[0; 4]), // Takelma != Turkmen
+        // "tkm" => Tag::new(&[0; 4]), // Takelma != Turkmen
         "tl" => Tag::new(b"TGL "),  // Tagalog
-        // "tli" => 	tag: Tag::new(b"TLI "), // Tlingit
-        // "tly" => 	tag: Tag::new(b"TLY "), // Talysh
+        // "tli" => Tag::new(b"TLI "), // Tlingit
+        // "tly" => Tag::new(b"TLY "), // Talysh
         "tmg" => Tag::new(b"CPP "), // Ternateño -> Creoles
         "tmh" => Tag::new(b"TMH "), // Tamashek [macrolanguage]
         // "tmh" => Tag::new(b"BBR "), // Tamashek [macrolanguage] -> Berber
-        "tmn" => Tag::new(&[0; 4]), // Taman (Indonesia) != Temne
+        // "tmn" => Tag::new(&[0; 4]), // Taman (Indonesia) != Temne
         "tmw" => Tag::new(b"MLY "), // Temuan -> Malay
         "tn" => Tag::new(b"TNA "),  // Tswana
-        "tna" => Tag::new(&[0; 4]), // Tacana != Tswana
-        "tne" => Tag::new(&[0; 4]), /* Tinoc Kallahan(retired code) !=
-                                      * Tundra Enets */
+        // "tna" => Tag::new(&[0; 4]), // Tacana != Tswana
+        // "tne" => Tag::new(&[0; 4]), Tinoc Kallahan(retired code) != Tundra Enets
         "tnf" => Tag::new(b"DRI "), // Tangshewi(retired code) -> Dari
         // "tnf" => Tag::new(b"FAR "), // Tangshewi(retired code) -> Persian
-        "tng" => Tag::new(&[0; 4]), // Tobanga != Tonga
+        // "tng" => Tag::new(&[0; 4]), // Tobanga != Tonga
         "to" => Tag::new(b"TGN "),  // Tonga (Tonga Islands) -> Tongan
         "tod" => Tag::new(b"TOD0"), // Toma
         "toi" => Tag::new(b"TNG "), // Tonga (Zambia)
@@ -1681,26 +1682,26 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         // "tpi" => Tag::new(b"CPP "), // Tok Pisin -> Creoles
         "tr" => Tag::new(b"TRK "),  // Turkish
         "trf" => Tag::new(b"CPP "), // Trinidadian Creole English -> Creoles
-        "trk" => Tag::new(&[0; 4]), // Turkic  [collection] != Turkish
+        // "trk" => Tag::new(&[0; 4]), // Turkic  [collection] != Turkish
         "tru" => Tag::new(b"TUA "), // Turoyo -> Turoyo Aramaic
         // "tru" => Tag::new(b"SYR "), // Turoyo -> Syriac
         "ts" => Tag::new(b"TSG "),  // Tsonga
-        "tsg" => Tag::new(&[0; 4]), // Tausug != Tsonga
-        // "tsj" => 	tag: Tag::new(b"TSJ "), // Tshangla
+        // "tsg" => Tag::new(&[0; 4]), // Tausug != Tsonga
+        // "tsj" => Tag::new(b"TSJ "), // Tshangla
         "tt" => Tag::new(b"TAT "),  // Tatar
         "ttc" => Tag::new(b"MYN "), // Tektiteko -> Mayan
         "ttm" => Tag::new(b"ATH "), // Northern Tutchone -> Athapaskan
         "ttq" => Tag::new(b"TTQ "), // Tawallammat Tamajaq
         // "ttq" => Tag::new(b"TMH "), // Tawallammat Tamajaq -> Tamashek
         // "ttq" => Tag::new(b"BBR "), // Tawallammat Tamajaq -> Berber
-        "tua" => Tag::new(&[0; 4]), // Wiarumus != Turoyo Aramaic
-        "tul" => Tag::new(&[0; 4]), // Tula != Tulu
-        // "tum" => 	tag: Tag::new(b"TUM "), // Tumbuka
-        // "tus" => 	tag: Tag::new(b"TUS "), // Tuscarora
+        // "tua" => Tag::new(&[0; 4]), // Wiarumus != Turoyo Aramaic
+        // "tul" => Tag::new(&[0; 4]), // Tula != Tulu
+        // "tum" => Tag::new(b"TUM "), // Tumbuka
+        // "tus" => Tag::new(b"TUS "), // Tuscarora
         "tuu" => Tag::new(b"ATH "), // Tututni -> Athapaskan
-        "tuv" => Tag::new(&[0; 4]), // Turkana != Tuvin
+        // "tuv" => Tag::new(&[0; 4]), // Turkana != Tuvin
         "tuy" => Tag::new(b"KAL "), // Tugen -> Kalenjin
-        // "tvl" => 	tag: Tag::new(b"TVL "), // Tuvalu
+        // "tvl" => Tag::new(b"TVL "), // Tuvalu
         "tvy" => Tag::new(b"CPP "), // Timor Pidgin -> Creoles
         "tw" => Tag::new(b"TWI "),  // Twi
         // "tw" => Tag::new(b"AKA "),  // Twi -> Akan
@@ -1708,7 +1709,7 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "txy" => Tag::new(b"MLG "), // Tanosy Malagasy -> Malagasy
         "ty" => Tag::new(b"THT "),  // Tahitian
         "tyv" => Tag::new(b"TUV "), // Tuvinian -> Tuvin
-        // "tyz" => 	tag: Tag::new(b"TYZ "), // Tày
+        // "tyz" => Tag::new(b"TYZ "), // Tày
         "tzh" => Tag::new(b"MYN "), // Tzeltal -> Mayan
         "tzj" => Tag::new(b"MYN "), // Tz'utujil -> Mayan
         "tzm" => Tag::new(b"TZM "), // Central Atlas Tamazight -> Tamazight
@@ -1716,13 +1717,13 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "tzo" => Tag::new(b"TZO "), // Tzotzil
         // "tzo" => Tag::new(b"MYN "), // Tzotzil -> Mayan
         "ubl" => Tag::new(b"BIK "), // Buhi'non Bikol -> Bikol
-        // "udi" => 	tag: Tag::new(b"UDI "), // Udi
-        // "udm" => 	tag: Tag::new(b"UDM "), // Udmurt
+        // "udi" => Tag::new(b"UDI "), // Udi
+        // "udm" => Tag::new(b"UDM "), // Udmurt
         "ug" => Tag::new(b"UYG "),  // Uyghur
         "uk" => Tag::new(b"UKR "),  // Ukrainian
         "uki" => Tag::new(b"KUI "), // Kui (India)
         "uln" => Tag::new(b"CPP "), // Unserdeutsch -> Creoles
-        // "umb" => 	tag: Tag::new(b"UMB "), // Umbundu
+        // "umb" => Tag::new(b"UMB "), // Umbundu
         "unr" => Tag::new(b"MUN "), // Mundari
         "ur" => Tag::new(b"URD "),  // Urdu
         "urk" => Tag::new(b"MLY "), // Urak Lawoi' -> Malay
@@ -1732,10 +1733,10 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "uzs" => Tag::new(b"UZB "), // Southern Uzbek -> Uzbek
         "vap" => Tag::new(b"QIN "), // Vaiphei -> Chin
         "ve" => Tag::new(b"VEN "),  // Venda
-        // "vec" => 	tag: Tag::new(b"VEC "), // Venetian
+        // "vec" => Tag::new(b"VEC "), // Venetian
         "vi" => Tag::new(b"VIT "),  // Vietnamese
         "vic" => Tag::new(b"CPP "), // Virgin Islands Creole English -> Creoles
-        "vit" => Tag::new(&[0; 4]), // Viti != Vietnamese
+        // "vit" => Tag::new(&[0; 4]), // Viti != Vietnamese
         "vkk" => Tag::new(b"MLY "), // Kaur -> Malay
         "vkp" => Tag::new(b"CPP "), // Korlai Creole Portuguese -> Creoles
         "vkt" => Tag::new(b"MLY "), // Tenggarong Kutai Malay -> Malay
@@ -1746,14 +1747,14 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         // "vro" => Tag::new(b"ETI "), // Võro -> Estonian
         "vsn" => Tag::new(b"SAN "), // Vedic Sanskrit -> Sanskrit
         "wa" => Tag::new(b"WLN "),  // Walloon
-        "wag" => Tag::new(&[0; 4]), // Wa'ema != Wagdi
-        // "war" => 	tag: Tag::new(b"WAR "), // Waray (Philippines) ->
-        // Waray-Waray "wbl" => 	tag: Tag::new(b"WBL "), // Wakhi
+        // "wag" => Tag::new(&[0; 4]), // Wa'ema != Wagdi
+        // "war" => Tag::new(b"WAR "), // Waray (Philippines) ->
+        // Waray-Waray "wbl" => Tag::new(b"WBL "), // Wakhi
         "wbm" => Tag::new(b"WA  "), // Wa
         "wbr" => Tag::new(b"WAG "), // Wagdi
         // "wbr" => Tag::new(b"RAJ "), // Wagdi -> Rajasthani
-        // "wci" => 	tag: Tag::new(b"WCI "), // Waci Gbe
-        // "wdt" => 	tag: Tag::new(b"WDT "), // Wendat
+        // "wci" => Tag::new(b"WCI "), // Waci Gbe
+        // "wdt" => Tag::new(b"WDT "), // Wendat
         "wea" => Tag::new(b"KRN "), // Wewaw -> Karen
         "wes" => Tag::new(b"CPP "), // Cameroon Pidgin -> Creoles
         "weu" => Tag::new(b"QIN "), // Rawngtu Chin -> Chin
@@ -1764,18 +1765,18 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "wo" => Tag::new(b"WLF "),  // Wolof
         "wry" => Tag::new(b"MAW "), // Merwari -> Marwari
         "wsg" => Tag::new(b"GON "), // Adilabad Gondi -> Gondi
-        // "wtm" => 	tag: Tag::new(b"WTM "), // Mewati
+        // "wtm" => Tag::new(b"WTM "), // Mewati
         "wuu" => Tag::new(b"ZHS "), // Wu Chinese -> Chinese, Simplified
         "wya" => Tag::new(b"WDT "), // Wyandot(retired code) -> Wendat
         // "wya" => Tag::new(b"WYN "), // Wyandot(retired code)
-        // "wyn" => 	tag: Tag::new(b"WYN "), // Wyandot
+        // "wyn" => Tag::new(b"WYN "), // Wyandot
         "xal" => Tag::new(b"KLM "), // Kalmyk
         // "xal" => Tag::new(b"TOD "), // Kalmyk -> Todo
         "xan" => Tag::new(b"SEK "), // Xamtanga -> Sekota
-        "xbd" => Tag::new(&[0; 4]), // Bindal != Lü
+        // "xbd" => Tag::new(&[0; 4]), // Bindal != Lü
         "xh" => Tag::new(b"XHS "),  // Xhosa
-        // "xjb" => 	tag: Tag::new(b"XJB "), // Minjungbal -> Minjangbal
-        // "xkf" => 	tag: Tag::new(b"XKF "), // Khengkha
+        // "xjb" => Tag::new(b"XJB "), // Minjungbal -> Minjangbal
+        // "xkf" => Tag::new(b"XKF "), // Khengkha
         "xmg" => Tag::new(b"BML "), // Mengaka -> Bamileke
         "xmm" => Tag::new(b"MLY "), // Manado Malay -> Malay
         // "xmm" => Tag::new(b"CPP "), // Manado Malay -> Creoles
@@ -1784,42 +1785,42 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "xnj" => Tag::new(b"SXT "), // Ngoni (Tanzania) -> Sutu
         "xnq" => Tag::new(b"SXT "), // Ngoni (Mozambique) -> Sutu
         "xnr" => Tag::new(b"DGR "), // Kangri -> Dogri (macrolanguage)
-        // "xog" => 	tag: Tag::new(b"XOG "), // Soga
+        // "xog" => Tag::new(b"XOG "), // Soga
         "xpe" => Tag::new(b"XPE "), // Liberia Kpelle -> Kpelle (Liberia)
         // "xpe" => Tag::new(b"KPL "), // Liberia Kpelle -> Kpelle
         "xsl" => Tag::new(b"SSL "), // South Slavey
         // "xsl" => Tag::new(b"SLA "), // South Slavey -> Slavey
         // "xsl" => Tag::new(b"ATH "), // South Slavey -> Athapaskan
         "xst" => Tag::new(b"SIG "), // Silt'e(retired code) -> Silte Gurage
-        // "xub" => 	tag: Tag::new(b"XUB "), // Betta Kurumba -> Bette Kuruma
-        // "xuj" => 	tag: Tag::new(b"XUJ "), // Jennu Kurumba -> Jennu Kuruma
+        // "xub" => Tag::new(b"XUB "), // Betta Kurumba -> Bette Kuruma
+        // "xuj" => Tag::new(b"XUJ "), // Jennu Kurumba -> Jennu Kuruma
         "xup" => Tag::new(b"ATH "), // Upper Umpqua -> Athapaskan
         "xwo" => Tag::new(b"TOD "), // Written Oirat -> Todo
         "yaj" => Tag::new(b"BAD0"), // Banda-Yangere -> Banda
-        "yak" => Tag::new(&[0; 4]), // Yakama != Sakha
-        // "yao" => 	tag: Tag::new(b"YAO "), // Yao
-        // "yap" => 	tag: Tag::new(b"YAP "), // Yapese
-        "yba" => Tag::new(&[0; 4]), // Yala != Yoruba
+        // "yak" => Tag::new(&[0; 4]), // Yakama != Sakha
+        // "yao" => Tag::new(b"YAO "), // Yao
+        // "yap" => Tag::new(b"YAP "), // Yapese
+        // "yba" => Tag::new(&[0; 4]), // Yala != Yoruba
         "ybb" => Tag::new(b"BML "), // Yemba -> Bamileke
         "ybd" => Tag::new(b"ARK "), // Yangbye(retired code) -> Rakhine
         "ycr" => Tag::new(b"CPP "), // Yilan Creole -> Creoles
         "ydd" => Tag::new(b"JII "), // Eastern Yiddish -> Yiddish
-        // "ygp" => 	tag: Tag::new(b"YGP "), // Gepo
+        // "ygp" => Tag::new(b"YGP "), // Gepo
         "yi" => Tag::new(b"JII "), // Yiddish [macrolanguage]
         "yih" => Tag::new(b"JII "), // Western Yiddish -> Yiddish
-        "yim" => Tag::new(&[0; 4]), // Yimchungru Naga != Yi Modern
-        // "yna" => 	tag: Tag::new(b"YNA "), // Aluo
+        // "yim" => Tag::new(&[0; 4]), // Yimchungru Naga != Yi Modern
+        // "yna" => Tag::new(b"YNA "), // Aluo
         "yo" => Tag::new(b"YBA "),  // Yoruba
         "yos" => Tag::new(b"QIN "), // Yos(retired code) -> Chin
         "yua" => Tag::new(b"MYN "), // Yucateco -> Mayan
         "yue" => Tag::new(b"ZHH "), /* Yue Chinese -> Chinese, Traditional,
                                       * Hong Kong SAR */
-        // "yuf" => 	tag: Tag::new(b"YUF "), // Havasupai-Walapai-Yavapai
-        // "ywq" => 	tag: Tag::new(b"YWQ "), // Wuding-Luquan Yi
+        // "yuf" => Tag::new(b"YUF "), // Havasupai-Walapai-Yavapai
+        // "ywq" => Tag::new(b"YWQ "), // Wuding-Luquan Yi
         "za" => Tag::new(b"ZHA "), // Zhuang [macrolanguage]
         "zch" => Tag::new(b"ZHA "), // Central Hongshuihe Zhuang -> Zhuang
         "zdj" => Tag::new(b"CMR "), // Ngazidja Comorian -> Comorian
-        // "zea" => 	tag: Tag::new(b"ZEA "), // Zeeuws -> Zealandic
+        // "zea" => Tag::new(b"ZEA "), // Zeeuws -> Zealandic
         "zeh" => Tag::new(b"ZHA "), // Eastern Hongshuihe Zhuang -> Zhuang
         "zen" => Tag::new(b"BBR "), // Zenaga -> Berber
         "zgb" => Tag::new(b"ZHA "), // Guibei Zhuang -> Zhuang
@@ -1837,7 +1838,7 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "zlq" => Tag::new(b"ZHA "), // Liuqian Zhuang -> Zhuang
         "zmi" => Tag::new(b"MLY "), // Negeri Sembilan Malay -> Malay
         "zmz" => Tag::new(b"BAD0"), // Mbandja -> Banda
-        "znd" => Tag::new(&[0; 4]), // Zande  [collection] != Zande
+        // "znd" => Tag::new(&[0; 4]), // Zande  [collection] != Zande
         "zne" => Tag::new(b"ZND "), // Zande
         "zom" => Tag::new(b"QIN "), // Zou -> Chin
         "zqe" => Tag::new(b"ZHA "), // Qiubei Zhuang -> Zhuang
@@ -1849,7 +1850,7 @@ pub fn iso639_to_opentype(language: &str) -> Option<Tag> {
         "zyj" => Tag::new(b"ZHA "), // Youjiang Zhuang -> Zhuang
         "zyn" => Tag::new(b"ZHA "), // Yongnan Zhuang -> Zhuang
         "zyp" => Tag::new(b"QIN "), // Zyphe Chin -> Chin
-        // "zza" => 	tag: Tag::new(b"ZZA "), // Zazaki [macrolanguage]
+        // "zza" => Tag::new(b"ZZA "), // Zazaki [macrolanguage]
         "zzj" => Tag::new(b"ZHA "), // Zuojiang Zhuang -> Zhuang
         _ => return None,           // Unknown
     };

@@ -1,6 +1,6 @@
 [package]
 name = "harfshapedfa"
-description = "TODO"
+description = "Glue functionality between skrifa & harfrust"
 version = "0.1.0"
 edition = "2024"
 authors = ["Dalton Maag <sd@daltonmaag.com>"]

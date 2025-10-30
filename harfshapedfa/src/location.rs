@@ -10,9 +10,9 @@ use skrifa::MetadataProvider;
 
 use crate::errors::{InvalidTagError, MismatchedAxesError};
 
-// TODO: document NaN panics
-
 /// A mapping of axis tags to values.
+///
+/// Retains insertion order of axes.
 ///
 /// ```
 /// # use harfshapedfa::Location;
@@ -37,6 +37,11 @@ impl Location {
         Default::default()
     }
 
+    /// Convert from a [`HashMap`] using [`skrifa::Tag`]s as keys.
+    ///
+    /// # Panics
+    ///
+    /// If any axis values are `NaN`.
     #[must_use]
     pub fn from_skrifa(user_coords: HashMap<skrifa::Tag, f32>) -> Self {
         Self(
@@ -69,6 +74,10 @@ impl Location {
     /// # Ok(())
     /// # }
     /// ```
+    ///
+    /// # Panics
+    ///
+    /// If any axis value is `NaN`.
     pub fn axis(
         &mut self,
         tag: impl AsRef<[u8]>,
@@ -87,6 +96,11 @@ impl Location {
     /// Fails if any keys aren't valid axis tags.
     ///
     /// Note: this is just an alias to the [`TryFrom`] implementation.
+    ///
+    /// # Panics
+    ///
+    /// If any axis values are `NaN`.
+    // TODO: I think this one should error, not panic, on NaNs
     pub fn try_from_std(
         location: HashMap<String, f32>,
     ) -> Result<Self, InvalidTagError> {
@@ -113,16 +127,12 @@ impl Location {
         )
     }
 
-    /// Creates a [`harfrust::Variation`] from `&self`.
-    #[must_use]
-    pub fn to_harfrust(&self) -> Vec<harfrust::Variation> {
-        self.0
-            .iter()
-            .map(|(&tag, value)| harfrust::Variation {
-                tag,
-                value: value.into_inner(),
-            })
-            .collect()
+    /// Creates a [`harfrust::Variation`] iterator from `&self`.
+    pub fn to_harfrust(&self) -> impl Iterator<Item = harfrust::Variation> {
+        self.0.iter().map(|(&tag, value)| harfrust::Variation {
+            tag,
+            value: value.into_inner(),
+        })
     }
 
     /// Checks that `&self` doesn't specify any axes that aren't present in
@@ -130,6 +140,8 @@ impl Location {
     ///
     /// Omitting axes is allowed as most libraries will just use the default
     /// value if one isn't provided for an axis.
+    ///
+    /// ⚠️ Does not current check axis values are valid / in range.
     ///
     /// Note: if you're just using Font Height, it will perform this validation
     /// for you as necessary.
@@ -152,28 +164,38 @@ impl Location {
         }
     }
 
+    /// Sort axes lexicographically.
+    ///
+    /// Axes being ordered allows for [sorting](Location::partial_cmp).
     pub fn sort_axes(&mut self) {
         self.0.sort_keys();
     }
 
     // TODO
-    // pub fn sort_axes_by(&mut self, )
+    // pub fn sort_axes_by(&mut self, func)
+    // pub fn sort_axes_with_fvar(&mut self, font)
+    // pub fn sort_axes_with_stat(&mut self, font)
 }
 
 impl PartialOrd for Location {
-    // TODO: docs
-    // FIXME: if axis order is different, produces inconsistent results
+    /// Sorts two `Location`s iff they have the same axes in the same order.
+    /// Will return `None` if this is not the case.
+    // FIXME: will return None for some Locations that are considered equal
+    //        (when axis order differs). Does this violate expected
+    //        invariants of PartialOrd/Eq?
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         if self.0.len() != other.0.len() {
-            // Difference in axes (order)
+            // Difference in axes
             return None;
         }
 
-        for (tag, left_val) in self.0.iter() {
-            let Some(right_val) = other.0.get(tag) else {
-                // Missing axis
+        for ((left_tag, left_val), (right_tag, right_val)) in
+            self.0.iter().zip(other.0.iter())
+        {
+            if left_tag != right_tag {
+                // Difference in axes (order)
                 return None;
-            };
+            }
             match NotNan::cmp(left_val, right_val) {
                 Ordering::Equal => { /* check next axis */ },
                 not_equal => return Some(not_equal),
@@ -191,11 +213,16 @@ impl fmt::Debug for Location {
     }
 }
 
-// TODO: document panics
 impl<T> FromIterator<(T, f32)> for Location
 where
     T: AsRef<[u8]>,
 {
+    /// Support collecting into a `Location`.
+    // TODO: code example
+    ///
+    /// # Panics
+    ///
+    /// If any axis value is `NaN`.
     fn from_iter<I: IntoIterator<Item = (T, f32)>>(iter: I) -> Self {
         iter.into_iter()
             .fold(Location::new(), |mut loc, (tag, value)| {
@@ -209,6 +236,12 @@ where
 impl TryFrom<HashMap<String, f32>> for Location {
     type Error = InvalidTagError;
 
+    /// Convert standard library types into a `Location`.
+    ///
+    /// # Panics
+    ///
+    /// If any value of `location` is `NaN`.
+    // TODO: make NaNs an error
     fn try_from(location: HashMap<String, f32>) -> Result<Self, Self::Error> {
         let user_coords = location
             .into_iter()

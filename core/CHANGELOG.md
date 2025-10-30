@@ -7,7 +7,7 @@
 ### Removed
 
 All now live in [`harfshapedfa`](../harfshapedfa/README.md).
-Other changes have been made to the `Location` API/behaviour.
+Other changes have been made to the `Location` API/behaviour (see [`harfshapedfa/CHANGELOG.md`](../harfshapedfa/CHANGELOG.md).
 
 - `Location`
 - `ShapingPlanError`

@@ -32,7 +32,7 @@ By keeping everything in lockstep, we avoid duplicate dependencies and incompati
 [dependencies]
 harfrust = "=0.3.2"
 skrifa = "=0.37.0"
-harfshapedfa = {version = "0.1", features = ["pens"] }
+harfshapedfa = { version = "0.1", features = ["pens"] }
 ```
 
 This provides some pens and re-exports some [`kurbo`](https://docs.rs/kurbo/latest/kurbo/) types that our API exposes, so if you have a very simple use case you probably won't need to explicitly pull in `kurbo`.

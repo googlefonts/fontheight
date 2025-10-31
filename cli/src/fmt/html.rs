@@ -603,12 +603,12 @@ pub fn format_all_reports(
         (DOCTYPE)
         html {
             head {
-                title { "Tall Glyphs" }
+                title { "Font Height report" }
                 meta charset="utf-8";
                 style { (CSS) }
             }
             body {
-                h1 { "Tall Glyphs" }
+                h1 { "Font Height report" }
                 h3 { "Lines legend" }
                 p {
                     span style="color: grey" {

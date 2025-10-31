@@ -1,5 +1,11 @@
 # `fontheight` CLI
 
+## v0.1.2 - 2025/10/31
+
+### Fixed
+
+- Vertical positioning of marks in HTML reports
+
 ## v0.1.1 - 2025/10/31
 
 ### Added

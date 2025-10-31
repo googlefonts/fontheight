@@ -324,10 +324,16 @@ impl<'a> FontCache<'a> {
 #[derive(Debug)]
 struct ShapingAccumulator {
     /// Where to position the next glyph relative to
+    ///
+    /// Co-ordinates are in TTF-space
     x_origin: f32,
     /// Where to position the next glyph relative to
+    ///
+    /// Co-ordinates are in TTF-space
     y_origin: f32,
     /// All the glyphs in the current word
+    ///
+    /// Glyphs are flipped for SVG-space, but untranslated
     glyph_svgs: Vec<Path>,
 }
 
@@ -453,7 +459,9 @@ fn draw_svg<'a>(
                         format!(
                             "translate({x}, {y})",
                             x = acc.x_origin + position.x_offset as f32,
-                            y = acc.y_origin + position.y_offset as f32
+                            // Our pen flips the TTF outlines, but we have to
+                            // negate the harfrust position ourselves
+                            y = -(acc.y_origin + position.y_offset as f32)
                         ),
                     )
                     .set("d", svg_pen.to_string());

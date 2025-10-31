@@ -2,11 +2,15 @@
 
 Some glue and utilities to ease working with [`harfrust`](https://docs.rs/harfrust) and [`skrifa`](https://docs.rs/skrifa), continuing the tradition of confusing font-related crate names.
 
+> *This crate is not affiliated with `harfrust` or `skrifa`*
+
 ## What exciting features can you offer?
 
 - [`ShapingMeta`](https://docs.rs/harfshapedfa/latest/harfshapedfa/struct.ShapingMeta.html), to make creating & re-using [shaping plans](https://harfbuzz.github.io/shaping-plans-and-caching.html) easier
 - [`Location`](https://docs.rs/harfshapedfa/latest/harfshapedfa/struct.Location.html), a library-agnostic variable font location specifier, mapping axis names to values. Can be validated against a font
 - Conversion functions between script, language, and direction (to `harfrust` or OpenType types)
+
+The hope would be to see this crate eventually deprecated as the functionality/utilities provided here move into sensible locations in the major font libraries, like `harfrust`/`skrifa`/fontations.
 
 ## Usage
 

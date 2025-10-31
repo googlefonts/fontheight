@@ -470,12 +470,13 @@ fn draw_svg<'a>(
         );
     location_cache.buffer = Some(glyph_buffer.clear());
 
-    // From this point on, padding is factored in
     let x_min = -svg_pad;
     let x_max = end_width + svg_pad;
     let y_min = lowest - svg_pad;
     let y_max = highest + svg_pad;
 
+    // This group is positioned to factor in padding, everything within it is
+    // just font coordinates with y negated.
     let word_svg = glyph_svgs
         .into_iter()
         .fold(Group::new(), |group, path| group.add(path))
@@ -492,6 +493,8 @@ fn draw_svg<'a>(
         .copied()
         .chain(maybe_base.into_iter().flat_map(|base| base.line_iter()))
         .fold(word_svg, |group, (line_y, colour)| {
+            // Here we're back to working within the group in font cooordinates,
+            // just need to flip y
             let y = line_y.into_inner();
             // Draw the lines the full width of the box
             let line = Line::new()

@@ -412,6 +412,11 @@ fn draw_svg<'a>(
 
     let svg_pad = font_cache.upm * SVG_PAD_SCALE;
     let outlines = font_cache.font.outline_glyphs();
+    // FIXME: in theory, using the final x_advance is insufficient. We would
+    //        have to use the bounds of the final glyph instead of just where
+    //        it reports the next one should start.
+    //        In practice, the padding will probably save us even if end_width
+    //        should be larger.
     let ShapingAccumulator {
         x_origin: end_width,
         glyph_svgs,

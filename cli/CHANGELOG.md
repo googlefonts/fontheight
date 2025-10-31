@@ -1,6 +1,6 @@
 # `fontheight` CLI
 
-## v0.1.1
+## v0.1.1 - 2025/10/31
 
 ### Added
 

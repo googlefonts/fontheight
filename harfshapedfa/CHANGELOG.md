@@ -1,6 +1,6 @@
 # `harfshapedfa` library crate changelog
 
-## v0.1.0
+## v0.1.0 - 2025/10/31
 
 Changes documented here are for items that were migrated from `fontheight`, not for any completely new features (e.g. `ShapingMeta`, conversion utilities, and pens).
 

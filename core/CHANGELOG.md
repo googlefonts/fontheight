@@ -1,6 +1,6 @@
 # `fontheight` library crate changelog
 
-## v0.2.0
+## v0.2.0 - 2025/10/31
 
 **Breaking change**: the `Location` type and several errors now reside in [`harfshapedfa`](../harfshapedfa/README.md) instead of this crate. Error types of some functions have changed.
 

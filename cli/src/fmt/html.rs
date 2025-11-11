@@ -1,6 +1,6 @@
 use std::{
     cell::RefCell,
-    collections::{BTreeMap, HashMap, hash_map::Entry},
+    collections::{BTreeMap, HashMap, HashSet, hash_map::Entry},
     fmt,
     fmt::Write,
     ops::Neg,
@@ -556,30 +556,37 @@ fn format_script_reports<'a>(
     script: &str,
     reports: &[&Report<'a>],
 ) -> Markup {
+    let mut dedup = HashSet::new();
     html! {
         details open {
             summary { h2 { (script) } }
             @for report in reports {
                 @let location_cache =
                     Rc::new(RefCell::new(LocationCache::new(font_cache.borrow().font, report.location)));
-                ul.drawn {
-                    @for high_exemplar in report.exemplars.highest() {
-                        (draw_exemplar(
-                            font_cache.clone(),
-                            location_cache.clone(),
-                            high_exemplar.word,
-                            report.word_list,
-                            report.location,
-                        ))
+                @for high_exemplar in report.exemplars.highest() {
+                    @if dedup.insert(high_exemplar.word) {
+                        ul.drawn {
+                            (draw_exemplar(
+                                font_cache.clone(),
+                                location_cache.clone(),
+                                high_exemplar.word,
+                                report.word_list,
+                                report.location,
+                            ))
+                        }
                     }
-                    @for low_exemplar in report.exemplars.lowest() {
-                        (draw_exemplar(
-                            font_cache.clone(),
-                            location_cache.clone(),
-                            low_exemplar.word,
-                            report.word_list,
-                            report.location,
-                        ))
+                }
+                @for low_exemplar in report.exemplars.lowest() {
+                    @if dedup.insert(low_exemplar.word) {
+                        ul.drawn {
+                            (draw_exemplar(
+                                font_cache.clone(),
+                                location_cache.clone(),
+                                low_exemplar.word,
+                                report.word_list,
+                                report.location,
+                            ))
+                        }
                     }
                 }
             }

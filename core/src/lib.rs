@@ -470,6 +470,24 @@ impl WordExtremes<'_> {
         self.extremes.highest()
     }
 
+    /// The lowest/smaller extreme, in font units. NotNan for cmp.
+    ///
+    /// Sugar for [`VerticalExtremes::lowest_not_nan`].
+    #[inline]
+    #[must_use]
+    pub fn lowest_not_nan(&self) -> NotNan<f64> {
+        self.extremes.lowest_not_nan()
+    }
+
+    /// The highest/bigger extreme, in font units. NotNan for cmp.
+    ///
+    /// Sugar for [`VerticalExtremes::highest_not_nan`].
+    #[inline]
+    #[must_use]
+    pub fn highest_not_nan(&self) -> NotNan<f64> {
+        self.extremes.highest_not_nan()
+    }
+
     /// Get the `WordExtremes` that reaches the lowest.
     #[inline]
     #[must_use]
@@ -576,6 +594,20 @@ impl VerticalExtremes {
         *self.highest
     }
 
+    /// The lowest/smaller extreme, in font units. NotNan for cmp.
+    #[inline]
+    #[must_use]
+    pub fn lowest_not_nan(&self) -> NotNan<f64> {
+        self.lowest
+    }
+
+    /// The highest/bigger extreme, in font units. NotNan for cmp.
+    #[inline]
+    #[must_use]
+    pub fn highest_not_nan(&self) -> NotNan<f64> {
+        self.highest
+    }
+
     /// Combine two `VerticalExtremes`, taking the higher `highest` value, and
     /// lower `lowest` value.
     #[inline]
@@ -616,6 +648,56 @@ impl<'a> Report<'a> {
             location,
             word_list,
             exemplars,
+        }
+    }
+
+    /// Produce a list of flat reports, each about a single word, for easy
+    /// sorting for HTML reporting.
+    pub fn flatten(&'a self) -> Vec<FlatReport<'a>> {
+        // Deduplicate words at this location and word_list (the same word might
+        // be both hitting low and high extremes)
+        self.exemplars
+            .lowest()
+            .iter()
+            .chain(self.exemplars.highest())
+            .map(|word_extremes| (word_extremes.word, word_extremes))
+            .collect::<HashMap<_, _>>()
+            .values()
+            .map(|word_extremes| {
+                FlatReport::new(self.location, self.word_list, **word_extremes)
+            })
+            .collect()
+    }
+}
+
+/// For reporting purposes, the user might want to see the lowest and highest
+/// words regardless of their location or word list of origin.
+#[derive(Debug, Clone)]
+pub struct FlatReport<'a> {
+    /// The [`Location`] the exemplars were found at.
+    pub location: &'a Location,
+    /// The [`WordList`] that was shaped.
+    ///
+    /// This will always be the full word list, even if only part of it was
+    /// tested.
+    pub word_list: &'a WordList,
+    /// One word that reached an extreme
+    pub extremes: WordExtremes<'a>,
+}
+
+impl<'a> FlatReport<'a> {
+    /// Create a new report from its fields.
+    #[inline]
+    #[must_use]
+    pub const fn new(
+        location: &'a Location,
+        word_list: &'a WordList,
+        extremes: WordExtremes<'a>,
+    ) -> Self {
+        FlatReport {
+            location,
+            word_list,
+            extremes,
         }
     }
 }

@@ -1,6 +1,6 @@
 use std::{
     cell::RefCell,
-    collections::{BTreeMap, HashMap, hash_map::Entry},
+    collections::{BTreeMap, HashMap, HashSet, hash_map::Entry},
     fmt,
     fmt::Write,
     ops::Neg,
@@ -8,7 +8,8 @@ use std::{
 };
 
 use anyhow::{Context, bail};
-use fontheight::{Location, Report, VerticalExtremes};
+use chrono::Utc;
+use fontheight::{FlatReport, Location, Report, VerticalExtremes};
 use harfrust::{ShaperData, ShaperInstance, UnicodeBuffer};
 use harfshapedfa::{
     HarfRustShaperExt, ShapingMeta,
@@ -34,12 +35,28 @@ body {
     font-family: sans-serif;
 }
 
+#timestamp {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin: 0;
+    background: white;
+    z-index: 1;
+}
+
 h1 {
     text-align: center;
 }
 
 details {
     margin: 4rem 0;
+    position: relative;
+}
+
+summary {
+    position: sticky;
+    top: 0;
+    background: white;
 }
 
 summary h2 {
@@ -554,33 +571,24 @@ fn draw_exemplar<'a>(
 fn format_script_reports<'a>(
     font_cache: Rc<RefCell<FontCache<'a>>>,
     script: &str,
-    reports: &[&Report<'a>],
+    reports: &[FlatReport<'a>],
 ) -> Markup {
     html! {
         details open {
             summary { h2 { (script) } }
-            @for report in reports {
-                @let location_cache =
-                    Rc::new(RefCell::new(LocationCache::new(font_cache.borrow().font, report.location)));
-                ul.drawn {
-                    @for high_exemplar in report.exemplars.highest() {
-                        (draw_exemplar(
-                            font_cache.clone(),
-                            location_cache.clone(),
-                            high_exemplar.word,
-                            report.word_list,
-                            report.location,
-                        ))
-                    }
-                    @for low_exemplar in report.exemplars.lowest() {
-                        (draw_exemplar(
-                            font_cache.clone(),
-                            location_cache.clone(),
-                            low_exemplar.word,
-                            report.word_list,
-                            report.location,
-                        ))
-                    }
+            ul.drawn {
+                @for report in reports {
+                    // TODO: make location_cache be a hash by location?
+                    // Generating the HTML report is fast enough like this though.
+                    @let location_cache =
+                        Rc::new(RefCell::new(LocationCache::new(font_cache.borrow().font, report.location)));
+                    (draw_exemplar(
+                        font_cache.clone(),
+                        location_cache.clone(),
+                        report.extremes.word,
+                        report.word_list,
+                        report.location,
+                    ))
                 }
             }
         }
@@ -591,18 +599,37 @@ pub fn format_all_reports(
     reports: &[Report],
     font: &FontRef,
 ) -> anyhow::Result<String> {
-    // Group on script and then present exemplars from word lists in order by
-    // name
-    let mut script_exemplars = BTreeMap::<&str, Vec<&Report>>::new();
-    reports.iter().for_each(|report| {
+    // Group on script and then present examplars by decreasing badness, with
+    // all locations and word lists of origin mixed together.
+    let mut script_exemplars = BTreeMap::<&str, Vec<FlatReport>>::new();
+    reports.iter().flat_map(Report::flatten).for_each(|report| {
         // ZWSP at the start of Unknown so it gets sorted last
         let script = report.word_list.script().unwrap_or("\u{200B}Unknown");
         script_exemplars.entry(script).or_default().push(report);
     });
     // Sort reports by name, then by location
     script_exemplars.values_mut().for_each(|reports| {
-        reports.sort_unstable_by(|report_a, report_b| {
-            Ord::cmp(report_a.word_list.name(), report_b.word_list.name())
+        // Here we'll also be deduplicating words from different locations,
+        // keeping the badest one. Here the same word can show at most twice,
+        // once as demonstrating a highest extreme, and a second time for
+        // lowest. I was concerned that using the same dedup for high and low
+        // could miss a problem, if a word is highest in one location but not
+        // very low there, and lowest in another location (later in the list).
+        let mut dedup_high = HashSet::new();
+        let mut dedup_low = HashSet::new();
+        let mut highest = reports.clone();
+        highest.sort_unstable_by(|report_a, report_b| {
+            // b cmp a, because above we want the biggest values first (desc)
+            report_b
+                .extremes
+                .highest_not_nan()
+                .cmp(&report_a.extremes.highest_not_nan())
+                .then_with(|| {
+                    Ord::cmp(
+                        report_a.word_list.name(),
+                        report_b.word_list.name(),
+                    )
+                })
                 .then_with(|| {
                     PartialOrd::partial_cmp(
                         &report_a.location,
@@ -611,6 +638,41 @@ pub fn format_all_reports(
                     .expect("fontheight produced unsortable locations")
                 })
         });
+        let mut lowest = reports.clone();
+        lowest.sort_unstable_by(|report_a, report_b| {
+            // a cmp b, because below we want the smallest values first (asc)
+            report_a
+                .extremes
+                .lowest_not_nan()
+                .cmp(&report_b.extremes.lowest_not_nan())
+                .then_with(|| {
+                    Ord::cmp(
+                        report_a.word_list.name(),
+                        report_b.word_list.name(),
+                    )
+                })
+                .then_with(|| {
+                    PartialOrd::partial_cmp(
+                        &report_a.location,
+                        &report_b.location,
+                    )
+                    .expect("fontheight produced unsortable locations")
+                })
+        });
+        // Report high, low, high, low so that the first 2 words from each
+        // script are the worst high and low = makes skimming the report easy.
+        *reports = highest.into_iter().zip(lowest).fold(
+            Vec::new(),
+            |mut acc, (high, low)| {
+                if dedup_high.insert(high.extremes.word) {
+                    acc.push(high);
+                }
+                if dedup_low.insert(low.extremes.word) {
+                    acc.push(low)
+                }
+                acc
+            },
+        )
     });
 
     let font_cache = Rc::new(RefCell::new(FontCache::new(font)?));
@@ -624,6 +686,11 @@ pub fn format_all_reports(
                 style { (CSS) }
             }
             body {
+                // Timestamp the report to allow checking quickly that we're
+                // looking at the latest
+                p id="timestamp" {
+                    (Utc::now().format("%Y-%m-%d %H:%M:%S").to_string())
+                }
                 h1 { "Font Height report" }
                 h3 { "Lines legend" }
                 p {

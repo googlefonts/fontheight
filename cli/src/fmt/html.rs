@@ -661,20 +661,18 @@ pub fn format_all_reports(
         });
         // Report high, low, high, low so that the first 2 words from each
         // script are the worst high and low = makes skimming the report easy.
-        *reports = highest
-            .into_iter()
-            .zip(lowest)
-            .flat_map(|(high, low)| {
-                let mut res = vec![];
+        *reports = highest.into_iter().zip(lowest).fold(
+            Vec::new(),
+            |mut acc, (high, low)| {
                 if dedup_high.insert(high.extremes.word) {
-                    res.push(high);
+                    acc.push(high);
                 }
                 if dedup_low.insert(low.extremes.word) {
-                    res.push(low)
+                    acc.push(low)
                 }
-                res
-            })
-            .collect();
+                acc
+            },
+        )
     });
 
     let font_cache = Rc::new(RefCell::new(FontCache::new(font)?));

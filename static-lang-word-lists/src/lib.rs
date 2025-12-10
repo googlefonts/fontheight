@@ -66,9 +66,10 @@
 //! download by setting the environment variable `STATIC_LANG_WORD_LISTS_LOCAL`.
 //! Otherwise, you're welcome to audit the [build script](https://github.com/googlefonts/fontheight/blob/main/static-lang-word-lists/build.rs).
 
+mod metadata;
 mod word_lists;
 
-pub(crate) use word_lists::WordListMetadata;
+pub use metadata::*;
 #[cfg(feature = "rayon")]
 pub use word_lists::rayon::ParWordListIter;
 pub use word_lists::{WordList, WordListError, WordListIter};
@@ -124,4 +125,5 @@ macro_rules! word_list {
 
 // Module declaration has to be below macro definition to be able to use it
 mod declarations;
+
 pub use declarations::*;

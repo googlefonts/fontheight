@@ -7,68 +7,13 @@ use std::{
     sync::LazyLock,
 };
 
-use serde::Deserialize;
 use thiserror::Error;
 
-use crate::newline_delimited_words;
+use crate::{metadata::WordListMetadata, newline_delimited_words};
 
 // TODO: this can be Box<str>
 pub(crate) type Word = String;
 pub(crate) type WordSource = Box<[Word]>;
-
-#[derive(Debug, Clone, Deserialize)]
-#[serde(deny_unknown_fields)]
-pub(crate) struct WordListMetadata {
-    name: Cow<'static, str>,
-    script: Option<Cow<'static, str>>,
-    language: Option<Cow<'static, str>>,
-}
-
-impl WordListMetadata {
-    // Used by word_list!
-    #[must_use]
-    pub(crate) const fn new(
-        name: &'static str,
-        script: Option<&'static str>,
-        language: Option<&'static str>,
-    ) -> Self {
-        // Can't use Option::map in const context
-        let script = match script {
-            Some(script) => Some(Cow::Borrowed(script)),
-            None => None,
-        };
-        let language = match language {
-            Some(language) => Some(Cow::Borrowed(language)),
-            None => None,
-        };
-        WordListMetadata {
-            name: Cow::Borrowed(name),
-            script,
-            language,
-        }
-    }
-
-    #[allow(clippy::result_large_err)]
-    fn load(metadata_path: impl AsRef<Path>) -> Result<Self, WordListError> {
-        let path = metadata_path.as_ref();
-        let metadata_content = fs::read_to_string(path).map_err(|io_err| {
-            WordListError::FailedToRead(path.to_owned(), io_err)
-        })?;
-        let metadata: WordListMetadata = toml::from_str(&metadata_content)
-            .map_err(|json_err| {
-                WordListError::MetadataError(path.to_owned(), json_err)
-            })?;
-        Ok(metadata)
-    }
-
-    fn new_from_name(name: impl Into<String>) -> Self {
-        WordListMetadata {
-            name: Cow::Owned(name.into()),
-            script: None,
-            language: None,
-        }
-    }
-}
 
 /// A list of words, with optional additional metadata.
 #[derive(Debug)]
@@ -132,14 +77,18 @@ impl WordList {
 
     /// Create a new word list from an iterable.
     ///
-    /// Metadata is unspecified.
+    /// Types that `impl Into<WordListMetadata>`:
+    /// - [`&str`] (used as name of word list)
+    /// - [`String`] (used as name of word list)
+    /// - [`WordListMetadata`]
+    /// - [`WordListMetadataBuilder`](crate::WordListMetadataBuilder)
     #[must_use]
     pub fn define(
-        name: impl Into<String>,
+        name_or_metadata: impl Into<WordListMetadata>,
         words: impl IntoIterator<Item = impl Into<String>>,
     ) -> Self {
         WordList {
-            metadata: WordListMetadata::new_from_name(name.into()),
+            metadata: name_or_metadata.into(),
             words: words.into_iter().map(Into::into).collect::<Vec<_>>().into(),
         }
     }
@@ -238,6 +187,20 @@ impl WordList {
             metadata: self.metadata.clone(),
             words: reduced_words,
         }
+    }
+
+    /// Override the existing metadata for a word list
+    ///
+    /// Doing this for a built-in word list will require you to clone it first:
+    ///
+    /// ```
+    /// let mut word_list = static_lang_word_lists::AOSP_ARABIC.clone();
+    /// word_list.set_metadata("not AOSP Arabic nyehehehe");
+    /// // Step 3: world domination!
+    /// ```
+    #[inline]
+    pub fn set_metadata(&mut self, metadata: WordListMetadata) {
+        self.metadata = metadata;
     }
 }
 

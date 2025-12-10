@@ -16,7 +16,7 @@ use crate::newline_delimited_words;
 pub(crate) type Word = String;
 pub(crate) type WordSource = Box<[Word]>;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub(crate) struct WordListMetadata {
     name: Cow<'static, str>,
@@ -215,6 +215,42 @@ impl WordList {
     #[must_use]
     pub fn is_empty(&self) -> bool {
         self.words.is_empty()
+    }
+
+    /// Create a new word list by removing words from an existing one, according
+    /// to the `predicate`.
+    ///
+    /// You can think of this similar to calling [`Vec::retain`], except it
+    /// returns a new list instead of modifying the old one in-place.
+    pub fn filter<F>(&self, mut predicate: F) -> Self
+    where
+        F: FnMut(&str) -> bool,
+    {
+        let reduced_words = self
+            .words
+            .iter()
+            .filter(|word| predicate(word))
+            .cloned()
+            .collect::<Vec<_>>();
+        let reduced_words =
+            EagerOrLazy::Eager(reduced_words.into_boxed_slice());
+        Self {
+            metadata: self.metadata.clone(),
+            words: reduced_words,
+        }
+    }
+}
+
+impl Clone for WordList {
+    /// Returns a duplicate of the value.
+    ///
+    /// Note: this will load the word list for `&self` and the newly returned
+    /// word list.
+    fn clone(&self) -> Self {
+        Self {
+            metadata: self.metadata.clone(),
+            words: EagerOrLazy::Eager(self.words.deref().clone()),
+        }
     }
 }
 

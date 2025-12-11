@@ -204,7 +204,13 @@ impl WordList {
         }
     }
 
-    /// Override the existing metadata for a word list
+    /// Override the existing metadata for a word list.
+    ///
+    /// Types that `impl Into<WordListMetadata>`:
+    /// - [`&str`] (used as name of word list)
+    /// - [`String`] (used as name of word list)
+    /// - [`WordListMetadata`]
+    /// - [`WordListMetadataBuilder`](crate::WordListMetadataBuilder)
     ///
     /// Doing this for a built-in word list will require you to clone it first:
     ///
@@ -214,8 +220,8 @@ impl WordList {
     /// // Step 3: world domination!
     /// ```
     #[inline]
-    pub fn set_metadata(&mut self, metadata: WordListMetadata) {
-        self.metadata = metadata;
+    pub fn set_metadata(&mut self, metadata: impl Into<WordListMetadata>) {
+        self.metadata = metadata.into();
     }
 }
 

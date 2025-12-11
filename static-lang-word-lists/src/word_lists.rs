@@ -122,7 +122,7 @@ impl WordList {
     #[inline]
     #[must_use]
     pub fn name(&self) -> &str {
-        &self.metadata.name
+        self.metadata.name()
     }
 
     /// Get the script of the word list, if known.
@@ -133,7 +133,7 @@ impl WordList {
     #[inline]
     #[must_use]
     pub fn script(&self) -> Option<&str> {
-        self.metadata.script.as_deref()
+        self.metadata.script()
     }
 
     /// Get the language of the word list, if known.
@@ -143,7 +143,21 @@ impl WordList {
     #[inline]
     #[must_use]
     pub fn language(&self) -> Option<&str> {
-        self.metadata.language.as_deref()
+        self.metadata.language()
+    }
+
+    /// Access the word list's metadata.
+    ///
+    /// You usually only need to do this if you plan to clone & edit the
+    /// metadata, as otherwise you can access metadata from the `WordList`
+    /// directly:
+    /// - [`WordList::name`]
+    /// - [`WordList::script`]
+    /// - [`WordList::language`]
+    #[inline]
+    #[must_use]
+    pub const fn metadata(&self) -> &WordListMetadata {
+        &self.metadata
     }
 
     /// Iterate through the word list.
@@ -171,6 +185,7 @@ impl WordList {
     ///
     /// You can think of this similar to calling [`Vec::retain`], except it
     /// returns a new list instead of modifying the old one in-place.
+    /// Metadata isn't modified.
     pub fn filter<F>(&self, mut predicate: F) -> Self
     where
         F: FnMut(&str) -> bool,

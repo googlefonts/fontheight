@@ -4,6 +4,16 @@ use serde::Deserialize;
 
 use crate::WordListError;
 
+/// Metadata about a [`WordList`](crate::WordList).
+///
+/// Contains:
+/// - [name](Self::name)
+/// - [script](Self::script) (optional)
+/// - [language](Self::language) (optional)
+///
+/// `WordListMetadata` is an immutable structure.
+/// If you need to edit one, you must first convert it to a
+/// [`WordListMetadataBuilder`] first using the [`From`]/[`Into`] impl.
 #[derive(Debug, Clone, Eq, PartialEq, Hash, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct WordListMetadata {
@@ -60,16 +70,29 @@ impl WordListMetadata {
         }
     }
 
+    /// Get the name of the word list.
+    #[inline]
     #[must_use]
     pub fn name(&self) -> &str {
         self.name.as_ref()
     }
 
+    /// Get the script of the word list, if known.
+    ///
+    /// The script is expected to be an [ISO 15924](https://en.wikipedia.org/wiki/ISO_15924)
+    /// four-letter capitalised code, but this is only guaranteed for built-in
+    /// word lists.
+    #[inline]
     #[must_use]
     pub fn script(&self) -> Option<&str> {
         self.script.as_deref()
     }
 
+    /// Get the language of the word list, if known.
+    ///
+    /// The language is expected to be an [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639-1)
+    /// two-letter code, but this is only guaranteed for built-in word lists.
+    #[inline]
     #[must_use]
     pub fn language(&self) -> Option<&str> {
         self.language.as_deref()
@@ -89,10 +112,13 @@ where
     }
 }
 
+/// An editable [`WordListMetadata`].
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
 pub struct WordListMetadataBuilder(WordListMetadata);
 
 impl WordListMetadataBuilder {
+    /// Start creating a new metadata struct from scratch.
+    #[inline]
     pub fn new(word_list_name: impl Into<Cow<'static, str>>) -> Self {
         Self(WordListMetadata {
             name: word_list_name.into(),
@@ -101,6 +127,10 @@ impl WordListMetadataBuilder {
         })
     }
 
+    /// Set the [ISO 15924](https://en.wikipedia.org/wiki/ISO_15924) script of the word list.
+    ///
+    /// ⚠️ The value value isn't checked to be a valid ISO 15924 tag.
+    #[inline]
     pub fn script(self, script: impl Into<Cow<'static, str>>) -> Self {
         Self(WordListMetadata {
             script: Some(script.into()),
@@ -108,6 +138,10 @@ impl WordListMetadataBuilder {
         })
     }
 
+    /// Set the [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639-1) language of the word list.
+    ///
+    /// ⚠️ The value value isn't checked to be a valid ISO 639-1 tag.
+    #[inline]
     pub fn language(self, language: impl Into<Cow<'static, str>>) -> Self {
         Self(WordListMetadata {
             language: Some(language.into()),
@@ -115,6 +149,9 @@ impl WordListMetadataBuilder {
         })
     }
 
+    /// Convert the builder into an immutable [`WordListMetadata`].
+    #[inline]
+    #[must_use]
     pub fn build(self) -> WordListMetadata {
         self.into()
     }

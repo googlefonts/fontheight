@@ -1,5 +1,12 @@
 # `fontheight` CLI
 
+## v0.1.3 - 2026/01/26
+
+### Changes
+
+- Sort words in the report so the highest and lowest overall are first for each script
+- Add timestamp to reports
+
 ## v0.1.2 - 2025/10/31
 
 ### Fixed

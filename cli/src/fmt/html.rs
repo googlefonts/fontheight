@@ -5,10 +5,10 @@ use std::{
     fmt::Write,
     ops::Neg,
     rc::Rc,
+    time::SystemTime,
 };
 
 use anyhow::{Context, bail};
-use chrono::Utc;
 use fontheight::{Location, Report, VerticalExtremes, WordExtremes};
 use harfrust::{ShaperData, ShaperInstance, UnicodeBuffer};
 use harfshapedfa::{
@@ -16,6 +16,7 @@ use harfshapedfa::{
     convert::{iso639_to_opentype, iso15924_to_opentype},
     pens::BoundsPen,
 };
+use humantime::format_rfc3339;
 use log::{debug, error};
 use maud::{DOCTYPE, Escaper, Markup, PreEscaped, Render, html};
 use ordered_float::NotNan;
@@ -718,7 +719,7 @@ pub fn format_all_reports(
                 // Timestamp the report to allow checking quickly that we're
                 // looking at the latest
                 p id="timestamp" {
-                    (Utc::now().format("%Y-%m-%d %H:%M:%S").to_string())
+                    (format_rfc3339(SystemTime::now()))
                 }
                 h1 { "Font Height report" }
                 h3 { "Lines legend" }

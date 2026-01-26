@@ -18,11 +18,11 @@ path = "src/main.rs"
 
 [dependencies]
 anyhow = "1"
-chrono = "0.4.42"
 clap-verbosity-flag = { version = "3", features = ["log"] }
 fontheight = { version = "0.2", path = "../core" }
 harfrust.workspace = true
 harfshapedfa.workspace = true
+humantime = "2.3.0"
 log.workspace = true
 maud = "0.27.0"
 ordered-float.workspace = true

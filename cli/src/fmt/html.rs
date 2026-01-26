@@ -659,44 +659,34 @@ pub fn format_all_reports(
         let mut highest = reports.clone();
         highest.sort_unstable_by(|report_a, report_b| {
             // b cmp a, because above we want the biggest values first (desc)
-            report_b
-                .extremes
-                .highest_not_nan()
-                .cmp(&report_a.extremes.highest_not_nan())
-                .then_with(|| {
-                    Ord::cmp(
-                        report_a.word_list.name(),
-                        report_b.word_list.name(),
-                    )
-                })
-                .then_with(|| {
-                    PartialOrd::partial_cmp(
-                        &report_a.location,
-                        &report_b.location,
-                    )
+            f64::partial_cmp(
+                &report_b.extremes.highest(),
+                &report_a.extremes.highest(),
+            )
+            .unwrap() // unwrap is safe because we know there are no NaNs
+            .then_with(|| {
+                Ord::cmp(report_a.word_list.name(), report_b.word_list.name())
+            })
+            .then_with(|| {
+                PartialOrd::partial_cmp(&report_a.location, &report_b.location)
                     .expect("fontheight produced unsortable locations")
-                })
+            })
         });
         let mut lowest = reports.clone();
         lowest.sort_unstable_by(|report_a, report_b| {
             // a cmp b, because below we want the smallest values first (asc)
-            report_a
-                .extremes
-                .lowest_not_nan()
-                .cmp(&report_b.extremes.lowest_not_nan())
-                .then_with(|| {
-                    Ord::cmp(
-                        report_a.word_list.name(),
-                        report_b.word_list.name(),
-                    )
-                })
-                .then_with(|| {
-                    PartialOrd::partial_cmp(
-                        &report_a.location,
-                        &report_b.location,
-                    )
+            f64::partial_cmp(
+                &report_a.extremes.lowest(),
+                &report_b.extremes.lowest(),
+            )
+            .unwrap() // unwrap is safe because we know there are no NaNs
+            .then_with(|| {
+                Ord::cmp(report_a.word_list.name(), report_b.word_list.name())
+            })
+            .then_with(|| {
+                PartialOrd::partial_cmp(&report_a.location, &report_b.location)
                     .expect("fontheight produced unsortable locations")
-                })
+            })
         });
         // Report high, low, high, low so that the first 2 words from each
         // script are the worst high and low = makes skimming the report easy.

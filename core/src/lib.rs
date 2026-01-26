@@ -470,24 +470,6 @@ impl WordExtremes<'_> {
         self.extremes.highest()
     }
 
-    /// The lowest/smaller extreme, in font units. NotNan for cmp.
-    ///
-    /// Sugar for [`VerticalExtremes::lowest_not_nan`].
-    #[inline]
-    #[must_use]
-    pub fn lowest_not_nan(&self) -> NotNan<f64> {
-        self.extremes.lowest_not_nan()
-    }
-
-    /// The highest/bigger extreme, in font units. NotNan for cmp.
-    ///
-    /// Sugar for [`VerticalExtremes::highest_not_nan`].
-    #[inline]
-    #[must_use]
-    pub fn highest_not_nan(&self) -> NotNan<f64> {
-        self.extremes.highest_not_nan()
-    }
-
     /// Get the `WordExtremes` that reaches the lowest.
     #[inline]
     #[must_use]
@@ -592,20 +574,6 @@ impl VerticalExtremes {
     #[must_use]
     pub fn highest(&self) -> f64 {
         *self.highest
-    }
-
-    /// The lowest/smaller extreme, in font units. NotNan for cmp.
-    #[inline]
-    #[must_use]
-    pub fn lowest_not_nan(&self) -> NotNan<f64> {
-        self.lowest
-    }
-
-    /// The highest/bigger extreme, in font units. NotNan for cmp.
-    #[inline]
-    #[must_use]
-    pub fn highest_not_nan(&self) -> NotNan<f64> {
-        self.highest
     }
 
     /// Combine two `VerticalExtremes`, taking the higher `highest` value, and

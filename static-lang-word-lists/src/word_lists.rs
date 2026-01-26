@@ -19,7 +19,18 @@ pub(crate) type WordSource = Box<[Word]>;
 #[derive(Debug)]
 pub struct WordList {
     words: EagerOrLazy<WordSource>,
-    metadata: WordListMetadata,
+    /// Metadata associated with this word list.
+    ///
+    /// Includes the word list's name, script (if known), and language (if
+    /// known).
+    ///
+    /// You usually only need to access this directly if you plan to edit the
+    /// metadata, as otherwise you can access metadata from the `WordList`
+    /// directly:
+    /// - [`WordList::name`]
+    /// - [`WordList::script`]
+    /// - [`WordList::language`]
+    pub metadata: WordListMetadata,
 }
 
 impl WordList {
@@ -145,20 +156,6 @@ impl WordList {
         self.metadata.language()
     }
 
-    /// Access the word list's metadata.
-    ///
-    /// You usually only need to do this if you plan to clone & edit the
-    /// metadata, as otherwise you can access metadata from the `WordList`
-    /// directly:
-    /// - [`WordList::name`]
-    /// - [`WordList::script`]
-    /// - [`WordList::language`]
-    #[inline]
-    #[must_use]
-    pub const fn metadata(&self) -> &WordListMetadata {
-        &self.metadata
-    }
-
     /// Iterate through the word list.
     #[must_use]
     pub fn iter(&self) -> WordListIter<'_> {
@@ -201,25 +198,6 @@ impl WordList {
             metadata: self.metadata.clone(),
             words: reduced_words,
         }
-    }
-
-    /// Override the existing metadata for a word list.
-    ///
-    /// Types that `impl Into<WordListMetadata>`:
-    /// - [`&str`] (used as name of word list)
-    /// - [`String`] (used as name of word list)
-    /// - [`WordListMetadata`]
-    ///
-    /// Doing this for a built-in word list will require you to clone it first:
-    ///
-    /// ```
-    /// let mut word_list = static_lang_word_lists::AOSP_ARABIC.clone();
-    /// word_list.set_metadata("not AOSP Arabic nyehehehe");
-    /// // Step 3: world domination!
-    /// ```
-    #[inline]
-    pub fn set_metadata(&mut self, metadata: impl Into<WordListMetadata>) {
-        self.metadata = metadata.into();
     }
 }
 

@@ -9,7 +9,7 @@ use std::{
 
 use anyhow::{Context, bail};
 use chrono::Utc;
-use fontheight::{FlatReport, Location, Report, VerticalExtremes};
+use fontheight::{Location, Report, VerticalExtremes, WordExtremes};
 use harfrust::{ShaperData, ShaperInstance, UnicodeBuffer};
 use harfshapedfa::{
     HarfRustShaperExt, ShapingMeta,
@@ -380,6 +380,45 @@ impl ShapingAccumulator {
     }
 }
 
+/// A report about a single word, for easier sorting
+#[derive(Debug, Clone)]
+struct WordReport<'a> {
+    /// The [`Location`] the exemplars were found at.
+    location: &'a Location,
+    /// The [`WordList`] that was shaped.
+    ///
+    /// This will always be the full word list, even if only part of it was
+    /// tested.
+    word_list: &'a WordList,
+    /// One word that reached an extreme
+    extremes: WordExtremes<'a>,
+}
+
+impl<'a> WordReport<'a> {
+    /// Produce a list of flat reports, each about a single word, for easy
+    /// sorting for HTML reporting.
+    fn new(report: &'a Report<'a>) -> Vec<Self> {
+        // Deduplicate words at this location and word_list (the same word might
+        // be both hitting low and high extremes)
+        report
+            .exemplars
+            .lowest()
+            .iter()
+            .chain(report.exemplars.highest())
+            .copied()
+            .map(|word_extremes| (word_extremes.word, word_extremes))
+            .collect::<HashMap<_, _>>()
+            .values()
+            .copied()
+            .map(|word_extremes| WordReport {
+                location: report.location,
+                word_list: report.word_list,
+                extremes: word_extremes,
+            })
+            .collect()
+    }
+}
+
 fn draw_svg<'a>(
     font_cache: Rc<RefCell<FontCache<'a>>>,
     location_cache: Rc<RefCell<LocationCache>>,
@@ -571,7 +610,7 @@ fn draw_exemplar<'a>(
 fn format_script_reports<'a>(
     font_cache: Rc<RefCell<FontCache<'a>>>,
     script: &str,
-    reports: &[FlatReport<'a>],
+    reports: &[WordReport<'a>],
 ) -> Markup {
     html! {
         details open {
@@ -601,8 +640,8 @@ pub fn format_all_reports(
 ) -> anyhow::Result<String> {
     // Group on script and then present examplars by decreasing badness, with
     // all locations and word lists of origin mixed together.
-    let mut script_exemplars = BTreeMap::<&str, Vec<FlatReport>>::new();
-    reports.iter().flat_map(Report::flatten).for_each(|report| {
+    let mut script_exemplars = BTreeMap::<&str, Vec<WordReport>>::new();
+    reports.iter().flat_map(WordReport::new).for_each(|report| {
         // ZWSP at the start of Unknown so it gets sorted last
         let script = report.word_list.script().unwrap_or("\u{200B}Unknown");
         script_exemplars.entry(script).or_default().push(report);

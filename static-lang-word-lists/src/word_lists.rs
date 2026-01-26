@@ -81,7 +81,6 @@ impl WordList {
     /// - [`&str`] (used as name of word list)
     /// - [`String`] (used as name of word list)
     /// - [`WordListMetadata`]
-    /// - [`WordListMetadataBuilder`](crate::WordListMetadataBuilder)
     #[must_use]
     pub fn define(
         name_or_metadata: impl Into<WordListMetadata>,
@@ -210,7 +209,6 @@ impl WordList {
     /// - [`&str`] (used as name of word list)
     /// - [`String`] (used as name of word list)
     /// - [`WordListMetadata`]
-    /// - [`WordListMetadataBuilder`](crate::WordListMetadataBuilder)
     ///
     /// Doing this for a built-in word list will require you to clone it first:
     ///

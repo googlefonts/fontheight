@@ -1,5 +1,14 @@
 # `static-lang-word-lists` changelog
 
+## v0.4.2 - 2026/01/27
+
+### Added
+
+- Exposed `WordlistMetadata` as part of public API
+- Add `WordlistMetadata::from` impl
+- Add `WordList::filter` for creating a reduced version of an existing word list
+- Impl `Clone` for `WordList` (which eagerly decompresses static word lists)
+
 ## v0.4.1 - 2025/10/29
 
 ### Changes
